@@ -32,7 +32,7 @@ public class Main {
 	public static int[] convolutionMachine(int[] signal, int[] impulseResponse){
 
 		int[]
-//			reversedImpulse = reverseSignal(impulseResponse),
+			reversedImpulse = reverseSignal(impulseResponse),
 			result = new int[signal.length + impulseResponse.length - 1];
 
 		for (int i = 0; i < result.length ; i++){
@@ -40,14 +40,14 @@ public class Main {
 			int
 				cache = 0;
 
-			for(int j = 0; j < impulseResponse.length ; j++){
+			for(int j = 0; j < impulseResponse.length && j <= i ; j++){
 
 				int
 					signalIndex = i - j;
 
 				if (signalIndex >= 0 && signalIndex < signal.length)
 
-					cache += signal[i - j] * impulseResponse[j];
+					cache += (signal[i - j] * impulseResponse[j]);
 
 			}
 
@@ -85,7 +85,7 @@ public class Main {
 
 		int[]
 			imp = {-1, 1},
-			sig = {1, 2, 3};
+			sig = {0, 1, 2, 3};
 
 		System.out.println(Arrays.toString(convolutionMachine(sig, imp)));
 

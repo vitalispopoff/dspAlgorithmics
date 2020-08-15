@@ -1,8 +1,9 @@
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import java.nio.*;
 import java.util.Arrays;
 
-import static algorithms.analyzers.BitRepresent.bitRepresent;
+import algorithms.analyzers.FormatTag.*;
+
+import static algorithms.analyzers.FormatTag.getFormatTag;
 
 public class Wave {
 
@@ -17,8 +18,9 @@ public class Wave {
 
 	String
 		header,
-		wrapper,
-		type;
+		wrapper;
+	FormatTags
+		format;
 
 	int
 		fileLength,
@@ -40,7 +42,7 @@ public class Wave {
 		setWave(fileAddress);
 		setHeader();
 		setWrapper();
-		setType();
+		setFormat();
 		setFileLength();
 		setFormatSize();
 		setChannels();
@@ -98,12 +100,30 @@ public class Wave {
 		return wrapper;
 	}
 
-	public void setType(){
+	public void setFormat(){
 
-		this.type = readWave(8, 4);
+		int
+			msB = wave[21],
+			lsB = wave[20];
+
+		if (msB < 0) {
+
+			msB = (msB << 24) >> 16;
+			lsB >>>= 24;
+		}
+		else {
+
+			msB <<= 8;
+			lsB >>>=32;
+		}
+
+		int index = msB + lsB;
+
+		this.format = getFormatTag(index);
+
 	}
-	public String getType() {
-		return type;
+	public FormatTags getFormat() {
+		return format;
 	}
 
 	public void setFileLength(){
@@ -207,38 +227,59 @@ public class Wave {
 	public static void main(String[] args) {
 
 		Wave
-			temporal;
+				temporal;
 
 		{
 			String
-				adres_0 = "2_samples-mono.wav",
-				adres_1 = "2_samples.wav",
-				adres_2 = "2_samples-mono-8bit.wav",
-				adres_3 = "shortie-mono-16bit.wav",
-				adres_4 = "2_samples-mono-temp.wav",
-				adress = "C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\" + adres_0;
+					adres_0 = "2_samples-mono.wav",
+					adres_1 = "2_samples.wav",
+					adres_2 = "2_samples-mono-8bit.wav",
+					adres_3 = "shortie-mono-16bit.wav",
+					adres_4 = "2_samples-mono-temp.wav",
+					adress = "C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\" + adres_0;
 
 			temporal = new Wave(adress);
 
-		}	// load waveFile
+		}    // load waveFile
 
-			int
+		int
 				dataBlockLength = temporal.dataBlockLength,
 				sampleFrameSize = temporal.sampleFrameSize,
 				sampleRate = temporal.sampleRate;
 
-			byte[]
+		byte[]
 				wave = temporal.wave;
 
 //		----------------------------------------------------------------------------------------------------------------
 
-		Byte[] look = {0x64,0x61,0x74,0x61};
+		Byte[] look = {0x64, 0x61, 0x74, 0x61};
 
 //		System.out.println(Arrays.toString(wave));
 //		System.out.println(Arrays.toString(look));
 
+/*
 		int start = 36;
 		System.out.println(Arrays.toString(Arrays.copyOfRange(wave, start, start + 4)));
+*/    // "data" tag reader
+
+		int
+			msB = wave[21],
+			lsB = wave[20];
+
+		if (msB < 0) {
+			msB = (msB << 24) >> 16;
+			lsB >>>= 24;
+		}
+		else {
+			msB <<= 8;
+			lsB >>>=32;
+		}
+
+
+		int sample = msB + lsB;
+
+
+		int s = 0x0001;
 
 	}
 }

@@ -70,70 +70,104 @@ public class Wave {
 
 		this.fileAddress = fileAddress;
 	}
-
-	public void setWave(){
-
-		setWave(fileAddress);
+	public String getFileAddress() {
+		return fileAddress;
 	}
 
 	public void setWave(String fileAddress){
 
 		this.wave = Loader.loadFile(fileAddress);
 	}
+	public byte[] getWave() {
+		return wave;
+	}
 
 	public void setHeader(){
 
 		this.header = readWave(0, 44);
+	}
+	public String getHeader() {
+		return header;
 	}
 
 	public void setWrapper(){
 
 		this.wrapper = readWave(0, 4);
 	}
+	public String getWrapper() {
+		return wrapper;
+	}
 
 	public void setType(){
 
 		this.type = readWave(8, 4);
+	}
+	public String getType() {
+		return type;
 	}
 
 	public void setFileLength(){
 
 		this.fileLength = ByteBuffer.wrap(wave, 4, 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
 	}
+	public int getFileLength() {
+		return fileLength;
+	}
 
 	public void setFormatSize(){
 
 		this.formatSize = ByteBuffer.wrap(wave, 16, 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
+	}
+	public int getFormatSize() {
+		return formatSize;
 	}
 
 	public void setChannels(){
 
 		this.channels = Short.toUnsignedInt(ByteBuffer.wrap(wave, 22, 2).order(ByteOrder.LITTLE_ENDIAN).getShort());
 	}
+	public int getChannels() {
+		return channels;
+	}
 
 	public void setSampleRate(){
 
 		this.sampleRate = ByteBuffer.wrap(wave, 24, 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
+	}
+	public int getSampleRate() {
+		return sampleRate;
 	}
 
 	public void setSampleSize(){
 
 		this.sampleSize = ByteBuffer.wrap(wave, 28, 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
 	}
+	public int getSampleSize() {
+		return sampleSize;
+	}
 
 	public void setSampleFrameSize(){
 
 		this.sampleFrameSize = Short.toUnsignedInt(ByteBuffer.wrap(wave, 32, 2).order(ByteOrder.LITTLE_ENDIAN).getShort());
+	}
+	public int getSampleFrameSize() {
+		return sampleFrameSize;
 	}
 
 	public void setBitDepth(){
 
 		this.bitDepth = Short.toUnsignedInt(ByteBuffer.wrap(wave, 34, 2).order(ByteOrder.LITTLE_ENDIAN).getShort());
 	}
+	public int getBitDepth() {
+		return bitDepth;
+	}
 
 	public void setDataBlockLength(){
 
 		this.dataBlockLength = ByteBuffer.wrap(wave, 40, 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
+	}
+	public int getDataBlockLength() {
+		return dataBlockLength;
 	}
 
 	public void setSignal(){
@@ -152,19 +186,20 @@ public class Wave {
 				if (j == sampleFrameSize - 1) {
 
 					int
-							cache = (byte) (byteCache[i + j] >>> 7);
+						cache = (byte) (byteCache[i + j] >>> 7);
 
 					sample = cache << 31;
 					cache = (byte) (byteCache[i + j] - (byte) (cache << 7));
 					sample += cache << (j << 3);
 				}
 
-				else {
+				else sample += (byteCache[i + j] << 24) >>> ((sampleFrameSize - j) << 3);
 
-					sample += (byteCache[i + j] << 24) >>> ((sampleFrameSize - j) << 3);
-				}
 			}
 		}
+	}
+	public int[] getSignal() {
+		return signal;
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------
@@ -197,40 +232,13 @@ public class Wave {
 
 //		----------------------------------------------------------------------------------------------------------------
 
-/*
-		byte[] byteCache = { (byte) 0b0000001, (byte) 0b00000000, (byte) 0b11111111 };
-		int sample = 0;
+		Byte[] look = {0x64,0x61,0x74,0x61};
 
-		for (int i = 0 ; i < byteCache.length ; i += sampleFrameSize) {
+//		System.out.println(Arrays.toString(wave));
+//		System.out.println(Arrays.toString(look));
 
-			int
-				j = sampleFrameSize - 1;
-
-			for ( ; j >= 0 ; j-- ){
-
-				if (j == sampleFrameSize - 1){
-
-				int
-					cache = (byte) (byteCache[i + j] >>> 7);
-
-					sample = cache << 31;
-
-					cache = (byte) (byteCache[i + j] - (byte) (cache << 7));
-
-					sample += cache << (j << 3) ;
-				}
-				else{
-
-					sample += (byteCache[i + j] << 24) >>> ((sampleFrameSize - j) << 3);
-
-				}
-			}
-		}
-*/	// disposable
-
-		Byte[] look = {64,61,74,61};
-
-		System.out.println(Arrays.toString(wave));
+		int start = 36;
+		System.out.println(Arrays.toString(Arrays.copyOfRange(wave, start, start + 4)));
 
 	}
 }

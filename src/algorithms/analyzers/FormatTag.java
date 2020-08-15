@@ -11,7 +11,10 @@ public abstract class FormatTag{
 		WAVE_FORMAT_ALAW,
 		WAVE_FORMAT_MULAW,
 		WAVE_FORMAT_EXTENSIBLE;
+
+		public static int[] starts = {44, 58, 58, 58, 72};
 	}
+
 
 	public static HashMap<Integer, FormatTags>
 		formatTags = new HashMap<>();

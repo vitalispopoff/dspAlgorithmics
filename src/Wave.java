@@ -3,7 +3,10 @@ import java.util.Arrays;
 
 import algorithms.analyzers.FormatTag.*;
 
+import static algorithms.analyzers.FormatTag.FormatTags.WAVE_FORMAT_PCM;
+import static algorithms.analyzers.FormatTag.FormatTags.starts;
 import static algorithms.analyzers.FormatTag.getFormatTag;
+import static algorithms.analyzers.BitRepresent.*;
 
 public class Wave {
 
@@ -19,22 +22,23 @@ public class Wave {
 	String
 		header,
 		wrapper;
+
 	FormatTags
 		format;
 
 	int
 		fileLength,
-		formatSize,
+/*		formatSize,*/
 		channels,
 		sampleRate,
-		sampleSize,
+/*		sampleSize,*/		// * disposable ?
 		sampleFrameSize,
 		bitDepth,
 		dataBlockLength;
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	private Wave(){ }
+	/*private*/ Wave(){ }
 
 	public Wave (String fileAddress){
 
@@ -44,12 +48,14 @@ public class Wave {
 		setWrapper();
 		setFormat();
 		setFileLength();
-		setFormatSize();
+/*		setFormatSize();*/
 		setChannels();
 		setSampleRate();
-		setSampleSize();
+/*		setSampleSize();*/		// * disposable?
+		setSampleFrameSize();
 		setBitDepth();
 		setDataBlockLength();
+		setSignal();
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------
@@ -102,6 +108,9 @@ public class Wave {
 
 	public void setFormat(){
 
+		int i = Short.toUnsignedInt(ByteBuffer.wrap(wave, 20, 2).order(ByteOrder.LITTLE_ENDIAN).getShort());
+
+/*
 		int
 			msB = wave[21],
 			lsB = wave[20];
@@ -118,8 +127,9 @@ public class Wave {
 		}
 
 		int index = msB + lsB;
+*/	// * disposable
 
-		this.format = getFormatTag(index);
+		this.format = getFormatTag(i);
 
 	}
 	public FormatTags getFormat() {
@@ -134,13 +144,13 @@ public class Wave {
 		return fileLength;
 	}
 
-	public void setFormatSize(){
+/*	public void setFormatSize(){
 
 		this.formatSize = ByteBuffer.wrap(wave, 16, 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
 	}
 	public int getFormatSize() {
 		return formatSize;
-	}
+	}*/		// * disposable
 
 	public void setChannels(){
 
@@ -158,13 +168,13 @@ public class Wave {
 		return sampleRate;
 	}
 
-	public void setSampleSize(){
+/*	public void setSampleSize(){
 
 		this.sampleSize = ByteBuffer.wrap(wave, 28, 4).order(ByteOrder.LITTLE_ENDIAN).getInt();
 	}
 	public int getSampleSize() {
 		return sampleSize;
-	}
+	}*/		// * disposable ?
 
 	public void setSampleFrameSize(){
 
@@ -190,39 +200,69 @@ public class Wave {
 		return dataBlockLength;
 	}
 
-	public void setSignal(){
+	public void setSignal() {
 
-		signal = new int[dataBlockLength];
+		signal = new int[dataBlockLength / sampleFrameSize];
 
-		byte[]
-				byteCache = Arrays.copyOfRange(wave, 44, 44 + dataBlockLength);
 		int
-			sample = 0;
+			start = starts[format.ordinal()],
+			index = 0;
 
-		for (int i = 0 ; i < byteCache.length ; i += sampleFrameSize) {
+		for (int i = start; i < start + dataBlockLength; i += sampleFrameSize) {
 
-			for (int j = sampleFrameSize - 1; j >= 0; j--) {
+			int
+				sample = wave[i + sampleFrameSize - 1];
 
-				if (j == sampleFrameSize - 1) {
+			boolean
+					flag = sample < 0;
 
-					int
-						cache = (byte) (byteCache[i + j] >>> 7);
+			if (flag)
+				sample <<= (sampleFrameSize - 1) << 3;
 
-					sample = cache << 31;
-					cache = (byte) (byteCache[i + j] - (byte) (cache << 7));
-					sample += cache << (j << 3);
-				}
+			else
+				sample <<= (sampleFrameSize - 1) << 3;
 
-				else sample += (byteCache[i + j] << 24) >>> ((sampleFrameSize - j) << 3);
+			for (int j = 0; j < sampleFrameSize - 1; j++) {
+
+				int
+					aByte = wave[j + i] & 0xFF;
+
+				if (flag)
+					aByte <<= (j) << 3;
+
+				else
+					aByte <<= j << 3;
+
+				sample |= aByte;
 
 			}
+
+			signal[index++] = sample;
 		}
 	}
+
 	public int[] getSignal() {
 		return signal;
 	}
 
-//	--------------------------------------------------------------------------------------------------------------------
+	@Override
+	public String toString() {
+		return "Wave{\n"
+				+ "fileAddress = " + fileAddress + '\n'
+				+ " wrapper = " + wrapper + '\n'
+				+ " format = " + format + '\n'
+				+ " fileLength = " + fileLength + '\n'
+/*				+ " formatSize = " + formatSize + '\n'*/		// * disposable
+				+ " channels = " + channels + '\n'
+				+ " sampleRate = " + sampleRate + '\n'
+/*				+ " sampleSize = " + sampleSize + '\n'*/		// * disposable ?
+				+ " sampleFrameSize = " + sampleFrameSize + '\n'
+				+ " bitDepth = " + bitDepth + '\n'
+				+ " dataBlockLength = " + dataBlockLength
+				+ "\n}";
+	}
+
+	//	--------------------------------------------------------------------------------------------------------------------
 
 	public static void main(String[] args) {
 
@@ -236,50 +276,24 @@ public class Wave {
 					adres_2 = "2_samples-mono-8bit.wav",
 					adres_3 = "shortie-mono-16bit.wav",
 					adres_4 = "2_samples-mono-temp.wav",
-					adress = "C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\" + adres_0;
+					adres_5 = "1kHz_16_mono.wav",
+					adress = "C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\" + adres_5;
 
 			temporal = new Wave(adress);
 
-		}    // load waveFile
+		}    // * load waveFile
 
 		int
-				dataBlockLength = temporal.dataBlockLength,
-				sampleFrameSize = temporal.sampleFrameSize,
-				sampleRate = temporal.sampleRate;
+			dataBlockLength = temporal.dataBlockLength,
+			sampleFrameSize = temporal.sampleFrameSize,
+			sampleRate = temporal.sampleRate,
+			channels = temporal.channels;
 
-		byte[]
-				wave = temporal.wave;
+		int[]
+				signal = temporal.signal;
 
-//		----------------------------------------------------------------------------------------------------------------
+	//	----------------------------------------------------------------------------------------------------------------
 
-		Byte[] look = {0x64, 0x61, 0x74, 0x61};
-
-//		System.out.println(Arrays.toString(wave));
-//		System.out.println(Arrays.toString(look));
-
-/*
-		int start = 36;
-		System.out.println(Arrays.toString(Arrays.copyOfRange(wave, start, start + 4)));
-*/    // "data" tag reader
-
-		int
-			msB = wave[21],
-			lsB = wave[20];
-
-		if (msB < 0) {
-			msB = (msB << 24) >> 16;
-			lsB >>>= 24;
-		}
-		else {
-			msB <<= 8;
-			lsB >>>=32;
-		}
-
-
-		int sample = msB + lsB;
-
-
-		int s = 0x0001;
-
+		System.out.println(Arrays.toString(temporal.signal));
 	}
 }

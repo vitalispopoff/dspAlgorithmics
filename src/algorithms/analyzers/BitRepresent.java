@@ -9,7 +9,7 @@ public abstract class BitRepresent {
 
 	public static String bitRepresent(short number){
 
-		String s = String.format("%16s", Integer.toBinaryString(number)).replace(' ', '0');
+		String s = String.format("%16s", Integer.toBinaryString(number & 0xFFFF)).replace(' ', '0');
 
 		return s.length() > 16 ? s.substring(16, 32) : s;
 	}

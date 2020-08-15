@@ -32,6 +32,26 @@ public class Wave {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
+	private Wave(){ }
+
+	public Wave (String fileAddress){
+
+		setFileAddress(fileAddress);
+		setWave(fileAddress);
+		setHeader();
+		setWrapper();
+		setType();
+		setFileLength();
+		setFormatSize();
+		setChannels();
+		setSampleRate();
+		setSampleSize();
+		setBitDepth();
+		setDataBlockLength();
+	}
+
+//	--------------------------------------------------------------------------------------------------------------------
+
 	private String readWave(int start, int length){
 
 		StringBuilder
@@ -147,42 +167,24 @@ public class Wave {
 		}
 	}
 
-	private int convertFrom2sComplement(byte[] sample){
-
-//		String[] cache = new String[sample.length];
-
-	return 0;
-	}
-
 //	--------------------------------------------------------------------------------------------------------------------
 
 	public static void main(String[] args) {
 
 		Wave
-			temporal = new Wave();
+			temporal;
 
 		{
 			String
-					adres_0 = "2_samples-mono.wav",
-					adres_1 = "2_samples.wav",
-					adres_2 = "2_samples-mono-8bit.wav",
-					adres_3 = "shortie-mono-16bit.wav",
-					adres_4 = "2_samples-mono-temp.wav";
+				adres_0 = "2_samples-mono.wav",
+				adres_1 = "2_samples.wav",
+				adres_2 = "2_samples-mono-8bit.wav",
+				adres_3 = "shortie-mono-16bit.wav",
+				adres_4 = "2_samples-mono-temp.wav",
+				adress = "C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\" + adres_0;
 
-			temporal.setFileAddress("C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\" + adres_0);
-			temporal.setWave(temporal.fileAddress);
-			temporal.setHeader();
-			temporal.setWrapper();
-			temporal.setType();
-			temporal.setFileLength();
-			temporal.setFormatSize();
-			temporal.setChannels();
-			temporal.setSampleRate();
-			temporal.setSampleSize();
-			temporal.setSampleFrameSize();
-			temporal.setBitDepth();
-			temporal.setDataBlockLength();
-//		temporal.setSignal();
+			temporal = new Wave(adress);
+
 		}	// load waveFile
 
 			int
@@ -194,33 +196,6 @@ public class Wave {
 				wave = temporal.wave;
 
 //		----------------------------------------------------------------------------------------------------------------
-
-/*
-		byte[]
-			byteCache = Arrays.copyOfRange(wave, 44, 44 + dataBlockLength);
-
-		int[]
-			samples = new int[dataBlockLength / sampleFrameSize];
-
-		byte
-//			msb,
-			middleByte,
-			nullByte = 0;
-
-		int
-			msb = (byteCache[2]>>> 7) << 31,
-			middleBit;
-
-		byte msBCache = (byte) (byteCache[2] - (byte) ((byteCache[2] >>> 7) << 7));
-
-		int msB = msBCache << 24;
-
-		int sample = msb + msB;
-
-
-		System.out.println(bitRepresent(sample));
-		System.out.println(sample);
-*/
 
 /*
 		byte[] byteCache = { (byte) 0b0000001, (byte) 0b00000000, (byte) 0b11111111 };
@@ -253,8 +228,9 @@ public class Wave {
 		}
 */	// disposable
 
+		Byte[] look = {64,61,74,61};
 
-
+		System.out.println(Arrays.toString(wave));
 
 	}
 }

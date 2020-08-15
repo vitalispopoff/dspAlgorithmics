@@ -2,6 +2,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
+import static algorithms.analyzers.BitRepresent.bitRepresent;
+
 public class Wave {
 
 	String
@@ -118,9 +120,31 @@ public class Wave {
 
 		signal = new int[dataBlockLength];
 
-		for(int i = 0 ; i < dataBlockLength ; i++)
-			signal[i] = Byte.toUnsignedInt(wave[i + 44]) /*- (1 << (bitDepth - 1))*/;
+		byte[]
+				byteCache = Arrays.copyOfRange(wave, 44, 44 + dataBlockLength);
+		int
+			sample = 0;
 
+		for (int i = 0 ; i < byteCache.length ; i += sampleFrameSize) {
+
+			for (int j = sampleFrameSize - 1; j >= 0; j--) {
+
+				if (j == sampleFrameSize - 1) {
+
+					int
+							cache = (byte) (byteCache[i + j] >>> 7);
+
+					sample = cache << 31;
+					cache = (byte) (byteCache[i + j] - (byte) (cache << 7));
+					sample += cache << (j << 3);
+				}
+
+				else {
+
+					sample += (byteCache[i + j] << 24) >>> ((sampleFrameSize - j) << 3);
+				}
+			}
+		}
 	}
 
 	private int convertFrom2sComplement(byte[] sample){
@@ -134,85 +158,100 @@ public class Wave {
 
 	public static void main(String[] args) {
 
-		String
-			adres_0 = "2_samples-mono.wav",
-			adres_1 = "2_samples.wav",
-			adres_2 = "2_samples-mono-8bit.wav",
-			adres_3 = "shortie-mono-16bit.wav";
+		Wave
+			temporal = new Wave();
 
+		{
+			String
+					adres_0 = "2_samples-mono.wav",
+					adres_1 = "2_samples.wav",
+					adres_2 = "2_samples-mono-8bit.wav",
+					adres_3 = "shortie-mono-16bit.wav",
+					adres_4 = "2_samples-mono-temp.wav";
 
-		Wave temporal = new Wave();
-
-		temporal.setFileAddress("C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\"+adres_0);
-		temporal.setWave(temporal.fileAddress);
-		temporal.setHeader();
-		temporal.setWrapper();
-		temporal.setType();
-		temporal.setFileLength();
-		temporal.setFormatSize();
-		temporal.setChannels();
-		temporal.setSampleRate();
-		temporal.setSampleSize();
-		temporal.setSampleFrameSize();
-		temporal.setBitDepth();
-		temporal.setDataBlockLength();
+			temporal.setFileAddress("C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\" + adres_0);
+			temporal.setWave(temporal.fileAddress);
+			temporal.setHeader();
+			temporal.setWrapper();
+			temporal.setType();
+			temporal.setFileLength();
+			temporal.setFormatSize();
+			temporal.setChannels();
+			temporal.setSampleRate();
+			temporal.setSampleSize();
+			temporal.setSampleFrameSize();
+			temporal.setBitDepth();
+			temporal.setDataBlockLength();
 //		temporal.setSignal();
+		}	// load waveFile
 
+			int
+				dataBlockLength = temporal.dataBlockLength,
+				sampleFrameSize = temporal.sampleFrameSize,
+				sampleRate = temporal.sampleRate;
 
-		int
-			dataBlockLength = temporal.dataBlockLength,
-			sampleFrameSize = temporal.sampleFrameSize;
-		byte[] wave = temporal.wave;
+			byte[]
+				wave = temporal.wave;
 
+//		----------------------------------------------------------------------------------------------------------------
 
-//		-------------------------------------------------
-
-//		System.out.println(sampleFrameSize);
-
-
-
+/*
 		byte[]
 			byteCache = Arrays.copyOfRange(wave, 44, 44 + dataBlockLength);
-
-//		System.out.println(Arrays.toString(byteCache));
-
 
 		int[]
 			samples = new int[dataBlockLength / sampleFrameSize];
 
-		samples[0] =
-				Byte.toUnsignedInt(byteCache[0])
-				+ Byte.toUnsignedInt(byteCache[1]) << 8
-				+ Byte.toUnsignedInt(byteCache[2]) << 16;
+		byte
+//			msb,
+			middleByte,
+			nullByte = 0;
+
+		int
+			msb = (byteCache[2]>>> 7) << 31,
+			middleBit;
+
+		byte msBCache = (byte) (byteCache[2] - (byte) ((byteCache[2] >>> 7) << 7));
+
+		int msB = msBCache << 24;
+
+		int sample = msb + msB;
+
+
+		System.out.println(bitRepresent(sample));
+		System.out.println(sample);
+*/
 
 /*
-		byte[] sample0 = new byte[4];
-		sample0[0] = byteCache[0];
-		sample0[2] = (byte) (byteCache[1] >> 4);
-		sample0[1] = (byte) (byteCache[1] - sample0[2]);
-		sample0[3] = byteCache[2];
+		byte[] byteCache = { (byte) 0b0000001, (byte) 0b00000000, (byte) 0b11111111 };
+		int sample = 0;
+
+		for (int i = 0 ; i < byteCache.length ; i += sampleFrameSize) {
+
+			int
+				j = sampleFrameSize - 1;
+
+			for ( ; j >= 0 ; j-- ){
+
+				if (j == sampleFrameSize - 1){
+
+				int
+					cache = (byte) (byteCache[i + j] >>> 7);
+
+					sample = cache << 31;
+
+					cache = (byte) (byteCache[i + j] - (byte) (cache << 7));
+
+					sample += cache << (j << 3) ;
+				}
+				else{
+
+					sample += (byteCache[i + j] << 24) >>> ((sampleFrameSize - j) << 3);
+
+				}
+			}
+		}
 */	// disposable
-
-
-		int[] sample1 = new int[4];
-		sample1[0] = byteCache[0];
-		sample1[2] = (byteCache[1] >> 4);
-		sample1[1] = (byte) (byteCache[1] - sample1[2] << 4);
-		sample1[3] = byteCache[2];
-
-		int[] sample2 = new int[2];
-
-		sample2[0] = byteCache[0] + (byteCache[1] - (byteCache[1] >> 4) << 4) << 8;
-		sample2[1] = (byteCache[1] >> 4) + byteCache[2] << 8;
-
-		;
-
-
-
-
-
-
-
 
 
 

@@ -28,7 +28,7 @@ public class Wave {
 
 	int
 		fileLength,
-/*		formatSize,*/
+/*		formatSize,*/		// * disposable
 		channels,
 		sampleRate,
 /*		sampleSize,*/		// * disposable ?
@@ -38,17 +38,17 @@ public class Wave {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	/*private*/ Wave(){ }
+	private Wave(){ }
 
 	public Wave (String fileAddress){
 
 		setFileAddress(fileAddress);
 		setWave(fileAddress);
-		setHeader();
-		setWrapper();
+/*		setHeader();*/		// * disposable
+/*		setWrapper();*/		// * disposable
 		setFormat();
 		setFileLength();
-/*		setFormatSize();*/
+/*		setFormatSize();*/		// * disposable
 		setChannels();
 		setSampleRate();
 /*		setSampleSize();*/		// * disposable?
@@ -60,7 +60,7 @@ public class Wave {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	private String readWave(int start, int length){
+/*	private String readWave(int start, int length){
 
 		StringBuilder
 				cache = new StringBuilder();
@@ -72,7 +72,7 @@ public class Wave {
 				cache.append((char) wave[i]);
 
 		return cache.toString();
-	}
+	}*/	// * disposable
 
 	public void setFileAddress(String fileAddress){
 
@@ -90,21 +90,21 @@ public class Wave {
 		return wave;
 	}
 
-	public void setHeader(){
+/*	public void setHeader(){
 
 		this.header = readWave(0, 44);
 	}
 	public String getHeader() {
 		return header;
-	}
+	}*/	// * disposable
 
-	public void setWrapper(){
+/*	public void setWrapper(){
 
 		this.wrapper = readWave(0, 4);
 	}
 	public String getWrapper() {
 		return wrapper;
-	}
+	}*/	// * disposable
 
 	public void setFormat(){
 

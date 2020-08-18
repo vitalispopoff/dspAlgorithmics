@@ -1,8 +1,20 @@
+package algorithms.processors;
+
+import com.sun.deploy.security.SelectableSecurityManager;
+
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
 
+import static java.nio.file.Files.exists;
+
 public class Loader implements Serializable {
+
+
+	public static boolean verifyFileExistence(String fileAddress){
+
+		return exists(Paths.get(fileAddress));
+	}
 
 	public static byte[] loadFile(String fileAddress){
 
@@ -11,14 +23,19 @@ public class Loader implements Serializable {
 		byte[]
 			wave = {};
 
-		try {
 
-			wave = Files.readAllBytes(filePath);
-		}
-		catch (IOException e) {
+		if (exists(filePath)) {
+			try {
 
-			e.printStackTrace();
+				wave = Files.readAllBytes(filePath);
+			}
+			catch (IOException e) {
+
+				e.printStackTrace();
+			}
 		}
+
+		else System.out.println("I can't find file: "+ filePath +'.');
 
 		return wave;
 	}

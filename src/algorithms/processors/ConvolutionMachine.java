@@ -1,3 +1,5 @@
+//	@formatter:off
+
 package algorithms.processors;
 
 public abstract class ConvolutionMachine {
@@ -38,6 +40,6 @@ public abstract class ConvolutionMachine {
 
 		return result;
 	}
-
-
 }
+
+//	@formatter:on

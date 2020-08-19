@@ -2,10 +2,10 @@
 
 package data;
 
-import algorithms.processors.metaProcessors.ChannelSplitter;
+import algorithms.processors.metaProcessors.ChannelSplitter;import algorithms.processors.metaProcessors.FileContentReader;
 
-import static algorithms.analyzers.FormatTag.FormatTags.starts;
-import static algorithms.processors.metaProcessors.FileManager.*;
+import java.util.Arrays;import static algorithms.analyzers.FormatTag.FormatTags.starts;
+import static algorithms.processors.metaProcessors.FileContentReader.dataFrameReader;import static algorithms.processors.metaProcessors.FileManager.*;
 
 public class Wave {
 
@@ -30,13 +30,13 @@ public class Wave {
 
 	public Wave (String fileAddress){
 
-		setHeader();	// prevents NullPointerException when file is not found.
+		setHeader(null);	// prevents NullPointerException when file is not found.
 
 		if(verifyFileExistence(fileAddress)){
 
 			setFileAddress(fileAddress);
 			setFileContent(fileAddress);
-			setHeader();
+			setHeader(fileContent);
 			setSignal();
 		}
 	}
@@ -47,28 +47,34 @@ public class Wave {
 
 		this.fileAddress = fileAddress;
 	}
+
 	public String getFileAddress() {
 
 		return fileAddress;
 	}
 
+
 	public void setFileContent(String fileAddress){
 
 		this.fileContent = loadFile(fileAddress);
 	}
+
 	public byte[] getFileContent() {
 
 		return fileContent;
 	}
 
-	public void setHeader(){
+
+	public void setHeader(byte[] fileContent){
 
 		this.header = WaveHeader.instanceOf(fileContent);
 	}
+
 	public WaveHeader getHeader(){
 
 		return header;
 	}
+
 
 	public void setSignal() {
 		
@@ -82,44 +88,39 @@ public class Wave {
 
 		for (int i = start; i < start + dataBlockLength; i += sampleFrameSize) {
 
-			int
+/*			int
 				sample = fileContent[i + sampleFrameSize - 1];
 
-			boolean
-				flag = sample < 0;
-
-			if (flag)
-				sample <<= (sampleFrameSize - 1) << 3;
-
-			else
-				sample <<= (sampleFrameSize - 1) << 3;
+			sample <<= (sampleFrameSize - 1) << 3;
 
 			for (int j = 0; j < sampleFrameSize - 1; j++) {
 
 				int
 					aByte = fileContent[j + i] & 0xFF;
 
-				if (flag)
-					aByte <<= (j) << 3;
-
-				else
-					aByte <<= j << 3;
+				aByte <<= j << (3 * (j + 1));
 
 				sample |= aByte;
-			}
+			}*/		// * disposable
+
+			int
+			 sample = dataFrameReader(Arrays.copyOfRange(fileContent, i, i + sampleFrameSize));
 
 			signal[index++] = sample;
 		}
 	}
+
 	public int[] getSignal() {
 
 		return signal;
 	}
 
+
 	public void setChannels(){
 
 		this.channels = ChannelSplitter.splitChannels(this);
 	}
+
 	public int[][] getChannels(){
 
 		return channels;
@@ -144,23 +145,21 @@ public class Wave {
 		Wave
 			temporal;
 
-		String
-			address_folder = "C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\";
-
 		{
 			String
+				address_folder = "C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\",
+
 				address_0 = "2_samples-mono.wav",
-				address_1 = "2_samples.wav",
-				address_2 = "2_samples-mono-8bit.wav",
-				address_3 = "shortie-mono-16bit.wav",
-				address_4 = "2_samples-mono-temp.wav",
-				address_5 = "1kHz_16_mono.wav",
-				address_6 = "2_samples-mono.aiff",
+				address_1 = "2_samples-mono-8bit.wav",
+				address_2 = "2_samples-mono-byte_unsigned.wav",
+				address_3 = "2_samples-mono-8bit.wav",
+				address_4 = "2_samples-mono-float.wav",
+				address_5 = "2_samples-mono-double.wav",
 
 				address_400 = "*.wav",
 				address_404 = "nope.wave",
 
-				address =  address_folder + address_6;
+				address =  address_folder + address_0;
 
 			temporal = new Wave(address);
 
@@ -178,6 +177,13 @@ public class Wave {
 			signal = temporal.signal;
 
 	//	----------------------------------------------------------------------------------------------------------------
+
+//		System.out.println(temporal);
+
+		System.out.println(Arrays.toString(temporal.signal));
+
+
+
 
 	}
 }

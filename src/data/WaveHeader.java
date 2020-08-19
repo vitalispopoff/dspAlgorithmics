@@ -59,6 +59,7 @@ public class WaveHeader {
 		this.format = getFormatTag(i);
 
 	}
+
 	public FormatTags getFormat() {
 
 		return format;
@@ -69,16 +70,19 @@ public class WaveHeader {
 		return format.ordinal();
 	}
 
+
 	public void setFileLength(byte[] fileContent){
 
 		this.fileLength = ByteBuffer.wrap(fileContent, 4, 4)
 									.order(ByteOrder.LITTLE_ENDIAN)
 									.getInt();
 	}
+
 	public int getFileLength() {
 
 		return fileLength;
 	}
+
 
 	public void setNumberOfChannels(byte[] fileContent){
 
@@ -86,10 +90,12 @@ public class WaveHeader {
 										.order(ByteOrder.LITTLE_ENDIAN)
 										.getShort());
 	}
+
 	public int getNumberOfChannels() {
 
 		return numberOfChannels;
 	}
+
 
 	public void setSampleRate(byte[] fileContent){
 
@@ -97,10 +103,12 @@ public class WaveHeader {
 									.order(ByteOrder.LITTLE_ENDIAN)
 									.getInt();
 	}
+
 	public int getSampleRate() {
 
 		return sampleRate;
 	}
+
 
 	public void setSampleFrameSize(byte[] fileContent){
 
@@ -108,10 +116,12 @@ public class WaveHeader {
 									.order(ByteOrder.LITTLE_ENDIAN)
 									.getShort());
 	}
+
 	public int getSampleFrameSize() {
 
 		return sampleFrameSize;
 	}
+
 
 	public void setBitDepth(byte[] fileContent){
 
@@ -119,10 +129,12 @@ public class WaveHeader {
 								.order(ByteOrder.LITTLE_ENDIAN)
 								.getShort());
 	}
+
 	public int getBitDepth() {
 
 		return bitDepth;
 	}
+
 
 	public void setDataBlockLength(byte[] fileContent){
 
@@ -130,6 +142,7 @@ public class WaveHeader {
 											.order(ByteOrder.LITTLE_ENDIAN)
 											.getInt();
 	}
+
 	public int getDataBlockLength() {
 
 		return dataBlockLength;

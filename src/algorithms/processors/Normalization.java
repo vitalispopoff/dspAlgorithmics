@@ -10,11 +10,14 @@ public abstract class Normalization {
 
 		int[]
 			limits = getLimits(signal, bitDepth);
+
 		int
 			peak = Math.max(Math.abs(limits[0]), limits[1]),
-			limit = peak == limits[1]
-						? limits[3]
-						: Math.abs(limits[2]);
+			limit =
+				peak == limits[1]
+				? limits[3]
+				: Math.abs(limits[2]);
+
 		double
 			normalization = ((double) limit) / ((double) peak);
 

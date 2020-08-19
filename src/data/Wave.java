@@ -2,27 +2,26 @@
 
 package data;
 
-import algorithms.processors.metaProcessors.ChannelSplitter;import algorithms.processors.metaProcessors.FileContentReader;
+import static java.util.Arrays.copyOfRange;
 
-import java.util.Arrays;import static algorithms.analyzers.FormatTag.FormatTags.starts;
-import static algorithms.processors.metaProcessors.FileContentReader.dataFrameReader;import static algorithms.processors.metaProcessors.FileManager.*;
+import static data.WaveHeader.instanceOf;
+
+import static algorithms.analyzers.FormatTag.FormatTags.starts;
+
+import static algorithms.metaProcessors.FileManager.*;
+import static algorithms.metaProcessors.ChannelSplitter.splitChannels;
+import static algorithms.metaProcessors.FileContentReader.dataFrameReader;
 
 public class Wave {
 
 	public String
 		fileAddress;
 
-	public byte[]
-		fileContent;
-
 	public WaveHeader
 		header;
 
-	public int[]
-		signal;
-
 	public int[][]
-		channels;
+		channelSignals;
 
 //	--------------------------------------------------------------------------------------------------------------------
 
@@ -32,12 +31,14 @@ public class Wave {
 
 		setHeader(null);	// prevents NullPointerException when file is not found.
 
-		if(verifyFileExistence(fileAddress)){
+		if(verifyFile(fileAddress)){
+
+			byte[]
+				fileContent = loadFile(fileAddress);
 
 			setFileAddress(fileAddress);
-			setFileContent(fileAddress);
 			setHeader(fileContent);
-			setSignal();
+			setChannelSignals(fileContent);
 		}
 	}
 
@@ -54,20 +55,9 @@ public class Wave {
 	}
 
 
-	public void setFileContent(String fileAddress){
-
-		this.fileContent = loadFile(fileAddress);
-	}
-
-	public byte[] getFileContent() {
-
-		return fileContent;
-	}
-
-
 	public void setHeader(byte[] fileContent){
 
-		this.header = WaveHeader.instanceOf(fileContent);
+		this.header = instanceOf(fileContent);
 	}
 
 	public WaveHeader getHeader(){
@@ -76,54 +66,39 @@ public class Wave {
 	}
 
 
-	public void setSignal() {
-		
+	public void setChannelSignals(byte[] fileContent){
+
+		int[]
+			signal = setSignal(fileContent);
+
+		this.channelSignals = splitChannels(this, signal);
+	}
+
+	public int[][] getChannelSignals(){
+
+		return channelSignals;
+	}
+
+	private int[] setSignal(byte[] fileContent) {
+
 		int
 			dataBlockLength = header.getDataBlockLength(),
 			sampleFrameSize = header.getSampleFrameSize(),
 			start = starts[header.getFormatOrdinal()],
 			index = 0;
-		
-		signal = new int[dataBlockLength / sampleFrameSize];
 
-		for (int i = start; i < start + dataBlockLength; i += sampleFrameSize) {
+		int[]
+			signal = new int[dataBlockLength / sampleFrameSize];
 
-/*			int
-				sample = fileContent[i + sampleFrameSize - 1];
+		for (int i = start; i < start + dataBlockLength; i += sampleFrameSize){
 
-			sample <<= (sampleFrameSize - 1) << 3;
+			byte[]
+				bytes = copyOfRange(fileContent, i, i + sampleFrameSize);
 
-			for (int j = 0; j < sampleFrameSize - 1; j++) {
-
-				int
-					aByte = fileContent[j + i] & 0xFF;
-
-				aByte <<= j << (3 * (j + 1));
-
-				sample |= aByte;
-			}*/		// * disposable
-
-			int
-			 sample = dataFrameReader(Arrays.copyOfRange(fileContent, i, i + sampleFrameSize));
-
-			signal[index++] = sample;
+			signal[index++] = dataFrameReader(bytes);
 		}
-	}
-
-	public int[] getSignal() {
 
 		return signal;
-	}
-
-
-	public void setChannels(){
-
-		this.channels = ChannelSplitter.splitChannels(this);
-	}
-
-	public int[][] getChannels(){
-
-		return channels;
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------
@@ -133,9 +108,8 @@ public class Wave {
 
 		return "Wave{\n"
 				+ "fileAddress = "
-				+ fileAddress
-				+ '\n'
-				+ header.toString();
+				+ fileAddress + '\n'
+				+ header.toString() + "}\n";
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------
@@ -169,21 +143,7 @@ public class Wave {
 			dataBlockLength = temporal.header.dataBlockLength,
 			sampleFrameSize = temporal.header.sampleFrameSize,
 			sampleRate = temporal.header.sampleRate,
-			channels = temporal.header.numberOfChannels,
-
-			nope = 0;
-
-		int[]
-			signal = temporal.signal;
-
-	//	----------------------------------------------------------------------------------------------------------------
-
-//		System.out.println(temporal);
-
-		System.out.println(Arrays.toString(temporal.signal));
-
-
-
+			channels = temporal.header.numberOfChannels;
 
 	}
 }

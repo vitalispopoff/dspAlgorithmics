@@ -1,22 +1,25 @@
 //	@formatter:off
 
-package algorithms.processors.metaProcessors;
+package algorithms.metaProcessors;
 
 public interface FileContentReader {
 
 	static int dataFrameReader(byte[] frame){
 
 		int
-			sample = frame[frame.length - 1];
+			sample = frame[frame.length - 1],
+			byteShift = (frame.length - 1) << 3;
 
-		sample <<= (frame.length - 1) << 3;
+		sample <<= byteShift;
 
 		for (int i = 0; i < frame.length - 1; i++){
+
+			byteShift = i << 3;
 
 			int
 				b = frame[i] & 0xFF;
 
-			b <<= i << 3;
+			b <<= byteShift;
 
 			sample |= b;
 		}

@@ -2,7 +2,7 @@
 
 package algorithms.metaProcessors;
 
-public interface FileContentReader {
+public interface FileContentConverter {
 
 	static int dataFrameReader(byte[] frame){
 
@@ -25,6 +25,11 @@ public interface FileContentReader {
 		}
 
 		return sample;
+	}
+
+	static byte[] dataFrameWriter(int frame){
+
+		return new byte[0];
 	}
 }
 

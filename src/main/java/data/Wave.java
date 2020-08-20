@@ -10,7 +10,7 @@ import static algorithms.analyzers.FormatTag.FormatTags.starts;
 
 import static algorithms.metaProcessors.FileManager.*;
 import static algorithms.metaProcessors.ChannelSplitter.splitChannels;
-import static algorithms.metaProcessors.FileContentReader.dataFrameReader;
+import static algorithms.metaProcessors.FileContentConverter.dataFrameReader;
 
 public class Wave {
 

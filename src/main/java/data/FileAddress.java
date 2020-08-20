@@ -8,7 +8,7 @@ import java.util.*;
 
 public class FileAddress {
 
-	private static HashMap<String, String>
+	private static final HashMap<String, String>
 		fileExtensions = new HashMap<>();
 
 	static {
@@ -47,16 +47,19 @@ public class FileAddress {
 
 		return catalogPath;
 	}
+
 	public void setCatalogPath(String catalogPath) {
 
 		this.catalogPath = catalogPath;
 	}
 
 
+
 	public String getFileName() {
 
 		return fileName;
 	}
+
 	public void setFileName(String fileName) {
 
 		this.fileName = fileName;
@@ -74,16 +77,25 @@ public class FileAddress {
 	}
 
 
+
 	public String getFileExtension() {
 
 		return fileExtension;
 	}
+
 	public void setFileExtension(String fileExtension) {
 
 		this.fileExtension = fileExtension;
 	}
 
-	public static String establishFileExtension(byte[] fileContent){
+	public void setFileExtensions(byte[] fileContent){
+
+		this.fileExtension = establishFileExtension(fileContent);
+	}
+
+
+
+	static String establishFileExtension(byte[] fileContent){
 
 		byte[]
 			cache = Arrays.copyOfRange(fileContent, 8, 12);
@@ -98,6 +110,10 @@ public class FileAddress {
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------
+
+	public int dupa(){
+		return 0;
+	}
 
 	public static void main(String[] args) {
 

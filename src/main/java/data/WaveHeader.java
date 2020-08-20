@@ -2,10 +2,10 @@
 
 package data;
 
+import java.nio.*;
 import algorithms.analyzers.FormatTag.FormatTags;
 
-import java.nio.*;
-
+import static java.nio.ByteBuffer.wrap;
 import static algorithms.analyzers.FormatTag.getFormatTag;
 
 public class WaveHeader {
@@ -51,7 +51,7 @@ public class WaveHeader {
 	public void setFormat(byte[]fileContent){
 
 		ByteBuffer
-			buffer = ByteBuffer.wrap(fileContent, 20, 2);
+			buffer = wrap(fileContent, 20, 2);
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -78,7 +78,7 @@ public class WaveHeader {
 	public void setFileLength(byte[] fileContent){
 
 		ByteBuffer
-			buffer = ByteBuffer.wrap(fileContent, 4, 4);
+			buffer = wrap(fileContent, 4, 4);
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -94,7 +94,7 @@ public class WaveHeader {
 	public void setNumberOfChannels(byte[] fileContent){
 
 		ByteBuffer
-			buffer = ByteBuffer.wrap(fileContent, 22, 2);
+			buffer = wrap(fileContent, 22, 2);
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -113,7 +113,7 @@ public class WaveHeader {
 	public void setSampleRate(byte[] fileContent){
 
 		ByteBuffer
-			buffer = ByteBuffer.wrap(fileContent, 24, 4);
+			buffer = wrap(fileContent, 24, 4);
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -129,7 +129,7 @@ public class WaveHeader {
 	public void setSampleFrameSize(byte[] fileContent){
 
 		ByteBuffer
-			buffer = ByteBuffer.wrap(fileContent, 32, 2);
+			buffer = wrap(fileContent, 32, 2);
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -148,7 +148,7 @@ public class WaveHeader {
 	public void setBitDepth(byte[] fileContent){
 
 		ByteBuffer
-			buffer = ByteBuffer.wrap(fileContent, 34, 2);
+			buffer = wrap(fileContent, 34, 2);
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -167,7 +167,7 @@ public class WaveHeader {
 	public void setDataBlockLength(byte[] fileContent){
 
 		ByteBuffer
-			buffer = ByteBuffer.wrap(fileContent, 40, 4);
+			buffer = wrap(fileContent, 40, 4);
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 

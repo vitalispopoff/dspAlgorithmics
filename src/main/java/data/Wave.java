@@ -123,12 +123,12 @@ public class Wave {
 			String
 				address_folder = "C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\",
 
-				address_0 = "2_samples-mono.wav",
-				address_1 = "2_samples-mono-8bit.wav",
-				address_2 = "2_samples-mono-byte_unsigned.wav",
-				address_3 = "2_samples-mono-8bit.wav",
-				address_4 = "2_samples-mono-float.wav",
-				address_5 = "2_samples-mono-double.wav",
+				address_0 = "sample-mono.wav",
+				address_1 = "sample-mono-byte.wav",
+				address_2 = "sample-mono-byte_unsigned.wav",
+				address_3 = "sample-mono-byte.wav",
+				address_4 = "sample-mono-float.wav",
+				address_5 = "sample-mono-double.wav",
 
 				address_400 = "*.wav",
 				address_404 = "nope.wave",

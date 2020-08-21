@@ -8,7 +8,12 @@ import java.nio.file.*;
 import static java.nio.file.Files.*;
 import static java.nio.file.Paths.get;
 
-public class FileManager implements Serializable {
+public abstract class FileManager implements Serializable {
+
+	static int
+		currentFileIndex = 0;
+
+//	--------------------------------------------------------------------------------------------------------------------
 
 	public static void saveFile(String fileAddress, byte[] wave){
 
@@ -53,6 +58,8 @@ public class FileManager implements Serializable {
 		return wave;
 	}
 
+
+
 	public static boolean verifyFile(String fileAddress){
 
 		boolean
@@ -66,7 +73,11 @@ public class FileManager implements Serializable {
 			fileExists = exists(filePath);
 
 			if (!fileExists)
-				System.out.println("\n\t I can't find file: " + fileAddress + "\n");
+
+				System.out.println(
+					"\n\t I can't find file: "
+					+ fileAddress + "\n"
+				);
 
 			return fileExists;
 		}
@@ -74,25 +85,13 @@ public class FileManager implements Serializable {
 		catch (InvalidPathException e){
 
 			System.out.println(
-					"\n\tI can't read the fileAddress: "
-							+ fileAddress
-							+ "\n\tYou may need to check the spelling.\n"
+				"\n\tI can't read the fileAddress: "
+				+ fileAddress
+				+ "\n\tYou may need to check the spelling.\n"
 			);
 
 			return false;
 		}
-	}
-
-//	--------------------------------------------------------------------------------------------------------------------
-
-	public static void main(String[] args) {
-
-		String
-			address_404 = "404.wav",
-			address_mistake = "*.wav",
-			address = "C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\" + address_404;
-
-		loadFile(address);
 	}
 }
 

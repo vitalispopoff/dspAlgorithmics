@@ -24,14 +24,14 @@ public class FileAddress {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	public FileAddress(String catalogPath, String fileName, String fileExtension) {
+	public FileAddress(String catalogPath, String fileName, String fileExtension){
 
 		this.catalogPath = catalogPath;
 		this.fileName = fileName;
 		this.fileExtension = fileExtension;
 	}
 
-	public FileAddress(String catalogPath, String fileExtension) {
+	public FileAddress(String catalogPath, String fileExtension){
 
 		this(catalogPath, getTemporalName(), fileExtension);
 	}
@@ -43,29 +43,29 @@ public class FileAddress {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	public String getCatalogPath() {
+	public String getCatalogPath( ){
 
 		return catalogPath;
 	}
 
-	public void setCatalogPath(String catalogPath) {
+	public void setCatalogPath(String catalogPath){
 
 		this.catalogPath = catalogPath;
 	}
 
 
 
-	public String getFileName() {
+	public String getFileName( ){
 
 		return fileName;
 	}
 
-	public void setFileName(String fileName) {
+	public void setFileName(String fileName){
 
 		this.fileName = fileName;
 	}
 
-	private static String getTemporalName() {
+	private static String getTemporalName( ){
 
 		LocalDateTime
 			now = LocalDateTime.now();
@@ -78,12 +78,12 @@ public class FileAddress {
 
 
 
-	public String getFileExtension() {
+	public String getFileExtension( ){
 
 		return fileExtension;
 	}
 
-	public void setFileExtension(String fileExtension) {
+	public void setFileExtension(String fileExtension){
 
 		this.fileExtension = fileExtension;
 	}
@@ -104,20 +104,10 @@ public class FileAddress {
 			builder = new StringBuilder();
 
 		for(byte b : cache)
+
 			builder.append((char) b);
 
 		return fileExtensions.get(builder.toString());
-	}
-
-//	--------------------------------------------------------------------------------------------------------------------
-
-	public int dupa(){
-		return 0;
-	}
-
-	public static void main(String[] args) {
-
-
 	}
 }
 

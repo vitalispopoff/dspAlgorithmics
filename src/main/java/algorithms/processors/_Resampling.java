@@ -1,8 +1,8 @@
 package algorithms.processors;
 
-public abstract class _Resampling {
+public interface _Resampling {
 
-	public int[] resample(int bitDepth){
+	static int[] resample(int bitDepth){
 
 		int[]
 			result = {};

@@ -25,7 +25,7 @@ public class Wave {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	private Wave() { }
+	private Wave( ){ }
 
 	public Wave (String fileAddress){
 
@@ -39,6 +39,8 @@ public class Wave {
 			setFileAddress(fileAddress);
 			setHeader(fileContent);
 			setChannelSignals(fileContent);
+
+			FileCache.addToCache(this);
 		}
 	}
 
@@ -49,10 +51,11 @@ public class Wave {
 		this.fileAddress = fileAddress;
 	}
 
-	public String getFileAddress() {
+	public String getFileAddress( ){
 
 		return fileAddress;
 	}
+
 
 
 	public void setHeader(byte[] fileContent){
@@ -60,10 +63,11 @@ public class Wave {
 		this.header = instanceOf(fileContent);
 	}
 
-	public WaveHeader getHeader(){
+	public WaveHeader getHeader( ){
 
 		return header;
 	}
+
 
 
 	public void setChannelSignals(byte[] fileContent){
@@ -74,7 +78,7 @@ public class Wave {
 		this.channelSignals = splitChannels(this, signal);
 	}
 
-	public int[][] getChannelSignals(){
+	public int[][] getChannelSignals( ){
 
 		return channelSignals;
 	}
@@ -104,7 +108,7 @@ public class Wave {
 //	--------------------------------------------------------------------------------------------------------------------
 
 	@Override
-	public String toString() {
+	public String toString( ){
 
 		return "Wave{\n"
 				+ "fileAddress = "
@@ -114,14 +118,14 @@ public class Wave {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	public static void main(String[] args) {
+	public static void main(String[] args){
 
 		Wave
 			temporal;
 
 		{
 			String
-				address_folder = "C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\",
+				address_folder = "src\\main\\resources\\",
 
 				address_0 = "sample-mono.wav",
 				address_1 = "sample-mono-byte.wav",

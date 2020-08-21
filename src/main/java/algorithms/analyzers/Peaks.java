@@ -4,14 +4,12 @@ package algorithms.analyzers;
 
 import static java.lang.Integer.*;
 
-public class Peaks {
+public abstract class Peaks {
 
 	public static int[] getLimits(int[] signal, int bitDepth){
 
 		int
-			max = (int) (Math.pow(2, bitDepth));
-
-		max >>= 1;
+			max = 1 << (bitDepth - 1);
 
 		int[]
 			result = {max - 1, -max, -max, max - 1};
@@ -34,7 +32,7 @@ public class Peaks {
 			infimum = MAX_VALUE,
 			supremum = MIN_VALUE;
 
-		for(int sample : signal){
+		for (int sample : signal){
 
 			if (sample > supremum)
 				supremum = sample;

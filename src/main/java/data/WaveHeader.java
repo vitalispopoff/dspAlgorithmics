@@ -23,7 +23,7 @@ public class WaveHeader {
 	
 //	--------------------------------------------------------------------------------------------------------------------
 	
-	private WaveHeader() { }
+	private WaveHeader( ){ }
 	
 	private WaveHeader(byte[] fileContent){
 
@@ -64,15 +64,16 @@ public class WaveHeader {
 		this.format = getFormatTag(i);
 	}
 
-	public FormatTags getFormat() {
+	public FormatTags getFormat( ){
 
 		return format;
 	}
 
-	public int getFormatOrdinal(){
+	public int getFormatOrdinal( ){
 
 		return format.ordinal();
 	}
+
 
 
 	public void setFileLength(byte[] fileContent){
@@ -85,10 +86,11 @@ public class WaveHeader {
 		this.fileLength = buffer.getInt();
 	}
 
-	public int getFileLength() {
+	public int getFileLength( ){
 
 		return fileLength;
 	}
+
 
 
 	public void setNumberOfChannels(byte[] fileContent){
@@ -104,10 +106,11 @@ public class WaveHeader {
 		this.numberOfChannels = Short.toUnsignedInt(s);
 	}
 
-	public int getNumberOfChannels() {
+	public int getNumberOfChannels( ){
 
 		return numberOfChannels;
 	}
+
 
 
 	public void setSampleRate(byte[] fileContent){
@@ -120,10 +123,11 @@ public class WaveHeader {
 		this.sampleRate = buffer.getInt();
 	}
 
-	public int getSampleRate() {
+	public int getSampleRate( ){
 
 		return sampleRate;
 	}
+
 
 
 	public void setSampleFrameSize(byte[] fileContent){
@@ -139,10 +143,11 @@ public class WaveHeader {
 		this.sampleFrameSize = Short.toUnsignedInt(s);
 	}
 
-	public int getSampleFrameSize() {
+	public int getSampleFrameSize( ){
 
 		return sampleFrameSize;
 	}
+
 
 
 	public void setBitDepth(byte[] fileContent){
@@ -158,10 +163,11 @@ public class WaveHeader {
 		this.bitDepth = Short.toUnsignedInt(s);
 	}
 
-	public int getBitDepth() {
+	public int getBitDepth( ){
 
 		return bitDepth;
 	}
+
 
 
 	public void setDataBlockLength(byte[] fileContent){
@@ -174,7 +180,7 @@ public class WaveHeader {
 		this.dataBlockLength = buffer.getInt();
 	}
 
-	public int getDataBlockLength() {
+	public int getDataBlockLength( ){
 
 		return dataBlockLength;
 	}
@@ -182,7 +188,7 @@ public class WaveHeader {
 //	--------------------------------------------------------------------------------------------------------------------
 	
 	@Override
-	public String toString(){
+	public String toString( ){
 
 		return
 			"format = " + format + '\n'

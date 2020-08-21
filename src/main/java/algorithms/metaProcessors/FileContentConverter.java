@@ -2,19 +2,18 @@
 
 package algorithms.metaProcessors;
 
-import static algorithms.analyzers.BitRepresent.bitRepresent;
-
 public interface FileContentConverter {
 
 	static int dataFrameReader(byte[] frame){
 
 		int
-			sample = frame[frame.length - 1],
-			byteShift = (frame.length - 1) << 3;
+			max = frame.length - 1,
+			sample = frame[max],
+			byteShift = max << 3;
 
 		sample <<= byteShift;
 
-		for (int i = 0; i < frame.length - 1; i++){
+		for (int i = 0; i < max; i++){
 
 			byteShift = i << 3;
 
@@ -31,10 +30,10 @@ public interface FileContentConverter {
 
 	static byte[] dataFrameWriter(int frame, int frameLength){
 
+		if (frameLength > 3) frameLength = 4;
+
 		boolean
 			isFrameNegative = frame < 0;
-
-		if (frameLength > 3) frameLength = 4;
 
 		byte[]
 			bytes = new byte[frameLength];
@@ -42,7 +41,7 @@ public interface FileContentConverter {
 		for (int i = 0; i < frameLength; i++){
 
 			int
-				filterShift = 1 >> 8 * i;
+				filterShift = 1 >> (8 * i);
 
 			byte
 				cache = (byte) (frame & 0xFF);

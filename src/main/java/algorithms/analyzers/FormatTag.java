@@ -7,7 +7,7 @@ import java.util.HashMap;
 public abstract class FormatTag{
 
 	private static final HashMap<Integer, FormatTags>
-		formatTags = new HashMap<>();
+		formatTags = new HashMap<>( );
 
 	static {
 		
@@ -35,7 +35,8 @@ public abstract class FormatTag{
 		WAVE_FORMAT_MULAW,
 		WAVE_FORMAT_EXTENSIBLE;
 
-		public static int[] starts = {44, 58, 58, 58, 72};
+		public static int[]
+			starts = {44, 58, 58, 58, 72};	// TODO to be dependent on the actual header stream readings
 	}
 }
 

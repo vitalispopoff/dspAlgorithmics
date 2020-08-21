@@ -4,9 +4,9 @@ package algorithms.processors;
 
 import static algorithms.analyzers.Peaks.*;
 
-public abstract class Normalization {
+public interface Normalization {
 
-	public static int[] normalize(int[] signal, int bitDepth){
+	static int[] normalize(int[] signal, int bitDepth){
 
 		int[]
 			limits = getLimits(signal, bitDepth);

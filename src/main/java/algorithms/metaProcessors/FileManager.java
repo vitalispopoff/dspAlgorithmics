@@ -10,11 +10,6 @@ import static java.nio.file.Paths.get;
 
 public abstract class FileManager implements Serializable {
 
-	static int
-		currentFileIndex = 0;
-
-//	--------------------------------------------------------------------------------------------------------------------
-
 	public static void saveFile(String fileAddress, byte[] wave){
 
 		Path
@@ -34,7 +29,7 @@ public abstract class FileManager implements Serializable {
 	public static byte[] loadFile(String fileAddress){
 
 		byte[]
-			wave = { };
+			fileContent = { };
 
 		boolean
 			fileExists = verifyFile(fileAddress);
@@ -46,7 +41,7 @@ public abstract class FileManager implements Serializable {
 
 			try {
 
-				wave = readAllBytes(filePath);
+				fileContent = readAllBytes(filePath);
 			}
 
 			catch (IOException e) {
@@ -55,7 +50,7 @@ public abstract class FileManager implements Serializable {
 			}
 		}
 
-		return wave;
+		return fileContent;
 	}
 
 

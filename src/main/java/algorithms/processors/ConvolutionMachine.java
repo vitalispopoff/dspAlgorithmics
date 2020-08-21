@@ -47,15 +47,18 @@ public abstract class ConvolutionMachine {
 
 	private static int[] reverseSignal(int[] signal) {
 
-		int[]
-			result = new int[signal.length];
+		int
+			length = signal.length;
 
-		for(int i = 0; i < signal.length; i++)
-			result[i] = signal[signal.length - 1 - i];
+		int[]
+			result = new int[length];
+
+		for (int i = 0; i < length; i++)
+
+			result[i] = signal[length - 1 - i];
 
 		return result;
 	}
-
 }
 
 //	@formatter:on

@@ -2,17 +2,14 @@
 
 package algorithms.metaProcessors;
 
-import data.Wave;
+import data.WaveHeader;
 
 public abstract class ChannelSplitter {
 
-	public static int[][] splitChannels(Wave wave){
-
-		int[]
-			signal = {};
+	public static int[][] splitChannels(WaveHeader header, int[] signal){
 
 		int
-			numberOfInputs = wave.header.numberOfChannels,
+			numberOfInputs = header.numberOfChannels,
 			outputLength = signal.length / numberOfInputs;
 
 		int[][]
@@ -23,27 +20,6 @@ public abstract class ChannelSplitter {
 			int
 				channel = i % numberOfInputs,
 				index = i / numberOfInputs;
-
-			outputs[channel][index] = signal[i];
-		}
-
-		return outputs;
-	}
-
-	public static int[][] splitChannels(Wave wave, int[]signal){
-
-		int
-				numberOfInputs = wave.header.numberOfChannels,
-				outputLength = signal.length / numberOfInputs;
-
-		int[][]
-				outputs = new int[numberOfInputs][outputLength];
-
-		for (int i = 0; i < signal.length ; i++){
-
-			int
-					channel = i % numberOfInputs,
-					index = i / numberOfInputs;
 
 			outputs[channel][index] = signal[i];
 		}

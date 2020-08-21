@@ -2,10 +2,8 @@
 
 package data;
 
-import java.nio.*;
 import algorithms.analyzers.FormatTag.FormatTags;
 
-import static java.nio.ByteBuffer.wrap;
 import static algorithms.metaProcessors.FileContentConverter.*;
 
 public class WaveHeader {
@@ -27,13 +25,25 @@ public class WaveHeader {
 	
 	private WaveHeader(byte[] fileContent){
 
-		setFormat(fileContent);
-		setFileLength(fileContent);
-		setNumberOfChannels(fileContent);
-		setSampleRate(fileContent);
-		setSampleFrameSize(fileContent);
-		setBitDepth(fileContent);
-		setDataBlockLength(fileContent);
+		this();
+
+		if (fileContent != null){
+
+			this.format =
+				readFormat(fileContent);
+			this.fileLength =
+				readFileLength(fileContent);
+			this.numberOfChannels =
+				readNumberOfChannels(fileContent);
+			this.sampleRate =
+				readSampleRate(fileContent);
+			this.sampleFrameSize =
+				readSampleFrameSize(fileContent);
+			this.bitDepth =
+				readBitDepth(fileContent);
+			this.dataBlockLength =
+				readDataBlockLength(fileContent);
+		}
 	}
 	
 //	--------------------------------------------------------------------------------------------------------------------
@@ -48,21 +58,7 @@ public class WaveHeader {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	public void setFormat(byte[]fileContent){
-
-/*		ByteBuffer
-			buffer = wrap(fileContent, 20, 2);
-
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		short
-			s = buffer.getShort();
-
-		int
-			i = Short.toUnsignedInt(s);*/	// disposable
-
-		FormatTags
-			format = readFormat(fileContent);
+	public void setFormat(FormatTags format){
 
 		this.format = format;
 	}
@@ -72,25 +68,10 @@ public class WaveHeader {
 		return format;
 	}
 
-/*	public int getFormatOrdinal( ){
 
+	public void setFileLength(int fileLength){
 
-		return format.ordinal();
-	}*/	//	disposable
-
-
-
-	public void setFileLength(byte[] fileContent){
-
-/*		ByteBuffer
-			buffer = wrap(fileContent, 4, 4);
-
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		this.fileLength = buffer.getInt();*/		// disposable
-
-		this.fileLength = readFileLength(fileContent);
-
+		this.fileLength = fileLength;
 	}
 
 	public int getFileLength( ){
@@ -100,19 +81,9 @@ public class WaveHeader {
 
 
 
-	public void setNumberOfChannels(byte[] fileContent){
+	public void setNumberOfChannels(int numberOfChannels){
 
-/*		ByteBuffer
-			buffer = wrap(fileContent, 22, 2);
-
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		short
-			s = buffer.getShort();
-
-		this.numberOfChannels = Short.toUnsignedInt(s);*/	// disposable
-
-		this.numberOfChannels = readNumberOfChannels(fileContent);
+		this.numberOfChannels = numberOfChannels;
 	}
 
 	public int getNumberOfChannels( ){
@@ -122,16 +93,9 @@ public class WaveHeader {
 
 
 
-	public void setSampleRate(byte[] fileContent){
+	public void setSampleRate(int sampleFrameSize){
 
-/*		ByteBuffer
-			buffer = wrap(fileContent, 24, 4);
-
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		this.sampleRate = buffer.getInt();*/	// disposable
-
-		this.sampleRate = readSampleRate(fileContent);
+		this.sampleRate = sampleFrameSize;
 	}
 
 	public int getSampleRate( ){
@@ -141,19 +105,9 @@ public class WaveHeader {
 
 
 
-	public void setSampleFrameSize(byte[] fileContent){
+	public void setSampleFrameSize(int sampleFrameSize){
 
-/*		ByteBuffer
-			buffer = wrap(fileContent, 32, 2);
-
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		short
-			s = buffer.getShort();
-
-		this.sampleFrameSize = Short.toUnsignedInt(s);*/	// disposable
-
-		this.sampleFrameSize = readSampleFrameSize(fileContent);
+		this.sampleFrameSize = sampleFrameSize;
 	}
 
 	public int getSampleFrameSize( ){
@@ -163,19 +117,9 @@ public class WaveHeader {
 
 
 
-	public void setBitDepth(byte[] fileContent){
+	public void setBitDepth(int bitDepth){
 
-/*		ByteBuffer
-			buffer = wrap(fileContent, 34, 2);
-
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		short
-			s = buffer.getShort();
-
-		this.bitDepth = Short.toUnsignedInt(s);*/	// disposable
-
-		this.bitDepth = readBitDepth(fileContent);
+		this.bitDepth = bitDepth;
 	}
 
 	public int getBitDepth( ){
@@ -185,16 +129,9 @@ public class WaveHeader {
 
 
 
-	public void setDataBlockLength(byte[] fileContent){
+	public void setDataBlockLength(int dataBlockLength){
 
-/*		ByteBuffer
-			buffer = wrap(fileContent, 40, 4);
-
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		this.dataBlockLength = buffer.getInt();*/	// disposable
-
-		this.dataBlockLength = readDataBlockLength(fileContent);
+		this.dataBlockLength = dataBlockLength;
 	}
 
 	public int getDataBlockLength( ){

@@ -17,6 +17,9 @@ public class FileAddress {
 		fileExtensions.put("AIFF", "aiff");
 	}	// * fileExtensions population
 
+	public static String
+		defaultCatalogPath;
+
 	String
 		catalogPath,
 		fileName,
@@ -65,7 +68,7 @@ public class FileAddress {
 		this.fileName = fileName;
 	}
 
-	private static String getTemporalName( ){
+	public static String getTemporalName(String path){
 
 		LocalDateTime
 			now = LocalDateTime.now();
@@ -73,7 +76,12 @@ public class FileAddress {
 		DateTimeFormatter
 			nowFormat = DateTimeFormatter.ofPattern("yyyy-DDD-HH-mm-ss");
 
-		return "temp_" + now.format(nowFormat);
+		return path + "temp_" + now.format(nowFormat);
+	}
+
+	public static String getTemporalName(){
+
+		return getTemporalName(defaultCatalogPath);
 	}
 
 
@@ -107,7 +115,10 @@ public class FileAddress {
 
 			builder.append((char) b);
 
-		return fileExtensions.get(builder.toString());
+		String
+			address = builder.toString();
+
+		return fileExtensions.get(address);
 	}
 }
 

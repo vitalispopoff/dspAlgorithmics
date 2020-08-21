@@ -17,9 +17,11 @@ public abstract class Peaks {
 		for (int sample : signal) {
 
 			if (sample < result[0])
+
 				result[0] = sample;
 
 			if (sample > result[1])
+
 				result[1] = sample;
 		}
 		
@@ -35,9 +37,11 @@ public abstract class Peaks {
 		for (int sample : signal){
 
 			if (sample > supremum)
+
 				supremum = sample;
 
 			if (sample < infimum)
+
 				infimum = sample;
 		}
 

@@ -12,6 +12,7 @@ public interface Normalization {
 			limits = getLimits(signal, bitDepth);
 
 		int
+			length = signal.length,
 			peak = Math.max(Math.abs(limits[0]), limits[1]),
 			limit =
 				peak == limits[1]
@@ -21,7 +22,8 @@ public interface Normalization {
 		double
 			normalization = ((double) limit) / ((double) peak);
 
-		for (int i = 0; i < signal.length; i++)
+		for (int i = 0; i < length; i++)
+
 			signal[i] *= normalization;
 
 		return signal;

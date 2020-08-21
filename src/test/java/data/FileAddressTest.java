@@ -5,15 +5,16 @@ import org.junit.*;
 import static resources.InputData.*;
 import static data.FileAddress.establishFileExtension;
 
+//	@Ignore
 public class FileAddressTest {
 
-	@Test
+//	@Test
 	public void establishFileExtensionTest_0(){
 
 		Assert.assertEquals("wav", establishFileExtension(waveFile));
 	}
 
-	@Test
+//	@Test
 	public void establishFileExtensionTest_1(){
 
 		Assert.assertEquals("aiff", establishFileExtension(aiffFile));

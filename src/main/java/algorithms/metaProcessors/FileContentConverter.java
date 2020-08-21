@@ -2,6 +2,8 @@
 
 package algorithms.metaProcessors;
 
+import static algorithms.analyzers.BitRepresent.bitRepresent;
+
 public interface FileContentConverter {
 
 	static int dataFrameReader(byte[] frame){
@@ -27,9 +29,30 @@ public interface FileContentConverter {
 		return sample;
 	}
 
-	static byte[] dataFrameWriter(int frame){
+	static byte[] dataFrameWriter(int frame, int frameLength){
 
-		return new byte[0];
+		boolean
+			isFrameNegative = frame < 0;
+
+		if (frameLength > 3) frameLength = 4;
+
+		byte[]
+			bytes = new byte[frameLength];
+
+		for (int i = 0; i < frameLength; i++){
+
+			int
+				filterShift = 1 >> 8 * i;
+
+			byte
+				cache = (byte) (frame & 0xFF);
+
+			if (isFrameNegative) cache |= 0x80;
+
+			bytes[i] = cache;
+		}
+
+		return bytes;
 	}
 }
 

@@ -26,7 +26,7 @@ public abstract class Peaks {
 		return result;
 	}
 
-	public static int getRealBitDepth(int[] signal){
+	public static int getActualBitDepth(int[] signal){
 
 		int
 			infimum = MAX_VALUE,
@@ -44,13 +44,12 @@ public abstract class Peaks {
 		infimum = Math.abs(infimum);
 
 		int
-			cache =
-				infimum == supremum
-				? supremum
-				: Math.max(infimum, supremum) + Math.min(infimum, supremum);
+			maximum = Math.max(infimum, supremum);
+
+		maximum <<= 1;
 
 		String
-			result = Integer.toBinaryString(cache);
+			result = Integer.toBinaryString(maximum);
 
 		return result.length();
 	}

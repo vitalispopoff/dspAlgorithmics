@@ -6,25 +6,49 @@ import data.Wave;
 
 public abstract class ChannelSplitter {
 
-	public static int[][] splitChannels(Wave wave, int[]signal){
+	public static int[][] splitChannels(Wave wave){
+
+		int[]
+			signal = {};
 
 		int
-			numberOfChannels = wave.header.numberOfChannels,
-			channelLength = signal.length / numberOfChannels;
+			numberOfInputs = wave.header.numberOfChannels,
+			outputLength = signal.length / numberOfInputs;
 
 		int[][]
-			channels = new int[numberOfChannels][channelLength];
+			outputs = new int[numberOfInputs][outputLength];
 
 		for (int i = 0; i < signal.length ; i++){
 
 			int
-				channel = i % numberOfChannels,
-				index = i / numberOfChannels;
+				channel = i % numberOfInputs,
+				index = i / numberOfInputs;
 
-			channels[channel][index] = signal[i];
+			outputs[channel][index] = signal[i];
 		}
 
-		return channels;
+		return outputs;
+	}
+
+	public static int[][] splitChannels(Wave wave, int[]signal){
+
+		int
+				numberOfInputs = wave.header.numberOfChannels,
+				outputLength = signal.length / numberOfInputs;
+
+		int[][]
+				outputs = new int[numberOfInputs][outputLength];
+
+		for (int i = 0; i < signal.length ; i++){
+
+			int
+					channel = i % numberOfInputs,
+					index = i / numberOfInputs;
+
+			outputs[channel][index] = signal[i];
+		}
+
+		return outputs;
 	}
 }
 

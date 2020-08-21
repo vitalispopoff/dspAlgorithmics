@@ -52,7 +52,7 @@ public class DataFrameReaderTest {
 	@Test
 	public void dataFrameReaderTest(){
 
-		Assert.assertEquals(dataFrameReader(frame), correctAnswer);
+		Assert.assertEquals(readDataFrame(frame), correctAnswer);
 	}
 }
 

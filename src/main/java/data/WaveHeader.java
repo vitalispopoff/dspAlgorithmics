@@ -6,7 +6,7 @@ import java.nio.*;
 import algorithms.analyzers.FormatTag.FormatTags;
 
 import static java.nio.ByteBuffer.wrap;
-import static algorithms.analyzers.FormatTag.getFormatTag;
+import static algorithms.metaProcessors.FileContentConverter.*;
 
 public class WaveHeader {
 	
@@ -50,7 +50,7 @@ public class WaveHeader {
 
 	public void setFormat(byte[]fileContent){
 
-		ByteBuffer
+/*		ByteBuffer
 			buffer = wrap(fileContent, 20, 2);
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -59,9 +59,12 @@ public class WaveHeader {
 			s = buffer.getShort();
 
 		int
-			i = Short.toUnsignedInt(s);
+			i = Short.toUnsignedInt(s);*/	// disposable
 
-		this.format = getFormatTag(i);
+		FormatTags
+			format = readFormat(fileContent);
+
+		this.format = format;
 	}
 
 	public FormatTags getFormat( ){
@@ -69,21 +72,25 @@ public class WaveHeader {
 		return format;
 	}
 
-	public int getFormatOrdinal( ){
+/*	public int getFormatOrdinal( ){
+
 
 		return format.ordinal();
-	}
+	}*/	//	disposable
 
 
 
 	public void setFileLength(byte[] fileContent){
 
-		ByteBuffer
+/*		ByteBuffer
 			buffer = wrap(fileContent, 4, 4);
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 
-		this.fileLength = buffer.getInt();
+		this.fileLength = buffer.getInt();*/		// disposable
+
+		this.fileLength = readFileLength(fileContent);
+
 	}
 
 	public int getFileLength( ){
@@ -95,7 +102,7 @@ public class WaveHeader {
 
 	public void setNumberOfChannels(byte[] fileContent){
 
-		ByteBuffer
+/*		ByteBuffer
 			buffer = wrap(fileContent, 22, 2);
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -103,7 +110,9 @@ public class WaveHeader {
 		short
 			s = buffer.getShort();
 
-		this.numberOfChannels = Short.toUnsignedInt(s);
+		this.numberOfChannels = Short.toUnsignedInt(s);*/	// disposable
+
+		this.numberOfChannels = readNumberOfChannels(fileContent);
 	}
 
 	public int getNumberOfChannels( ){
@@ -115,12 +124,14 @@ public class WaveHeader {
 
 	public void setSampleRate(byte[] fileContent){
 
-		ByteBuffer
+/*		ByteBuffer
 			buffer = wrap(fileContent, 24, 4);
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 
-		this.sampleRate = buffer.getInt();
+		this.sampleRate = buffer.getInt();*/	// disposable
+
+		this.sampleRate = readSampleRate(fileContent);
 	}
 
 	public int getSampleRate( ){
@@ -132,7 +143,7 @@ public class WaveHeader {
 
 	public void setSampleFrameSize(byte[] fileContent){
 
-		ByteBuffer
+/*		ByteBuffer
 			buffer = wrap(fileContent, 32, 2);
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -140,7 +151,9 @@ public class WaveHeader {
 		short
 			s = buffer.getShort();
 
-		this.sampleFrameSize = Short.toUnsignedInt(s);
+		this.sampleFrameSize = Short.toUnsignedInt(s);*/	// disposable
+
+		this.sampleFrameSize = readSampleFrameSize(fileContent);
 	}
 
 	public int getSampleFrameSize( ){
@@ -152,7 +165,7 @@ public class WaveHeader {
 
 	public void setBitDepth(byte[] fileContent){
 
-		ByteBuffer
+/*		ByteBuffer
 			buffer = wrap(fileContent, 34, 2);
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -160,7 +173,9 @@ public class WaveHeader {
 		short
 			s = buffer.getShort();
 
-		this.bitDepth = Short.toUnsignedInt(s);
+		this.bitDepth = Short.toUnsignedInt(s);*/	// disposable
+
+		this.bitDepth = readBitDepth(fileContent);
 	}
 
 	public int getBitDepth( ){
@@ -172,12 +187,14 @@ public class WaveHeader {
 
 	public void setDataBlockLength(byte[] fileContent){
 
-		ByteBuffer
+/*		ByteBuffer
 			buffer = wrap(fileContent, 40, 4);
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 
-		this.dataBlockLength = buffer.getInt();
+		this.dataBlockLength = buffer.getInt();*/	// disposable
+
+		this.dataBlockLength = readDataBlockLength(fileContent);
 	}
 
 	public int getDataBlockLength( ){

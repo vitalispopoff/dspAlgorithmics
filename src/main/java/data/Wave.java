@@ -2,15 +2,11 @@
 
 package data;
 
-import static java.util.Arrays.copyOfRange;
-
 import static data.WaveHeader.instanceOf;
 
-import static algorithms.analyzers.FormatTag.FormatTags.starts;
-
 import static algorithms.metaProcessors.FileManager.*;
+import static algorithms.metaProcessors.FileContentConverter.*;
 import static algorithms.metaProcessors.ChannelSplitter.splitChannels;
-import static algorithms.metaProcessors.FileContentConverter.dataFrameReader;
 
 public class Wave {
 
@@ -72,37 +68,12 @@ public class Wave {
 
 	public void setChannelSignals(byte[] fileContent){
 
-		int[]
-			signal = setSignal(fileContent);
-
-		this.channelSignals = splitChannels(this, signal);
+		this.channelSignals = splitChannels(this, readSignal(fileContent));
 	}
 
 	public int[][] getChannelSignals( ){
 
 		return channelSignals;
-	}
-
-	private int[] setSignal(byte[] fileContent) {
-
-		int
-			dataBlockLength = header.getDataBlockLength(),
-			sampleFrameSize = header.getSampleFrameSize(),
-			start = starts[header.getFormatOrdinal()],
-			index = 0;
-
-		int[]
-			signal = new int[dataBlockLength / sampleFrameSize];
-
-		for (int i = start; i < start + dataBlockLength; i += sampleFrameSize){
-
-			byte[]
-				bytes = copyOfRange(fileContent, i, i + sampleFrameSize);
-
-			signal[index++] = dataFrameReader(bytes);
-		}
-
-		return signal;
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------

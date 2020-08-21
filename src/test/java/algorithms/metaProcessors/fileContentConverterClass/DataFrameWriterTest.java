@@ -8,7 +8,7 @@ import org.junit.runners.Parameterized;
 
 import java.util.*;
 
-import static algorithms.metaProcessors.FileContentConverter.dataFrameWriter;
+import static algorithms.metaProcessors.FileContentConverter.writeDataFrame;
 
 	@RunWith(Parameterized.class)
 public class DataFrameWriterTest {
@@ -79,7 +79,7 @@ public class DataFrameWriterTest {
 		try {
 
 			byte[]
-				givenAnswer = dataFrameWriter(frame, frameLength);
+				givenAnswer = writeDataFrame(frame, frameLength);
 
 			Assert.assertTrue(equal(givenAnswer, correctAnswer));
 		}
@@ -88,7 +88,7 @@ public class DataFrameWriterTest {
 
 			System.out.println(
 				"\n\tgiven: "
-				+ Arrays.toString(dataFrameWriter(frame, frameLength))
+				+ Arrays.toString(writeDataFrame(frame, frameLength))
 				+ ", correct: "
 				+ Arrays.toString(correctAnswer));
 

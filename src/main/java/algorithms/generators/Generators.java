@@ -6,15 +6,15 @@ import java.util.Random;
 
 public abstract class Generators {
 
-	public static int[] generateNoise(int size, int bitDepth){
+	public static int[] generateNoise(int length, int bitDepth){
 
 		int[]
-			result = new int[size];
+			result = new int[length];
 
 		Random
 			random = new Random();
 
-		for (int index = 0; index < size; index++)
+		for (int index = 1; index < length - 1; index++)	// first and last bits of signal should be 0
 
 			result[index] = getSignedGaussianInt(bitDepth);
 
@@ -30,7 +30,7 @@ public abstract class Generators {
 			bits = 1 << bitDepth,
 			result = 0;
 
-		for (int i = 0; i < 12 ; i++)
+		for (int i = 0; i < 12; i++)
 
 			result += random.nextInt(bits);
 

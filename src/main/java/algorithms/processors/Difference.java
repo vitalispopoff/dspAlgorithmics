@@ -1,6 +1,6 @@
 //	@formatter:off
 
-package algorithms.analyzers;
+package algorithms.processors;
 
 import data.Wave;
 

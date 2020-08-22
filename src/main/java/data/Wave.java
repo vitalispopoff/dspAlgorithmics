@@ -7,7 +7,6 @@ import static data.WaveHeader.instanceOf;
 
 import static algorithms.metaProcessors.FileManager.*;
 import static algorithms.metaProcessors.FileContentConverter.*;
-import static algorithms.metaProcessors.ChannelSplitter.splitChannels;
 
 public class Wave {
 
@@ -42,7 +41,7 @@ public class Wave {
 			setFileAddress(fileAddress);
 
 			this.header = instanceOf(fileContent);
-			this.channelSignals = splitChannels(header, readSignal(fileContent));
+			this.channelSignals = readSignalChannels(fileContent);
 
 			FileCache.addToCache(this);
 		}

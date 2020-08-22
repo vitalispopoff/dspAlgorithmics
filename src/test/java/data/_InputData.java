@@ -2,7 +2,7 @@
 
 package data;
 
-public class InputData {
+public class _InputData {
 
 	public static byte[]
 		sample_mono_wav = new byte[]{

@@ -1,11 +1,12 @@
-package algorithms.metaProcessors.fileContentConverterClass;
+//  @formatter:off
 
+package algorithms.metaProcessors.fileContentConverterClass;
 
 import org.junit.*;
 
 import static algorithms.metaProcessors.FileContentConverter.*;
 
-import static data.InputData.sample_mono_wav;
+import static data._InputData.*;
 
 public class FileContentConverterUnitTest {
 
@@ -19,3 +20,5 @@ public class FileContentConverterUnitTest {
         Assert.assertEquals(correct, 0);
     }
 }
+
+//  @formatter:on

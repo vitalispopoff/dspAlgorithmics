@@ -11,7 +11,7 @@ import org.junit.runners.Parameterized;
 import static algorithms.metaProcessors.FileContentConverter.*;
 
 	@RunWith(Parameterized.class)
-public class DataFrameReaderParamTest {
+public class ReadDataSampleParamTest {
 
 	byte[]
 		frame;
@@ -21,7 +21,7 @@ public class DataFrameReaderParamTest {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	public DataFrameReaderParamTest(byte[] frame, int correctAnswer){
+	public ReadDataSampleParamTest(byte[] frame, int correctAnswer){
 
 		this.frame = frame;
 		this.correctAnswer = correctAnswer;
@@ -33,15 +33,15 @@ public class DataFrameReaderParamTest {
 	public static Collection<?> setInput(){
 
 			Object[][]
-					input = new Object[InputData.input1.length][2];
+					input = new Object[_InputData.input1.length][2];
 
-			for(int i = 0 ; i < Math.max(InputData.input1.length, InputData.input2.length); i++) {
+			for(int i = 0 ; i < Math.max(_InputData.input1.length, _InputData.input2.length); i++) {
 
-				if (i < InputData.input1.length)
-					input[i][0] = InputData.input1[i];
+				if (i < _InputData.input1.length)
+					input[i][0] = _InputData.input1[i];
 
-				if(i < InputData.input2.length)
-					input[i][1] = InputData.input2[i];
+				if(i < _InputData.input2.length)
+					input[i][1] = _InputData.input2[i];
 			}
 
 		return Arrays.asList(input);
@@ -52,7 +52,7 @@ public class DataFrameReaderParamTest {
 	@Test
 	public void dataFrameReaderTest(){
 
-		Assert.assertEquals(readDataFrame(frame), correctAnswer);
+		Assert.assertEquals(readDataSample(frame), correctAnswer);
 	}
 }
 

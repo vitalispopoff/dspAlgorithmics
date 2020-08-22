@@ -2,7 +2,7 @@
 
 package algorithms.metaProcessors.fileContentConverterClass;
 
-public class InputData {
+public class _InputData {
 
 	private static final byte
 		min = (byte) 0x80,

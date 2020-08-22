@@ -2,7 +2,8 @@
 
 package algorithms.metaProcessors;
 
-import java.nio.*;import java.util.Arrays;
+import java.nio.*;
+import java.util.ArrayList;import java.util.Arrays;
 
 import data.FormatTags;
 
@@ -13,49 +14,42 @@ import static data.FormatTags.*;
 
 public interface FileContentConverter {
 
-	static int readDataFrame(byte[] frame){
+	static int readDataSample(byte[] inputSample){
 
 		int
-			max = frame.length - 1,
-			sample = frame[max],
-			byteShift = max << 3;
-
-		sample <<= byteShift;
+			max = inputSample.length - 1,
+			byteShift = max << 3,
+			sample = inputSample[max] << byteShift;
 
 		for (int i = 0; i < max; i++){
 
-			byteShift = i << 3;
-
 			int
-				b = frame[i] & 0xFF;
+				b = inputSample[i] & 0xFF;
 
+			byteShift = i << 3;
 			b <<= byteShift;
-
 			sample |= b;
 		}
 
 		return sample;
 	}
 
-	static byte[] writeDataFrame(int frame, int frameLength){
+	static byte[] writeDataSample(int sample, int sampleLength){
 
-		if (frameLength > 3)
+		if (sampleLength > 3)
 
-			frameLength = 4;
+			sampleLength = 4;
 
 		boolean
-			isFrameNegative = frame < 0;
+			isFrameNegative = sample < 0;
 
 		byte[]
-			bytes = new byte[frameLength];
+			bytes = new byte[sampleLength];
 
-		for (int i = 0; i < frameLength; i++){
-
-			int
-				filterShift = 1 >> (8 * i);
+		for (int i = 0; i < sampleLength; i++){
 
 			byte
-				cache = (byte) (frame & 0xFF);
+				cache = (byte) (sample & 0xFF);	// ! no byte shift ?
 
 			if (isFrameNegative)
 
@@ -85,18 +79,114 @@ public interface FileContentConverter {
 			byte[]
 				bytes = copyOfRange(fileContent, i, i + sampleFrameSize);
 
-			signal[index++] = readDataFrame(bytes);
+			signal[index++] = readDataSample(bytes);
 		}
 
 		return signal;
 	}
 
-	static byte[] writeSignal(int[] signal){
+	static Byte[] writeSignal(int[] signal, int bitDepth){
+
+
+/*		private static int[] constructSignal(){
+
+			int
+					sampleSize = 2,
+					signalLength = sample_mono_wav.length / sampleSize;
+
+			int[]
+					signal = new int[signalLength];
+
+			for (int i = 0; i < signalLength; i++){
+
+				byte[]
+						bytes = new byte[4],
+						b = Arrays.copyOfRange(sample_mono_wav, i, i + 2);
+
+				System.arraycopy(b, 0, bytes, 0, b.length);
+
+				ByteBuffer
+						buffer = ByteBuffer.wrap(bytes);
+
+				buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+				signal[i]  = buffer.getInt();
+			}
+
+			return signal;
+		}*/	// * to be considered for the refactoring of the particular reading methods
+
+		ArrayList<Byte>
+			cache = new ArrayList<>();
+
+		for (int sample : signal){
+
+			boolean
+				sampleIsNegative = sample < 0;
+
+			int
+				numberOfBytes = bitDepth >> 3;
+			
+			if (bitDepth % 8 > 0) 
+				
+				bitDepth++;
+
+			for (int i = 0; i < numberOfBytes; i++){
+
+				boolean
+					containsMSB = i == numberOfBytes - 1;
+				
+				int
+					byteShift = i << 3,	
+					b = sample & (0xFF << byteShift);
+				
+				b >>>= (i << 3);
+				
+				if(containsMSB && bitDepth < 32 && sampleIsNegative)
+
+					b |= 0x80;
+				
+				cache.add((byte) b);
+			}
+
+			return (Byte[]) cache.toArray();	// ? this is doubtful, as the byte[] is desired ...
+		}
+
+		return null;
+	}
+
+
+
+	static int[][] readSignalChannels(byte[] fileContent){
+
+		int[]
+			signal = readSignal(fileContent);
+		int
+			numberOfInputs = readNumberOfChannels(fileContent),
+			outputLength = signal.length / numberOfInputs;
+
+		int[][]
+				outputs = new int[numberOfInputs][outputLength];
+
+		for (int i = 0; i < signal.length ; i++){
+
+			int
+					channel = i % numberOfInputs,
+					index = i / numberOfInputs;
+
+			outputs[channel][index] = signal[i];
+		}
+
+		return outputs;
+	}
+
+	static byte[] writeSignalChannels(int[][] signalChannels){
 
 		byte[] output = {};
 
 		return output;
-	}	// * TODO
+	}	// TODO
+
 
 
 

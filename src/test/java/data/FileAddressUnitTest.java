@@ -4,7 +4,7 @@ package data;
 
 import org.junit.*;
 
-import static data.InputData.*;
+import static data._InputData.*;
 import static data.FileAddress.*;
 
 public class FileAddressUnitTest {

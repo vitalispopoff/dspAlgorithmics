@@ -3,7 +3,7 @@ package algorithms.metaProcessors.fileManager;
 import org.junit.*;
 
 import static algorithms.metaProcessors.FileManager.*;
-import static data.InputData.*;
+import static data._InputData.*;
 
 public class FileManagerUnitTest {
 

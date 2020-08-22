@@ -15,6 +15,7 @@ public class FileAddress {
 
 		fileExtensions.put("WAVE", "wav");
 		fileExtensions.put("AIFF", "aiff");
+
 	}	// * fileExtensions population
 
 	public static String

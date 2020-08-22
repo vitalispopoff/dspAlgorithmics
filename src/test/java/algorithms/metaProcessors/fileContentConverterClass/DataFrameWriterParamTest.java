@@ -11,7 +11,7 @@ import java.util.*;
 import static algorithms.metaProcessors.FileContentConverter.writeDataFrame;
 
 	@RunWith(Parameterized.class)
-public class DataFrameWriterTest {
+public class DataFrameWriterParamTest {
 
 	byte[]
 		correctAnswer;
@@ -22,7 +22,7 @@ public class DataFrameWriterTest {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	public DataFrameWriterTest(int frame, int frameLength, byte[] correctAnswer){
+	public DataFrameWriterParamTest(int frame, int frameLength, byte[] correctAnswer){
 
 		this.frame = frame;
 		this.frameLength = frameLength;

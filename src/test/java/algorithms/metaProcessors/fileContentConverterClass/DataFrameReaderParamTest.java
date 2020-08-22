@@ -11,7 +11,7 @@ import org.junit.runners.Parameterized;
 import static algorithms.metaProcessors.FileContentConverter.*;
 
 	@RunWith(Parameterized.class)
-public class DataFrameReaderTest {
+public class DataFrameReaderParamTest {
 
 	byte[]
 		frame;
@@ -21,7 +21,7 @@ public class DataFrameReaderTest {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	public DataFrameReaderTest(byte[] frame, int correctAnswer){
+	public DataFrameReaderParamTest(byte[] frame, int correctAnswer){
 
 		this.frame = frame;
 		this.correctAnswer = correctAnswer;

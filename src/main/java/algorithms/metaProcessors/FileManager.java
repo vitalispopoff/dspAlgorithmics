@@ -8,9 +8,9 @@ import java.nio.file.*;
 import static java.nio.file.Files.*;
 import static java.nio.file.Paths.get;
 
-public abstract class FileManager implements Serializable {
+public interface FileManager {
 
-	public static void saveFile(String fileAddress, byte[] wave){
+	static void saveFile(String fileAddress, byte[] wave){
 
 		Path
 			filePath = get(fileAddress);
@@ -26,7 +26,7 @@ public abstract class FileManager implements Serializable {
 		}
 	}
 
-	public static byte[] loadFile(String fileAddress){
+	static byte[] loadFile(String fileAddress){
 
 		byte[]
 			fileContent = { };
@@ -53,9 +53,7 @@ public abstract class FileManager implements Serializable {
 		return fileContent;
 	}
 
-
-
-	public static boolean verifyFile(String fileAddress){
+	static boolean verifyFile(String fileAddress){
 
 		boolean
 				fileExists;

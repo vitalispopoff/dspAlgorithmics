@@ -4,9 +4,9 @@ package algorithms.analyzers;
 
 import static java.lang.Integer.*;
 
-public abstract class Peaks {
+public interface Peaks {
 
-	public static int[] getLimits(int[] signal, int bitDepth){
+	static int[] getLimits(int[] signal, int bitDepth){
 
 		int
 			max = 1 << (bitDepth - 1);
@@ -28,7 +28,7 @@ public abstract class Peaks {
 		return result;
 	}
 
-	public static int getActualBitDepth(int[] signal){
+	static int getActualBitDepth(int[] signal){
 
 		int
 			infimum = MAX_VALUE,

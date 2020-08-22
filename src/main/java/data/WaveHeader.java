@@ -2,8 +2,6 @@
 
 package data;
 
-import algorithms.analyzers.FormatTag.FormatTags;
-
 import static algorithms.metaProcessors.FileContentConverter.*;
 
 public class WaveHeader {

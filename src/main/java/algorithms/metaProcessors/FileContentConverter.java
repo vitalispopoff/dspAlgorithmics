@@ -2,15 +2,14 @@
 
 package algorithms.metaProcessors;
 
-import java.nio.*;
+import java.nio.*;import java.util.Arrays;
 
-import algorithms.analyzers.FormatTag.FormatTags;
+import data.FormatTags;
 
 import static java.nio.ByteBuffer.wrap;
 import static java.util.Arrays.copyOfRange;
 
-import static algorithms.analyzers.FormatTag.FormatTags.starts;
-import static algorithms.analyzers.FormatTag.getFormatTag;
+import static data.FormatTags.*;
 
 public interface FileContentConverter {
 
@@ -92,29 +91,48 @@ public interface FileContentConverter {
 		return signal;
 	}
 
+	static byte[] writeSignal(int[] signal){
+
+		byte[] output = {};
+
+		return output;
+	}	// * TODO
+
+
+
 	static FormatTags readFormat(byte[]fileContent){
 
-		ByteBuffer
-			buffer = wrap(fileContent, 20, 2);
-
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		short
-			s = buffer.getShort();
-
 		int
-			i = Short.toUnsignedInt(s);
+			tagOrdinal = readFormatOrdinal(fileContent);
 
-		return getFormatTag(i);
+		return FormatTags.values()[tagOrdinal];
 	}
 
 	static int readFormatOrdinal(byte[]fileContent){
 
-		FormatTags
-			result = readFormat(fileContent);
+		byte[]
+			b = Arrays.copyOfRange(fileContent, 20, 23);
 
-		return result.ordinal();
+		String
+			byteString = Arrays.toString(b);
+
+		for(int i = 0 ; i < FormatTags.byteStrings.length ; i++)
+
+			if (FormatTags.byteStrings[i].compareTo(byteString) == 0)
+
+				return i;
+
+		return 0;
 	}
+
+	static byte[] writeFormat(FormatTags format){
+
+		byte[] output = {};
+
+		return output;
+	}	// * TODO
+
+
 
 	static int readFileLength(byte[] fileContent){
 
@@ -125,6 +143,15 @@ public interface FileContentConverter {
 
 		return buffer.getInt();
 	}
+
+	static byte[] writeFileLength(int fileLength){
+
+		byte[] output = {};
+
+		return output;
+	}	// * TODO
+
+
 
 	static int readNumberOfChannels(byte[] fileContent){
 
@@ -139,6 +166,15 @@ public interface FileContentConverter {
 		return Short.toUnsignedInt(s);
 	}
 
+	static byte[] writeNumberOfChannels(int numberOfChannels){
+
+		byte[] output = {};
+
+		return output;
+	}	// * TODO
+
+
+
 	static int readSampleRate(byte[] fileContent){
 
 		ByteBuffer
@@ -148,6 +184,15 @@ public interface FileContentConverter {
 
 		return buffer.getInt();
 	}
+
+	static byte[] writeSampleRate(int sampleRate){
+
+		byte[] output = {};
+
+		return output;
+	}	// * TODO
+
+
 
 	static int readSampleFrameSize(byte[] fileContent){
 
@@ -162,6 +207,15 @@ public interface FileContentConverter {
 		return Short.toUnsignedInt(s);
 	}
 
+	static byte[] writeSampleFrameSize(int sampleFrameSize){
+
+		byte[] output = {};
+
+		return output;
+	}	// * TODO
+
+
+
 	static int readBitDepth(byte[] fileContent){
 
 		ByteBuffer
@@ -175,6 +229,15 @@ public interface FileContentConverter {
 		return Short.toUnsignedInt(s);
 	}
 
+	static byte[] writeBitDepth(int bitDepth){
+
+		byte[] output = {};
+
+		return output;
+	}	// * TODO
+
+
+
 	static int readDataBlockLength(byte[] fileContent){
 
 		ByteBuffer
@@ -184,6 +247,13 @@ public interface FileContentConverter {
 
 		return buffer.getInt();
 	}
+
+	static byte[] writeDataBlockLength(int dataBlockLength){
+
+		byte[] output = {};
+
+		return output;
+	}	// * TODO
 }
 
 //	@formatter:on

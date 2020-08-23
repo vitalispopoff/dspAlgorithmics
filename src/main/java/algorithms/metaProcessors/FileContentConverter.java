@@ -14,7 +14,7 @@ import static data.FormatTags.*;
 
 public interface FileContentConverter {
 
-	static int readDataSample(byte[] inputSample){
+	/*static int readDataSample(byte[] inputSample){
 
 		int
 			max = inputSample.length - 1,
@@ -32,7 +32,7 @@ public interface FileContentConverter {
 		}
 
 		return sample;
-	}
+	}*/
 
 	static int readDataSample(byte[] fileContent, int start, int sampleSize){
 
@@ -41,10 +41,12 @@ public interface FileContentConverter {
 
 		System.arraycopy(fileContent, start, bytes, 0, sampleSize);
 
-		if(bytes[sampleSize - 1] < 0){
+		if (bytes[sampleSize - 1] < 0){
 
-			bytes[3] |= 0x80;
-			bytes[sampleSize - 1] &= 0x80;
+			bytes[3] |= sampleSize == 4 ? 0xFF : 0x80;
+
+			if (sampleSize < 4)
+				bytes[sampleSize - 1] &= 0x7F;	// TODO
 		}
 
 		ByteBuffer
@@ -53,6 +55,18 @@ public interface FileContentConverter {
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 
 		return buffer.get();
+	}
+
+	static void main(String[] args){
+
+		byte[]
+			bytes = new byte[]{(byte)0x00, (byte)0x80};
+
+		int
+			start = 0,
+			sampleSize = 2;
+
+		System.out.println(readDataSample(new byte[]{0, (byte) 0x80}, 0, 2));
 	}
 
 		/*		private static int[] constructSignal(){
@@ -123,15 +137,10 @@ public interface FileContentConverter {
 		int[]
 			signal = new int[dataBlockLength / sampleSize];
 
-		for (int i = start; i < start + dataBlockLength; i += sampleSize){
+		for (int i = start; i < start + dataBlockLength; i += sampleSize)
 
 			signal[index++] = readDataSample(fileContent, i, sampleSize);
 
-/*			byte[]
-				bytes = copyOfRange(fileContent, i, i + sampleSize);
-
-			signal[index++] = readDataSample(bytes);*/ // disposable
-		}
 
 		return signal;
 	}

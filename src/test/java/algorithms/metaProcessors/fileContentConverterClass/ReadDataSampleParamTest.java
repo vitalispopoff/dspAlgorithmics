@@ -35,12 +35,12 @@ public class ReadDataSampleParamTest {
 			Object[][]
 					input = new Object[_InputData.input1.length][2];
 
-			for(int i = 0 ; i < Math.max(_InputData.input1.length, _InputData.input2.length); i++) {
+			for(int i = 0 ; i < Math.min(_InputData.input1.length, _InputData.input2.length); i++) {
 
-				if (i < _InputData.input1.length)
+//				if (i < _InputData.input1.length)
 					input[i][0] = _InputData.input1[i];
 
-				if(i < _InputData.input2.length)
+//				if(i < _InputData.input2.length)
 					input[i][1] = _InputData.input2[i];
 			}
 
@@ -50,10 +50,38 @@ public class ReadDataSampleParamTest {
 //	--------------------------------------------------------------------------------------------------------------------
 
 	@Test
-	public void dataFrameReaderTest(){
+	public void readDataSampleTest_1(){
 
-		Assert.assertEquals(readDataSample(frame), correctAnswer);
+//		Assert.assertEquals(readDataSample(frame), correctAnswer);
 	}
+
+	@Test
+	public void readDataSampleTest_2(){
+
+		int
+			givenAnswer = 0;
+
+		try {
+
+			givenAnswer = readDataSample(frame, 0, 1);
+
+			Assert.assertEquals(givenAnswer, correctAnswer);
+		}
+
+		catch (AssertionError error){
+
+			System.out.println(
+				"\n\tgiven : frame = "
+				+ Arrays.toString(frame)
+				+ ", given = "
+				+ givenAnswer
+				+ ", correct = "
+				+ correctAnswer
+			);
+
+			throw error;
+		}
+	}	// TODO
 }
 
 //	@formatter:on

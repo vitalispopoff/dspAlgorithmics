@@ -34,6 +34,55 @@ public interface FileContentConverter {
 		return sample;
 	}
 
+	static int readDataSample(byte[] fileContent, int start, int sampleSize){
+
+		byte[]
+			bytes = new byte[4];
+
+		System.arraycopy(fileContent, start, bytes, 0, sampleSize);
+
+		if(bytes[sampleSize - 1] < 0){
+
+			bytes[3] |= 0x80;
+			bytes[sampleSize - 1] &= 0x80;
+		}
+
+		ByteBuffer
+			buffer = ByteBuffer.wrap(bytes);
+
+		buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+		return buffer.get();
+	}
+
+		/*		private static int[] constructSignal(){
+
+			int
+					sampleSize = 2,
+					signalLength = sample_mono_wav.length / sampleSize;
+
+			int[]
+					signal = new int[signalLength];
+
+			for (int i = 0; i < signalLength; i++){
+
+				byte[]
+						bytes = new byte[4],
+						b = Arrays.copyOfRange(sample_mono_wav, i, i + 2);
+
+				System.arraycopy(b, 0, bytes, 0, b.length);
+
+				ByteBuffer
+						buffer = ByteBuffer.wrap(bytes);
+
+				buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+				signal[i]  = buffer.getInt();
+			}
+
+			return signal;
+		}*/	// * to be considered for the refactoring of the particular reading methods
+
 	static byte[] writeDataSample(int sample, int sampleLength){
 
 		if (sampleLength > 3)
@@ -67,54 +116,29 @@ public interface FileContentConverter {
 
 		int
 			dataBlockLength = readDataBlockLength(fileContent),
-			sampleFrameSize = readSampleFrameSize(fileContent),
+			sampleSize = readSampleFrameSize(fileContent),
 			start = starts[readFormatOrdinal(fileContent)],
 			index = 0;
 
 		int[]
-			signal = new int[dataBlockLength / sampleFrameSize];
+			signal = new int[dataBlockLength / sampleSize];
 
-		for (int i = start; i < start + dataBlockLength; i += sampleFrameSize){
+		for (int i = start; i < start + dataBlockLength; i += sampleSize){
 
-			byte[]
-				bytes = copyOfRange(fileContent, i, i + sampleFrameSize);
+			signal[index++] = readDataSample(fileContent, i, sampleSize);
 
-			signal[index++] = readDataSample(bytes);
+/*			byte[]
+				bytes = copyOfRange(fileContent, i, i + sampleSize);
+
+			signal[index++] = readDataSample(bytes);*/ // disposable
 		}
 
 		return signal;
 	}
 
+
+
 	static Byte[] writeSignal(int[] signal, int bitDepth){
-
-
-/*		private static int[] constructSignal(){
-
-			int
-					sampleSize = 2,
-					signalLength = sample_mono_wav.length / sampleSize;
-
-			int[]
-					signal = new int[signalLength];
-
-			for (int i = 0; i < signalLength; i++){
-
-				byte[]
-						bytes = new byte[4],
-						b = Arrays.copyOfRange(sample_mono_wav, i, i + 2);
-
-				System.arraycopy(b, 0, bytes, 0, b.length);
-
-				ByteBuffer
-						buffer = ByteBuffer.wrap(bytes);
-
-				buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-				signal[i]  = buffer.getInt();
-			}
-
-			return signal;
-		}*/	// * to be considered for the refactoring of the particular reading methods
 
 		ArrayList<Byte>
 			cache = new ArrayList<>();

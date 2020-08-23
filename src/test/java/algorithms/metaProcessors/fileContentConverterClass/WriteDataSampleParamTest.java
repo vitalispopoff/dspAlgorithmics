@@ -18,15 +18,15 @@ public class WriteDataSampleParamTest {
 		correctAnswer;
 
 	int
-		frame,
-		frameLength;
+		sample,
+		sampleLength;
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	public WriteDataSampleParamTest(int frame, int frameLength, byte[] correctAnswer){
+	public WriteDataSampleParamTest(int sample, int sampleLength, byte[] correctAnswer){
 
-		this.frame = frame;
-		this.frameLength = frameLength;
+		this.sample = sample;
+		this.sampleLength = sampleLength;
 		this.correctAnswer = correctAnswer;
 	}
 
@@ -78,12 +78,12 @@ public class WriteDataSampleParamTest {
 //	--------------------------------------------------------------------------------------------------------------------
 
 		@Test
-	public void dataFrameReaderTest(){
+	public void writeDataSampleTest(){
 
 		try {
 
 			byte[]
-				givenAnswer = writeDataSample(frame, frameLength);
+				givenAnswer = writeDataSample(sample, sampleLength);
 
 			Assert.assertTrue(equal(givenAnswer, correctAnswer));
 		}
@@ -92,7 +92,7 @@ public class WriteDataSampleParamTest {
 
 			System.out.println(
 				"\n\tgiven: "
-				+ Arrays.toString(writeDataSample(frame, frameLength))
+				+ Arrays.toString(writeDataSample(sample, sampleLength))
 				+ ", correct: "
 				+ Arrays.toString(correctAnswer));
 

@@ -50,7 +50,7 @@ public interface Peaks {
 		int
 			maximum = Math.max(infimum, supremum);
 
-		maximum <<= 1;
+//		maximum <<= 1;
 
 		String
 			result = Integer.toBinaryString(maximum);

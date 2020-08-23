@@ -1,6 +1,6 @@
 //	@formatter:off
 
-import data.Wave;
+import algorithms.analyzers.BitRepresent;import algorithms.analyzers.Peaks;import algorithms.processors.Difference;import data.Wave;import java.util.Arrays;
 
 public class Main {
 
@@ -11,7 +11,10 @@ public class Main {
 
 		{
 			String
-				address_folder = "src\\main\\resources\\",
+				address_folder_0 = "src\\main\\resources\\",
+				address_folder_1 = "C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\",
+
+				address_shortie = "shortie-mono-16bit.wav",
 
 				address_0 = "sample-mono.wav",
 				address_1 = "sample-mono-byte.wav",
@@ -23,7 +26,7 @@ public class Main {
 				address_400 = "*.wav",
 				address_404 = "nope.wave",
 
-				address =  address_folder + address_0;
+				address =  address_folder_1 + address_shortie;
 
 			temporal = new Wave(address);
 

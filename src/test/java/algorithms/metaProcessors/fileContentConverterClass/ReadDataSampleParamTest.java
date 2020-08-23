@@ -49,7 +49,7 @@ public class ReadDataSampleParamTest {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	@Test
+//	@Test
 	public void readDataSampleTest_1(){
 
 //		Assert.assertEquals(readDataSample(frame), correctAnswer);
@@ -63,7 +63,7 @@ public class ReadDataSampleParamTest {
 
 		try {
 
-			givenAnswer = readDataSample(frame, 0, 1);
+			givenAnswer = readDataSample(frame, 0, frame.length);
 
 			Assert.assertEquals(givenAnswer, correctAnswer);
 		}

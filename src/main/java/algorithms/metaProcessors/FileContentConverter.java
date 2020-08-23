@@ -4,49 +4,30 @@ package algorithms.metaProcessors;
 
 import java.nio.*;
 import java.util.ArrayList;import java.util.Arrays;
-
-import data.FormatTags;
+import algorithms.analyzers.BitRepresent;import data.FormatTags;
 
 import static java.nio.ByteBuffer.wrap;
-import static java.util.Arrays.copyOfRange;
-
 import static data.FormatTags.*;
 
 public interface FileContentConverter {
 
-	/*static int readDataSample(byte[] inputSample){
-
-		int
-			max = inputSample.length - 1,
-			byteShift = max << 3,
-			sample = inputSample[max] << byteShift;
-
-		for (int i = 0; i < max; i++){
-
-			int
-				b = inputSample[i] & 0xFF;
-
-			byteShift = i << 3;
-			b <<= byteShift;
-			sample |= b;
-		}
-
-		return sample;
-	}*/
-
-	static int readDataSample(byte[] fileContent, int start, int sampleSize){
+	static int readDataSample(byte[] fileContent, int startIndex, int sampleSize){
 
 		byte[]
 			bytes = new byte[4];
 
-		System.arraycopy(fileContent, start, bytes, 0, sampleSize);
+		System.arraycopy(fileContent, startIndex, bytes, 0, sampleSize);
 
-		if (bytes[sampleSize - 1] < 0){
+		boolean
+			sampleIsNegative = bytes[sampleSize - 1] < 0;
 
-			bytes[3] |= sampleSize == 4 ? 0xFF : 0x80;
+		if (sampleIsNegative){
 
-			if (sampleSize < 4)
-				bytes[sampleSize - 1] &= 0x7F;	// TODO
+			for (int i = 3 ; i >= sampleSize ; i--)
+
+				bytes[i] |= 0xFF;
+
+			bytes[3] |= 0x80;
 		}
 
 		ByteBuffer
@@ -54,54 +35,14 @@ public interface FileContentConverter {
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 
-		return buffer.get();
+		return buffer.getInt();
 	}
-
-	static void main(String[] args){
-
-		byte[]
-			bytes = new byte[]{(byte)0x00, (byte)0x80};
-
-		int
-			start = 0,
-			sampleSize = 2;
-
-		System.out.println(readDataSample(new byte[]{0, (byte) 0x80}, 0, 2));
-	}
-
-		/*		private static int[] constructSignal(){
-
-			int
-					sampleSize = 2,
-					signalLength = sample_mono_wav.length / sampleSize;
-
-			int[]
-					signal = new int[signalLength];
-
-			for (int i = 0; i < signalLength; i++){
-
-				byte[]
-						bytes = new byte[4],
-						b = Arrays.copyOfRange(sample_mono_wav, i, i + 2);
-
-				System.arraycopy(b, 0, bytes, 0, b.length);
-
-				ByteBuffer
-						buffer = ByteBuffer.wrap(bytes);
-
-				buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-				signal[i]  = buffer.getInt();
-			}
-
-			return signal;
-		}*/	// * to be considered for the refactoring of the particular reading methods
 
 	static byte[] writeDataSample(int sample, int sampleLength){
 
 		if (sampleLength > 3)
 
-			sampleLength = 4;
+			sampleLength = 4;	// only preventing possible errors with declared sampleLength
 
 		boolean
 			isFrameNegative = sample < 0;
@@ -112,7 +53,7 @@ public interface FileContentConverter {
 		for (int i = 0; i < sampleLength; i++){
 
 			byte
-				cache = (byte) (sample & 0xFF);	// ! no byte shift ?
+				cache = (byte) (sample & 0xFF);
 
 			if (isFrameNegative)
 
@@ -144,8 +85,6 @@ public interface FileContentConverter {
 
 		return signal;
 	}
-
-
 
 	static Byte[] writeSignal(int[] signal, int bitDepth){
 
@@ -213,7 +152,12 @@ public interface FileContentConverter {
 		return outputs;
 	}
 
-	static byte[] writeSignalChannels(int[][] signalChannels){
+	static byte[] writeSignalChannels(int[][] signalChannels, int bitDepth){
+
+
+
+
+
 
 		byte[] output = {};
 

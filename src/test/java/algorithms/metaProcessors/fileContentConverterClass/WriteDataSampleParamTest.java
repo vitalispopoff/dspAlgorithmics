@@ -2,17 +2,22 @@
 
 package algorithms.metaProcessors.fileContentConverterClass;
 
+import java.util.*;
+
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.util.*;
-
 import static algorithms.metaProcessors.FileContentConverter.writeDataSample;
-import static algorithms.metaProcessors.fileContentConverterClass._InputData.*;
 
 	@RunWith(Parameterized.class)
 public class WriteDataSampleParamTest {
+
+	static byte[][]
+		input1 = _InputData.input1;
+
+	static int[]
+		input2 = _InputData.input2;
 
 	byte[]
 		correctAnswer;
@@ -41,25 +46,28 @@ public class WriteDataSampleParamTest {
 	public static Object[][] setInput(){
 
 			Object[][]
-				input = new Object[_InputData.input1.length][3];
+				input = new Object[input1.length][3];
 
 			int
-				maxIndex = Math.max(_InputData.input1.length, input2.length);
+				maxIndex = Math.max(input1.length, input2.length);
 
 			for (int i = 0; i < maxIndex; i++) {
 
-				if(i < input2.length)
+				if (i < input2.length)
+
 					input[i][0] = input2[i];
 
-				if (i < _InputData.input1.length){
+				if (i < input1.length){
 
-					input[i][1] = _InputData.input1[i].length;
-					input[i][2] = _InputData.input1[i];
+					input[i][1] = input1[i].length;
+					input[i][2] = input1[i];
 				}
 			}
 
 		return input;
 	}
+
+//	--------------------------------------------------------------------------------------------------------------------
 
 	private static boolean equal(byte[] given, byte[] correct) {
 
@@ -74,8 +82,6 @@ public class WriteDataSampleParamTest {
 
 		return false;
 	}
-
-//	--------------------------------------------------------------------------------------------------------------------
 
 		@Test
 	public void writeDataSampleTest(){

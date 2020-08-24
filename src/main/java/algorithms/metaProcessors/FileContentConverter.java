@@ -3,8 +3,8 @@
 package algorithms.metaProcessors;
 
 import java.nio.*;
-import java.util.ArrayList;import java.util.Arrays;
-import algorithms.analyzers.BitRepresent;import data.FormatTags;
+import java.util.*;
+import data.FormatTags;
 
 import static java.nio.ByteBuffer.wrap;
 import static data.FormatTags.*;
@@ -82,10 +82,11 @@ public interface FileContentConverter {
 
 			signal[index++] = readDataSample(fileContent, i, sampleSize);
 
-
 		return signal;
 	}
 
+
+/*
 	static Byte[] writeSignal(int[] signal, int bitDepth){
 
 		ArrayList<Byte>
@@ -126,6 +127,7 @@ public interface FileContentConverter {
 
 		return null;
 	}
+*/	// ? disposable ?
 
 
 
@@ -152,18 +154,30 @@ public interface FileContentConverter {
 		return outputs;
 	}
 
-	static byte[] writeSignalChannels(int[][] signalChannels, int bitDepth){
+	static byte[] writeSignalChannels(int[][] signalChannels, int sampleFrameSize){
 
+		int
+			sampleSize = sampleFrameSize / signalChannels.length,
+			signalLength = signalChannels.length * sampleFrameSize;
 
+		byte[]
+			signal = new byte[signalLength];
 
+		for (int i = 0; i < signalChannels[0].length; i++)
 
+			for (int j = 0; j < 2; j++){
 
+				int
+					signalIndex = i * sampleFrameSize;
 
-		byte[] output = {};
+				byte[]
+					bytes = writeDataSample(signalChannels[j][i],sampleSize);
 
-		return output;
-	}	// TODO
+				System.arraycopy(bytes, 0, signal, signalIndex, bytes.length);
+			}
 
+		return signal;
+	}
 
 
 

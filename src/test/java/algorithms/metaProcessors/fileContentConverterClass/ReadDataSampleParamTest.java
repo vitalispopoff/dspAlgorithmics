@@ -4,7 +4,7 @@ package algorithms.metaProcessors.fileContentConverterClass;
 
 import java.util.*;
 
-import org.junit.*;
+import _inputs.FileContentConverter_InputData;import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -33,15 +33,15 @@ public class ReadDataSampleParamTest {
 	public static Collection<?> setInput(){
 
 			Object[][]
-					input = new Object[_InputData.input1.length][2];
+					input = new Object[FileContentConverter_InputData.input1.length][2];
 
-			for(int i = 0 ; i < Math.min(_InputData.input1.length, _InputData.input2.length); i++) {
+			for(int i = 0 ; i < Math.min(FileContentConverter_InputData.input1.length, FileContentConverter_InputData.input2.length); i++) {
 
 //				if (i < _InputData.input1.length)
-					input[i][0] = _InputData.input1[i];
+					input[i][0] = FileContentConverter_InputData.input1[i];
 
 //				if(i < _InputData.input2.length)
-					input[i][1] = _InputData.input2[i];
+					input[i][1] = FileContentConverter_InputData.input2[i];
 			}
 
 		return Arrays.asList(input);

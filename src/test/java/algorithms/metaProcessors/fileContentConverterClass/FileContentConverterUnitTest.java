@@ -6,7 +6,7 @@ import org.junit.*;
 
 import static algorithms.metaProcessors.FileContentConverter.*;
 
-import static data._InputData.*;
+import static _inputs.Data_InputData.*;
 
 public class FileContentConverterUnitTest {
 

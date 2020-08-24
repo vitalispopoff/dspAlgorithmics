@@ -4,7 +4,7 @@ package algorithms.metaProcessors.fileContentConverterClass;
 
 import java.util.*;
 
-import org.junit.*;
+import _inputs.FileContentConverter_InputData;import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -14,10 +14,10 @@ import static algorithms.metaProcessors.FileContentConverter.writeDataSample;
 public class WriteDataSampleParamTest {
 
 	static byte[][]
-		input1 = _InputData.input1;
+		input1 = FileContentConverter_InputData.input1;
 
 	static int[]
-		input2 = _InputData.input2;
+		input2 = FileContentConverter_InputData.input2;
 
 	byte[]
 		correctAnswer;

@@ -1,8 +1,8 @@
 //	@formatter:off
 
-package algorithms.metaProcessors.fileContentConverterClass;
+package _inputs;
 
-public class _InputData {
+public class FileContentConverter_InputData {
 
 	private static final byte
 		min = (byte) 0x80,

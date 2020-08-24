@@ -67,70 +67,6 @@ public interface FileContentConverter {
 
 
 
-	static int[] readSignal(byte[] fileContent) {
-
-		int
-			dataBlockLength = readDataBlockLength(fileContent),
-			sampleSize = readSampleFrameSize(fileContent),
-			start = starts[readFormatOrdinal(fileContent)],
-			index = 0;
-
-		int[]
-			signal = new int[dataBlockLength / sampleSize];
-
-		for (int i = start; i < start + dataBlockLength; i += sampleSize)
-
-			signal[index++] = readDataSample(fileContent, i, sampleSize);
-
-		return signal;
-	}
-
-
-/*
-	static Byte[] writeSignal(int[] signal, int bitDepth){
-
-		ArrayList<Byte>
-			cache = new ArrayList<>();
-
-		for (int sample : signal){
-
-			boolean
-				sampleIsNegative = sample < 0;
-
-			int
-				numberOfBytes = bitDepth >> 3;
-			
-			if (bitDepth % 8 > 0) 
-				
-				bitDepth++;
-
-			for (int i = 0; i < numberOfBytes; i++){
-
-				boolean
-					containsMSB = i == numberOfBytes - 1;
-				
-				int
-					byteShift = i << 3,	
-					b = sample & (0xFF << byteShift);
-				
-				b >>>= (i << 3);
-				
-				if(containsMSB && bitDepth < 32 && sampleIsNegative)
-
-					b |= 0x80;
-				
-				cache.add((byte) b);
-			}
-
-			return (Byte[]) cache.toArray();	// ? this is doubtful, as the byte[] is desired ...
-		}
-
-		return null;
-	}
-*/	// ? disposable ?
-
-
-
 	static int[][] readSignalChannels(byte[] fileContent){
 
 		int[]
@@ -152,6 +88,24 @@ public interface FileContentConverter {
 		}
 
 		return outputs;
+	}
+
+	static int[] readSignal(byte[] fileContent) {
+
+		int
+				dataBlockLength = readDataBlockLength(fileContent),
+				sampleSize = readSampleFrameSize(fileContent),
+				start = starts[readFormatOrdinal(fileContent)],
+				index = 0;
+
+		int[]
+				signal = new int[dataBlockLength / sampleSize];
+
+		for (int i = start; i < start + dataBlockLength; i += sampleSize)
+
+			signal[index++] = readDataSample(fileContent, i, sampleSize);
+
+		return signal;
 	}
 
 	static byte[] writeSignalChannels(int[][] signalChannels, int sampleFrameSize){
@@ -208,10 +162,8 @@ public interface FileContentConverter {
 
 	static byte[] writeFormat(FormatTags format){
 
-		byte[] output = {};
-
-		return output;
-	}	// * TODO
+		return FormatTags.bytes[format.ordinal()];
+	}
 
 
 
@@ -222,16 +174,13 @@ public interface FileContentConverter {
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 
-		return buffer.getInt();
+		return 8 + buffer.getInt();
 	}
 
 	static byte[] writeFileLength(int fileLength){
 
-		byte[] output = {};
-
-		return output;
-	}	// * TODO
-
+		return writeDataSample(fileLength - 8, 4);
+	}
 
 
 	static int readNumberOfChannels(byte[] fileContent){
@@ -248,11 +197,9 @@ public interface FileContentConverter {
 	}
 
 	static byte[] writeNumberOfChannels(int numberOfChannels){
-
-		byte[] output = {};
-
-		return output;
-	}	// * TODO
+		
+		return writeDataSample(numberOfChannels, 2);
+	}	
 
 
 
@@ -268,10 +215,8 @@ public interface FileContentConverter {
 
 	static byte[] writeSampleRate(int sampleRate){
 
-		byte[] output = {};
-
-		return output;
-	}	// * TODO
+		return writeDataSample(sampleRate, 4);
+	}	
 
 
 
@@ -290,10 +235,8 @@ public interface FileContentConverter {
 
 	static byte[] writeSampleFrameSize(int sampleFrameSize){
 
-		byte[] output = {};
-
-		return output;
-	}	// * TODO
+		return writeDataSample(sampleFrameSize, 2);
+	}	
 
 
 
@@ -312,10 +255,8 @@ public interface FileContentConverter {
 
 	static byte[] writeBitDepth(int bitDepth){
 
-		byte[] output = {};
-
-		return output;
-	}	// * TODO
+		return writeDataSample(bitDepth, 2);
+	}	
 
 
 
@@ -331,10 +272,8 @@ public interface FileContentConverter {
 
 	static byte[] writeDataBlockLength(int dataBlockLength){
 
-		byte[] output = {};
-
-		return output;
-	}	// * TODO
+		return writeDataSample(dataBlockLength, 4);
+	}	
 }
 
 //	@formatter:on

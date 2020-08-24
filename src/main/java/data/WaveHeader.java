@@ -56,6 +56,7 @@ public class WaveHeader {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
+
 	public void setFormat(FormatTags format){
 
 		this.format = format;

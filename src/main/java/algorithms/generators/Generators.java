@@ -4,9 +4,9 @@ package algorithms.generators;
 
 import java.util.Random;
 
-public abstract class Generators {
+public interface Generators {
 
-	public static int[] generateNoise(int length, int bitDepth){
+	static int[] generateNoise(int length, int bitDepth){
 
 		int[]
 			result = new int[length];
@@ -21,7 +21,9 @@ public abstract class Generators {
 		return result;
 	}
 
-	private static int getSignedGaussianInt(int bitDepth){
+
+
+	static int getSignedGaussianInt(int bitDepth){
 
 		Random
 			random = new Random();

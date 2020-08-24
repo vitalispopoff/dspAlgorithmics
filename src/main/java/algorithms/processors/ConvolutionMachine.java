@@ -2,9 +2,9 @@
 
 package algorithms.processors;
 
-public abstract class ConvolutionMachine {
+public interface ConvolutionMachine {
 
-	public static int[] convolutionMachine(int[] signal, int[] impulse){
+	static int[] convolutionMachine(int[] signal, int[] impulse){
 
 		int[]
 			reversedImpulse = reverseSignal(impulse);
@@ -12,7 +12,7 @@ public abstract class ConvolutionMachine {
 		return correlationMachine(signal, reversedImpulse);
 	}
 
-	public static int[] correlationMachine(int[] signal, int[] impulse){
+	static int[] correlationMachine(int[] signal, int[] impulse){
 
 		int
 			resultLength = 	signal.length + impulse.length - 1;
@@ -45,7 +45,9 @@ public abstract class ConvolutionMachine {
 		return result;
 	}
 
-	private static int[] reverseSignal(int[] signal) {
+
+
+	static int[] reverseSignal(int[] signal) {
 
 		int
 			length = signal.length;

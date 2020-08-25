@@ -12,28 +12,28 @@ import static data.FormatTags.*;
 
 public interface FileContentConverter {
 
-	static FormatTags readFormat(byte[]fileContent){
+	static FormatTags readFormatTag(byte[]fileContent){
 
 		int
-				tagOrdinal = readFormatOrdinal(fileContent);
+			tagOrdinal = readFormatTagOrdinal(fileContent);
 
 		return FormatTags.values()[tagOrdinal];
 	}
 
-	static int readFormatOrdinal(byte[]fileContent){
+	static int readFormatTagOrdinal(byte[]fileContent){
 
 		int
-				start = FORMAT_TAG.getStart(),
-				end = start + FORMAT_TAG.getLength(),
-				index = 0;
+			start = FORMAT_TAG.getStart(),
+			end = start + FORMAT_TAG.getLength(),
+			index = 0;
 
 		byte[]
-				b = Arrays.copyOfRange(fileContent, start, end);
+			b = Arrays.copyOfRange(fileContent, start, end);
 
 		for (byte[] pair : bytes){
 
 			boolean
-					arraysAreEqual = Arrays.equals(b, pair);
+				arraysAreEqual = Arrays.equals(b, pair);
 
 			if (arraysAreEqual)
 
@@ -45,10 +45,10 @@ public interface FileContentConverter {
 		return 0;
 	}
 
-	static byte[] writeFormat(FormatTags format){
+/*	static byte[] writeFormat(FormatTags format){
 
 		return FormatTags.bytes[format.ordinal()];
-	}
+	}*/		// ? disposable ?
 
 
 
@@ -56,18 +56,19 @@ public interface FileContentConverter {
 
 		int[]
 			signal = readSignal(fileContent);
+
 		int
 			numberOfInputs = readDataField(fileContent, CHANNELS),
 			outputLength = signal.length / numberOfInputs;
 
 		int[][]
-				outputs = new int[numberOfInputs][outputLength];
+			outputs = new int[numberOfInputs][outputLength];
 
 		for (int i = 0; i < signal.length ; i++){
 
 			int
-					channel = i % numberOfInputs,
-					index = i / numberOfInputs;
+				channel = i % numberOfInputs,
+				index = i / numberOfInputs;
 
 			outputs[channel][index] = signal[i];
 		}
@@ -78,13 +79,13 @@ public interface FileContentConverter {
 	static int[] readSignal(byte[] fileContent) {
 
 		int
-				dataBlockLength = readDataField(fileContent, DATA_SIZE),
-				sampleSize = readDataField(fileContent, BLOCK_SIZE),
-				start = starts[readFormatOrdinal(fileContent)],
-				index = 0;
+			dataBlockLength = readDataField(fileContent, DATA_SIZE),
+			sampleSize = readDataField(fileContent, BLOCK_ALIGN),
+			start = starts[readFormatTagOrdinal(fileContent)],
+			index = 0;
 
 		int[]
-				signal = new int[dataBlockLength / sampleSize];
+			signal = new int[dataBlockLength / sampleSize];
 
 		for (int i = start; i < start + dataBlockLength; i += sampleSize)
 
@@ -123,12 +124,12 @@ public interface FileContentConverter {
 	static int readDataSample(byte[] fileContent, int startIndex, int sampleSize){
 
 		byte[]
-				bytes = new byte[4];
+			bytes = new byte[4];
 
 		System.arraycopy(fileContent, startIndex, bytes, 0, sampleSize);
 
 		boolean
-				sampleIsNegative = bytes[sampleSize - 1] < 0;
+			sampleIsNegative = bytes[sampleSize - 1] < 0;
 
 		if (sampleIsNegative){
 
@@ -140,7 +141,7 @@ public interface FileContentConverter {
 		}
 
 		ByteBuffer
-				buffer = ByteBuffer.wrap(bytes);
+			buffer = ByteBuffer.wrap(bytes);
 
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -154,15 +155,15 @@ public interface FileContentConverter {
 			sampleLength = 4;	// only preventing possible errors with declared sampleLength
 
 		boolean
-				isFrameNegative = sample < 0;
+			isFrameNegative = sample < 0;
 
 		byte[]
-				bytes = new byte[sampleLength];
+			bytes = new byte[sampleLength];
 
 		for (int i = 0; i < sampleLength; i++){
 
 			byte
-					cache = (byte) (sample & 0xFF);
+				cache = (byte) (sample & 0xFF);
 
 			if (isFrameNegative)
 
@@ -192,47 +193,6 @@ public interface FileContentConverter {
 
 		return writeDataSample(input, length);
 	}
-
-/*	static byte[] writeFileLength(int fileLength){
-
-		return writeDataSample(fileLength - 8, 4);
-	}
-
-
-
-	static byte[] writeNumberOfChannels(int numberOfChannels){
-		
-		return writeDataSample(numberOfChannels, 2);
-	}	
-
-
-
-	static byte[] writeSampleRate(int sampleRate){
-
-		return writeDataSample(sampleRate, 4);
-	}	
-
-
-
-	static byte[] writeBlockSize(int sampleFrameSize){
-
-		return writeDataSample(sampleFrameSize, 2);
-	}	
-
-
-
-	static byte[] writeBitDepth(int bitDepth){
-
-		return writeDataSample(bitDepth, 2);
-	}	
-
-
-
-	static byte[] writeDataBlockLength(int dataBlockLength){
-
-		return writeDataSample(dataBlockLength, 4);
-	}	*/	// disposable
-
 }
 
 //	@formatter:on

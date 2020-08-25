@@ -31,9 +31,12 @@ public class Wave {
 
 	public Wave (String fileAddress){
 
-		this.header = WaveHeader.instanceOf(null);	// prevents NullPointerException when file is not found.
+		boolean
+			addressIsValid = verifyFile(fileAddress);
 
-		if(verifyFile(fileAddress)){
+			this.header = WaveHeader.instanceOf(null);	// prevents NullPointerException when file is not found.
+
+		if(addressIsValid){
 
 			byte[]
 				fileContent = loadFile(fileAddress);
@@ -60,10 +63,12 @@ public class Wave {
 	}
 
 
+
 	public WaveHeader getHeader( ){
 
 		return header;
 	}
+
 
 
 	public void setChannelSignals(int[][] channelSignals){
@@ -81,10 +86,10 @@ public class Wave {
 	@Override
 	public String toString( ){
 
-		return "Wave{\n"
+		return "Wave = [\n"
 				+ "fileAddress = "
 				+ fileAddress + '\n'
-				+ header.toString() + "}\n";
+				+ header.toString() + "]\n";
 	}
 }
 

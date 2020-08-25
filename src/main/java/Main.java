@@ -1,6 +1,6 @@
 //	@formatter:off
 
-import algorithms.analyzers.BitRepresent;import algorithms.analyzers.Peaks;import algorithms.processors.Difference;import data.Wave;import java.util.Arrays;
+import data.Wave;import static data.FileCache.exportCurrentFile;
 
 public class Main {
 
@@ -26,7 +26,7 @@ public class Main {
 				address_400 = "*.wav",
 				address_404 = "nope.wave",
 
-				address =  address_folder_0 + address_0;
+				address =  address_folder_1 + address_shortie;
 
 			temporal = new Wave(address);
 
@@ -34,15 +34,21 @@ public class Main {
 
 		int
 			dataBlockLength =
-				temporal.header.dataBlockLength,
+				temporal.header.blockAlign,
 			sampleFrameSize =
-				temporal.header.sampleFrameSize,
+				temporal.header.avgBytesPerSec,
 			sampleRate =
-				temporal.header.sampleRate,
-			channels =
-				temporal.header.numberOfChannels;
+				temporal.header.samplePerSec,
+			channels = temporal.header.channels;
+
+		int[][]
+			signals = temporal.getChannelSignals();
 
 		System.out.println(temporal);
+
+		exportCurrentFile();
+
+
 	}
 }
 

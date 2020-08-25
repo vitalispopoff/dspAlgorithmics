@@ -10,14 +10,14 @@ import static java.nio.file.Paths.get;
 
 public interface FileManager {
 
-	static void saveFile(String fileAddress, byte[] wave){
+	static void saveFile(String fileAddress, byte[] export){
 
 		Path
 			filePath = get(fileAddress);
 
 		try {
 
-			write(filePath, wave);
+			write(filePath, export);
 		}
 
 		catch (IOException e) {
@@ -56,7 +56,7 @@ public interface FileManager {
 	static boolean verifyFile(String fileAddress){
 
 		boolean
-				fileExists;
+			fileExists;
 
 		try {
 

@@ -50,12 +50,13 @@ public interface Peaks {
 		int
 			maximum = Math.max(infimum, supremum);
 
-//		maximum <<= 1;
-
 		String
-			result = Integer.toBinaryString(maximum);
+			string = Integer.toBinaryString(maximum);
 
-		return result.length();
+		int
+			index = string.indexOf('1');
+
+		return string.length() - index;
 	}
 }
 

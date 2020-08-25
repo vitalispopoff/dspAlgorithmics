@@ -14,7 +14,7 @@ public class FileContentConverterUnitTest {
     public void readFormatOrdinalTest(){
 
         int
-            result = readFormatOrdinal(sample_mono_wav),
+            result = readFormatTagOrdinal(sample_mono_wav),
             correct = 0;
 
         Assert.assertEquals(correct, 0);

@@ -12,6 +12,7 @@ public enum FormatTags{
 
 	public static byte[][]
 		bytes = {
+
 			{1, 0},
 			{3, 0},
 			{6, 0},

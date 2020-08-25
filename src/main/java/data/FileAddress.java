@@ -106,8 +106,12 @@ public class FileAddress {
 
 	static String establishFileExtension(byte[] fileContent){
 
+		int
+			start = FileContentStructure.WAVE_ID.getStart(),
+			end = start + FileContentStructure.WAVE_ID.getLength();
+
 		byte[]
-			cache = Arrays.copyOfRange(fileContent, 8, 12);
+			cache = Arrays.copyOfRange(fileContent, start, end);
 
 		StringBuilder
 			builder = new StringBuilder();

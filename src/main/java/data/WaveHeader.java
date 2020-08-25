@@ -5,9 +5,9 @@ package data;
 import static algorithms.metaProcessors.FileContentConverter.*;
 
 public class WaveHeader {
-	
+
 	public FormatTags
-		format;
+		formatTag;
 	
 	public int
 		fileLength = 0,
@@ -16,7 +16,7 @@ public class WaveHeader {
 		sampleFrameSize = 0,
 		bitDepth = 0,
 		dataBlockLength = 0;
-	
+
 //	--------------------------------------------------------------------------------------------------------------------
 	
 	private WaveHeader( ){ }
@@ -27,7 +27,7 @@ public class WaveHeader {
 
 		if (fileContent != null){
 
-			this.format =
+			this.formatTag =
 				readFormat(fileContent);
 			this.fileLength =
 				readFileLength(fileContent);
@@ -36,7 +36,7 @@ public class WaveHeader {
 			this.sampleRate =
 				readSampleRate(fileContent);
 			this.sampleFrameSize =
-				readSampleFrameSize(fileContent);
+				readBlockSize(fileContent);
 			this.bitDepth =
 				readBitDepth(fileContent);
 			this.dataBlockLength =
@@ -57,14 +57,14 @@ public class WaveHeader {
 //	--------------------------------------------------------------------------------------------------------------------
 
 
-	public void setFormat(FormatTags format){
+	public void setFormatTag(FormatTags formatTag){
 
-		this.format = format;
+		this.formatTag = formatTag;
 	}
 
-	public FormatTags getFormat( ){
+	public FormatTags getFormatTag( ){
 
-		return format;
+		return formatTag;
 	}
 
 
@@ -144,7 +144,7 @@ public class WaveHeader {
 	public String toString( ){
 
 		return
-			"format = " + format + '\n'
+			"format = " + formatTag + '\n'
 			+ "fileLength = " + fileLength + '\n'
 			+ "numberOfChannels = " + numberOfChannels + '\n'
 			+ "sampleRate = " + sampleRate + '\n'

@@ -6,66 +6,10 @@ import java.nio.*;
 import java.util.*;
 import data.FormatTags;
 
-import static java.nio.ByteBuffer.wrap;
+import static data.FileContentStructure.*;
 import static data.FormatTags.*;
 
 public interface FileContentConverter {
-
-	static int readDataSample(byte[] fileContent, int startIndex, int sampleSize){
-
-		byte[]
-			bytes = new byte[4];
-
-		System.arraycopy(fileContent, startIndex, bytes, 0, sampleSize);
-
-		boolean
-			sampleIsNegative = bytes[sampleSize - 1] < 0;
-
-		if (sampleIsNegative){
-
-			for (int i = 3 ; i >= sampleSize ; i--)
-
-				bytes[i] |= 0xFF;
-
-			bytes[3] |= 0x80;
-		}
-
-		ByteBuffer
-			buffer = ByteBuffer.wrap(bytes);
-
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		return buffer.getInt();
-	}
-
-	static byte[] writeDataSample(int sample, int sampleLength){
-
-		if (sampleLength > 3)
-
-			sampleLength = 4;	// only preventing possible errors with declared sampleLength
-
-		boolean
-			isFrameNegative = sample < 0;
-
-		byte[]
-			bytes = new byte[sampleLength];
-
-		for (int i = 0; i < sampleLength; i++){
-
-			byte
-				cache = (byte) (sample & 0xFF);
-
-			if (isFrameNegative)
-
-				cache |= 0x80;
-
-			bytes[i] = cache;
-		}
-
-		return bytes;
-	}
-
-
 
 	static int[][] readSignalChannels(byte[] fileContent){
 
@@ -94,7 +38,7 @@ public interface FileContentConverter {
 
 		int
 				dataBlockLength = readDataBlockLength(fileContent),
-				sampleSize = readSampleFrameSize(fileContent),
+				sampleSize = readBlockSize(fileContent),
 				start = starts[readFormatOrdinal(fileContent)],
 				index = 0;
 
@@ -135,6 +79,62 @@ public interface FileContentConverter {
 
 
 
+	static int readDataSample(byte[] fileContent, int startIndex, int sampleSize){
+
+		byte[]
+				bytes = new byte[4];
+
+		System.arraycopy(fileContent, startIndex, bytes, 0, sampleSize);
+
+		boolean
+				sampleIsNegative = bytes[sampleSize - 1] < 0;
+
+		if (sampleIsNegative){
+
+			for (int i = 3 ; i >= sampleSize ; i--)
+
+				bytes[i] |= 0xFF;
+
+			bytes[3] |= 0x80;
+		}
+
+		ByteBuffer
+				buffer = ByteBuffer.wrap(bytes);
+
+		buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+		return buffer.getInt();
+	}
+
+	static byte[] writeDataSample(int sample, int sampleLength){
+
+		if (sampleLength > 3)
+
+			sampleLength = 4;	// only preventing possible errors with declared sampleLength
+
+		boolean
+				isFrameNegative = sample < 0;
+
+		byte[]
+				bytes = new byte[sampleLength];
+
+		for (int i = 0; i < sampleLength; i++){
+
+			byte
+					cache = (byte) (sample & 0xFF);
+
+			if (isFrameNegative)
+
+				cache |= 0x80;
+
+			bytes[i] = cache;
+		}
+
+		return bytes;
+	}
+
+
+
 	static FormatTags readFormat(byte[]fileContent){
 
 		int
@@ -145,21 +145,27 @@ public interface FileContentConverter {
 
 	static int readFormatOrdinal(byte[]fileContent){
 
-/*		byte[]
-			b = Arrays.copyOfRange(fileContent, 20, 23);
+		int
+			start = FORMAT_TAG.getStart(),
+			end = start + FORMAT_TAG.getLength(),
+			index = 0;
 
-		String
-			byteString = Arrays.toString(b);
+		byte[]
+			b = Arrays.copyOfRange(fileContent, start, end);
 
-		for(int i = 0 ; i < FormatTags.byteStrings.length ; i++)
+			for (byte[] pair : bytes){
 
-			if (FormatTags.byteStrings[i].compareTo(byteString) == 0)
+				boolean
+					arraysAreEqual = Arrays.equals(b, pair);
 
-				return i;
+				if (arraysAreEqual)
 
-		return 0;*/	// disposable
+					return index;
 
-		return readDataSample(fileContent, 20, 2);
+				else index++;
+			}
+
+		return 0;
 	}
 
 	static byte[] writeFormat(FormatTags format){
@@ -171,14 +177,11 @@ public interface FileContentConverter {
 
 	static int readFileLength(byte[] fileContent){
 
-/*		ByteBuffer
-			buffer = wrap(fileContent, 4, 4);
+		int
+			start = FILE_SIZE.getStart(),
+			length = FILE_SIZE.getLength();
 
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		return 8 + buffer.getInt();*/	// disposable
-
-		return 8 + readDataSample(fileContent, 4, 4);
+		return /*8 + */readDataSample(fileContent, start, length);	// ? value to be decided : whether including first chunk first slots
 	}
 
 	static byte[] writeFileLength(int fileLength){
@@ -187,19 +190,14 @@ public interface FileContentConverter {
 	}
 
 
+
 	static int readNumberOfChannels(byte[] fileContent){
 
-/*		ByteBuffer
-			buffer = wrap(fileContent, 22, 2);
+		int
+			start = CHANNELS.getStart(),
+			length = CHANNELS.getLength();
 
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		short
-			s = buffer.getShort();
-
-		return Short.toUnsignedInt(s);*/	// disposable
-
-		return readDataSample(fileContent, 22, 2);
+		return readDataSample(fileContent, start, length);
 	}
 
 	static byte[] writeNumberOfChannels(int numberOfChannels){
@@ -211,14 +209,11 @@ public interface FileContentConverter {
 
 	static int readSampleRate(byte[] fileContent){
 
-/*		ByteBuffer
-			buffer = wrap(fileContent, 24, 4);
+		int
+			start = SAMPLING_RATE.getStart(),
+			length = SAMPLING_RATE.getLength();
 
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		return buffer.getInt();*/	// disposable
-
-		return readDataSample(fileContent, 24, 4);
+		return readDataSample(fileContent, start, length);
 	}
 
 	static byte[] writeSampleRate(int sampleRate){
@@ -228,22 +223,16 @@ public interface FileContentConverter {
 
 
 
-	static int readSampleFrameSize(byte[] fileContent){
+	static int readBlockSize(byte[] fileContent){
 
-/*		ByteBuffer
-			buffer = wrap(fileContent, 32, 2);
+		int
+				start = BLOCK_SIZE.getStart(),
+				length = BLOCK_SIZE.getLength();
 
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		short
-			s = buffer.getShort();
-
-		return Short.toUnsignedInt(s);*/	// disposable
-
-		return readDataSample(fileContent, 32, 2);
+		return readDataSample(fileContent, start, length);
 	}
 
-	static byte[] writeSampleFrameSize(int sampleFrameSize){
+	static byte[] writeBlockSize(int sampleFrameSize){
 
 		return writeDataSample(sampleFrameSize, 2);
 	}	
@@ -252,17 +241,11 @@ public interface FileContentConverter {
 
 	static int readBitDepth(byte[] fileContent){
 
-/*		ByteBuffer
-			buffer = wrap(fileContent, 34, 2);
+		int
+				start = BIT_DEPTH.getStart(),
+				length = BIT_DEPTH.getLength();
 
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		short
-			s = buffer.getShort();
-
-		return Short.toUnsignedInt(s);*/	// disposable
-
-		return readDataSample(fileContent, 24, 2);
+		return readDataSample(fileContent, start, length);
 	}
 
 	static byte[] writeBitDepth(int bitDepth){
@@ -274,14 +257,11 @@ public interface FileContentConverter {
 
 	static int readDataBlockLength(byte[] fileContent){
 
-/*		ByteBuffer
-			buffer = wrap(fileContent, 40, 4);
+		int
+				start = DATA_SIZE.getStart(),
+				length = DATA_SIZE.getLength();
 
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		return buffer.getInt();*/	// disposable
-
-		return readDataSample(fileContent, 40, 4);
+		return readDataSample(fileContent, start, length);
 	}
 
 	static byte[] writeDataBlockLength(int dataBlockLength){

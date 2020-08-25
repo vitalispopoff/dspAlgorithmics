@@ -26,7 +26,7 @@ public class Main {
 				address_400 = "*.wav",
 				address_404 = "nope.wave",
 
-				address =  address_folder_1 + address_shortie;
+				address =  address_folder_0 + address_0;
 
 			temporal = new Wave(address);
 

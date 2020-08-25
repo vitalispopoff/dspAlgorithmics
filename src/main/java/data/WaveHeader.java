@@ -3,6 +3,7 @@
 package data;
 
 import static algorithms.metaProcessors.FileContentConverter.*;
+import static data.FileContentStructure.*;
 
 public class WaveHeader {
 
@@ -27,20 +28,13 @@ public class WaveHeader {
 
 		if (fileContent != null){
 
-			this.formatTag =
-				readFormat(fileContent);
-			this.fileLength =
-				readFileLength(fileContent);
-			this.numberOfChannels =
-				readNumberOfChannels(fileContent);
-			this.sampleRate =
-				readSampleRate(fileContent);
-			this.sampleFrameSize =
-				readBlockSize(fileContent);
-			this.bitDepth =
-				readBitDepth(fileContent);
-			this.dataBlockLength =
-				readDataBlockLength(fileContent);
+			this.formatTag = readFormat(fileContent);
+			this.fileLength = readDataField(fileContent, FILE_SIZE);
+			this.numberOfChannels = readDataField(fileContent, CHANNELS);
+			this.sampleRate = readDataField(fileContent, SAMPLING_RATE);
+			this.sampleFrameSize = readDataField(fileContent, BLOCK_SIZE);
+			this.bitDepth = readDataField(fileContent, BIT_DEPTH);
+			this.dataBlockLength = readDataField(fileContent, DATA_SIZE);
 		}
 	}
 	

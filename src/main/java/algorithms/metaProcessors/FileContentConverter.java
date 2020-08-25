@@ -4,6 +4,7 @@ package algorithms.metaProcessors;
 
 import java.nio.*;
 import java.util.*;
+import data.FileContentStructure;
 import data.FormatTags;
 
 import static data.FileContentStructure.*;
@@ -11,12 +12,52 @@ import static data.FormatTags.*;
 
 public interface FileContentConverter {
 
+	static FormatTags readFormat(byte[]fileContent){
+
+		int
+				tagOrdinal = readFormatOrdinal(fileContent);
+
+		return FormatTags.values()[tagOrdinal];
+	}
+
+	static int readFormatOrdinal(byte[]fileContent){
+
+		int
+				start = FORMAT_TAG.getStart(),
+				end = start + FORMAT_TAG.getLength(),
+				index = 0;
+
+		byte[]
+				b = Arrays.copyOfRange(fileContent, start, end);
+
+		for (byte[] pair : bytes){
+
+			boolean
+					arraysAreEqual = Arrays.equals(b, pair);
+
+			if (arraysAreEqual)
+
+				return index;
+
+			else index++;
+		}
+
+		return 0;
+	}
+
+	static byte[] writeFormat(FormatTags format){
+
+		return FormatTags.bytes[format.ordinal()];
+	}
+
+
+
 	static int[][] readSignalChannels(byte[] fileContent){
 
 		int[]
 			signal = readSignal(fileContent);
 		int
-			numberOfInputs = readNumberOfChannels(fileContent),
+			numberOfInputs = readDataField(fileContent, CHANNELS),
 			outputLength = signal.length / numberOfInputs;
 
 		int[][]
@@ -37,8 +78,8 @@ public interface FileContentConverter {
 	static int[] readSignal(byte[] fileContent) {
 
 		int
-				dataBlockLength = readDataBlockLength(fileContent),
-				sampleSize = readBlockSize(fileContent),
+				dataBlockLength = readDataField(fileContent, DATA_SIZE),
+				sampleSize = readDataField(fileContent, BLOCK_SIZE),
 				start = starts[readFormatOrdinal(fileContent)],
 				index = 0;
 
@@ -135,70 +176,29 @@ public interface FileContentConverter {
 
 
 
-	static FormatTags readFormat(byte[]fileContent){
+	static int readDataField(byte[] fileContent, FileContentStructure field){
 
 		int
-			tagOrdinal = readFormatOrdinal(fileContent);
+			start = field.getStart(),
+			length = field.getLength();
 
-		return FormatTags.values()[tagOrdinal];
+		return readDataSample(fileContent, start, length);
 	}
 
-	static int readFormatOrdinal(byte[]fileContent){
+	static byte[] writeDataField(int input, FileContentStructure field){
 
 		int
-			start = FORMAT_TAG.getStart(),
-			end = start + FORMAT_TAG.getLength(),
-			index = 0;
+				length = field.getLength();
 
-		byte[]
-			b = Arrays.copyOfRange(fileContent, start, end);
-
-			for (byte[] pair : bytes){
-
-				boolean
-					arraysAreEqual = Arrays.equals(b, pair);
-
-				if (arraysAreEqual)
-
-					return index;
-
-				else index++;
-			}
-
-		return 0;
+		return writeDataSample(input, length);
 	}
 
-	static byte[] writeFormat(FormatTags format){
-
-		return FormatTags.bytes[format.ordinal()];
-	}
-
-
-
-	static int readFileLength(byte[] fileContent){
-
-		int
-			start = FILE_SIZE.getStart(),
-			length = FILE_SIZE.getLength();
-
-		return /*8 + */readDataSample(fileContent, start, length);	// ? value to be decided : whether including first chunk first slots
-	}
-
-	static byte[] writeFileLength(int fileLength){
+/*	static byte[] writeFileLength(int fileLength){
 
 		return writeDataSample(fileLength - 8, 4);
 	}
 
 
-
-	static int readNumberOfChannels(byte[] fileContent){
-
-		int
-			start = CHANNELS.getStart(),
-			length = CHANNELS.getLength();
-
-		return readDataSample(fileContent, start, length);
-	}
 
 	static byte[] writeNumberOfChannels(int numberOfChannels){
 		
@@ -207,30 +207,12 @@ public interface FileContentConverter {
 
 
 
-	static int readSampleRate(byte[] fileContent){
-
-		int
-			start = SAMPLING_RATE.getStart(),
-			length = SAMPLING_RATE.getLength();
-
-		return readDataSample(fileContent, start, length);
-	}
-
 	static byte[] writeSampleRate(int sampleRate){
 
 		return writeDataSample(sampleRate, 4);
 	}	
 
 
-
-	static int readBlockSize(byte[] fileContent){
-
-		int
-				start = BLOCK_SIZE.getStart(),
-				length = BLOCK_SIZE.getLength();
-
-		return readDataSample(fileContent, start, length);
-	}
 
 	static byte[] writeBlockSize(int sampleFrameSize){
 
@@ -239,15 +221,6 @@ public interface FileContentConverter {
 
 
 
-	static int readBitDepth(byte[] fileContent){
-
-		int
-				start = BIT_DEPTH.getStart(),
-				length = BIT_DEPTH.getLength();
-
-		return readDataSample(fileContent, start, length);
-	}
-
 	static byte[] writeBitDepth(int bitDepth){
 
 		return writeDataSample(bitDepth, 2);
@@ -255,19 +228,11 @@ public interface FileContentConverter {
 
 
 
-	static int readDataBlockLength(byte[] fileContent){
-
-		int
-				start = DATA_SIZE.getStart(),
-				length = DATA_SIZE.getLength();
-
-		return readDataSample(fileContent, start, length);
-	}
-
 	static byte[] writeDataBlockLength(int dataBlockLength){
 
 		return writeDataSample(dataBlockLength, 4);
-	}	
+	}	*/	// disposable
+
 }
 
 //	@formatter:on

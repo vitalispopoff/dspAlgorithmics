@@ -16,7 +16,7 @@ public enum FileContentStructure {
 	DATA_SIZE,
 	SIGNAL;
 
-
+//	--------------------------------------------------------------------------------------------------------------------
 
 	public int getStart(){
 
@@ -27,6 +27,8 @@ public enum FileContentStructure {
 
 		return slotLocations[this.ordinal()][1];
 	}
+
+//	--------------------------------------------------------------------------------------------------------------------
 
 	int[][]
 	slotLocations = {

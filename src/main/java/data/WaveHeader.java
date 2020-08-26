@@ -17,6 +17,7 @@ public class WaveHeader {
 		formatTag;
 
 	public int
+
 		fileSize = 0,
 
 		fmtSize = 0,
@@ -83,6 +84,17 @@ public class WaveHeader {
 	public static byte[] getFmt_Id() {
 
 		return fmt_Id;
+	}
+
+
+	public void setFmtSize(int fmtSize) {
+
+		this.fmtSize = fmtSize;
+	}
+
+	public int getFmtSize() {
+
+		return fmtSize;
 	}
 
 
@@ -200,12 +212,15 @@ public class WaveHeader {
 
 		return
 			"format = " + formatTag + '\n'
-			+ "fileLength = " + fileSize + '\n'
-			+ "numberOfChannels = " + channels + '\n'
-			+ "sampleRate = " + samplePerSec + '\n'
-			+ "sampleFrameSize = " + avgBytesPerSec + '\n'
-			+ "bitDepth = " + bitsPerSec + '\n'
-			+ "dataBlockLength = " + blockAlign + "\n";
+			+ "fileSize = " + fileSize + '\n'
+			+ "channels = " + channels + '\n'
+			+ "samplePerSec = " + samplePerSec + '\n'
+			+ "avgBytePerSec = " + avgBytesPerSec + '\n'
+			+ "bitsPerSec = " + bitsPerSec + '\n'
+			+ "blockAlign = " + blockAlign + '\n'
+			+ "bitsPerSample = " + bitsPerSample + '\n'
+			+ "dataSize = " + dataSize + '\n'
+		;
 	}
 }
 

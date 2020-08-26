@@ -2,7 +2,8 @@
 
 package data;
 
-import static data.FileAddress.getTemporalName;
+//import static data.FileAddress.getTemporalName;
+import static data.FileAddress.readFileAddress;
 import static data.WaveHeader.instanceOf;
 
 import static algorithms.metaProcessors.FileManager.*;
@@ -10,7 +11,7 @@ import static algorithms.metaProcessors.FileContentConverter.*;
 
 public class Wave {
 
-	public String
+	public FileAddress
 		fileAddress;
 
 	public WaveHeader
@@ -25,7 +26,7 @@ public class Wave {
 
 	public Wave(WaveHeader header){
 
-		this.fileAddress = getTemporalName();
+//		this.fileAddress = getTemporalName();
 		this.header = header;
 	}
 
@@ -41,10 +42,10 @@ public class Wave {
 			byte[]
 				fileContent = loadFile(fileAddress);
 
-			setFileAddress(fileAddress);
-
 			this.header = instanceOf(fileContent);
 			this.channelSignals = readSignalChannels(fileContent);
+
+			setFileAddress(fileAddress);
 
 			FileCache.addToCache(this);
 		}
@@ -54,10 +55,10 @@ public class Wave {
 
 	public void setFileAddress(String fileAddress){
 
-		this.fileAddress = fileAddress;
+		this.fileAddress = FileAddress.readFileAddress(fileAddress);
 	}
 
-	public String getFileAddress( ){
+	public FileAddress getFileAddress( ){
 
 		return fileAddress;
 	}

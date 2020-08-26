@@ -19,7 +19,7 @@ public class FileAddress {
 	}	// * fileExtensions population
 
 	public static String
-		defaultCatalogPath;
+		defaultCatalogPath = System.getenv("USERPROFILE") + "Desktop\\";
 
 	String
 		catalogPath,
@@ -37,15 +37,73 @@ public class FileAddress {
 
 	public FileAddress(String catalogPath, String fileExtension){
 
-		this(catalogPath, getTemporalName(), fileExtension);
+//		this(catalogPath, getTemporalName(), fileExtension);
 	}
 
 	public FileAddress(String catalogPath){
 
-		this(catalogPath, "wav");
+		this(catalogPath, fileExtensions.get("WAVE"));
+	}
+
+	public FileAddress(){
+
+		this(defaultCatalogPath, fileExtensions.get("WAVE"));
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------
+
+	public static FileAddress readFileAddress(String input){
+
+		int
+			extensionIndex = 0,
+			fileNameIndex = 0;
+
+		boolean
+			foundExtension = false,
+			foundName = false;
+
+		for(int i = input.length() - 1; i >= 0  && !(foundExtension && foundName); i--){
+
+			boolean
+				iIsNotLastChar = i < input.length() - 1;
+
+			if(input.charAt(i) == '.' && iIsNotLastChar) {
+
+				extensionIndex = i + 1;
+				foundExtension = true;
+			}
+
+			if(input.charAt(i) == '\\' && iIsNotLastChar){
+
+				fileNameIndex = i + 1;
+				foundName = true;
+			}
+		}
+
+		String
+			extension = extensionIndex > 0
+				? input.substring(extensionIndex)
+				: fileExtensions.get("WAVE"),
+
+			name = fileNameIndex > 0
+				? input.substring(fileNameIndex, extensionIndex - 1)
+				: getTemporalName(),
+
+			path = fileNameIndex > 0
+				? input.substring(0, fileNameIndex)
+				: defaultCatalogPath;
+
+		System.out.println(
+			"\textension : " + extension
+			+ "\n\tname : " + name
+			+ "\n\tpath : " + path
+			+ '\n'
+		);
+
+		return new FileAddress(path, name, extension);
+	}
+
+
 
 	public String getCatalogPath( ){
 
@@ -69,7 +127,9 @@ public class FileAddress {
 		this.fileName = fileName;
 	}
 
-	public static String getTemporalName(String path){
+
+
+	public static String getTemporalName(){
 
 		LocalDateTime
 			now = LocalDateTime.now();
@@ -77,12 +137,7 @@ public class FileAddress {
 		DateTimeFormatter
 			nowFormat = DateTimeFormatter.ofPattern("yyyy-DDD-HH-mm-ss");
 
-		return path + "temp_" + now.format(nowFormat);
-	}
-
-	public static String getTemporalName(){
-
-		return getTemporalName(defaultCatalogPath);
+		return "temp_" + now.format(nowFormat);
 	}
 
 
@@ -125,6 +180,18 @@ public class FileAddress {
 
 		return fileExtensions.get(address);
 	}
-}
 
+//	--------------------------------------------------------------------------------------------------------------------
+
+	@Override
+	public String toString(){
+
+		String
+			slash = catalogPath.charAt(catalogPath.length() - 1) == '\\'
+				? ""
+				: "\\";
+
+		return catalogPath + slash +  fileName + '.' +  fileExtension;
+	}
+}
 //	@formatter:on

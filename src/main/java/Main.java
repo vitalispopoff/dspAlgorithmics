@@ -1,6 +1,6 @@
 //	@formatter:off
 
-import data.Wave;import static data.FileCache.exportCurrentFile;
+import algorithms.metaProcessors.FileManager;import data.FileAddress;import data.FileCache;import data.Wave;
 
 public class Main {
 
@@ -8,6 +8,8 @@ public class Main {
 
 		Wave
 			temporal;
+		String
+			address;
 
 		{
 			String
@@ -24,9 +26,9 @@ public class Main {
 				address_5 = "sample-mono-double.wav",
 
 				address_400 = "*.wav",
-				address_404 = "nope.wave",
+				address_404 = "nope.wave";
 
-				address =  address_folder_1 + address_shortie;
+				address =  address_folder_0 + address_0;
 
 			temporal = new Wave(address);
 
@@ -41,12 +43,16 @@ public class Main {
 				temporal.header.samplePerSec,
 			channels = temporal.header.channels;
 
+		FileAddress
+			fileAddress = temporal.getFileAddress();
+
 		int[][]
 			signals = temporal.getChannelSignals();
 
-		System.out.println(temporal);
+		System.out.println(fileAddress);
 
-		exportCurrentFile();
+		FileManager.exportToFile(temporal);
+
 
 
 	}

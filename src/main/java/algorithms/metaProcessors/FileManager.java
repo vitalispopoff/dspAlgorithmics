@@ -2,18 +2,15 @@
 
 package algorithms.metaProcessors;
 
-import java.io.*;
+import data.FileAddress;import data.Wave;import java.io.*;
 import java.nio.file.*;
 
-import static java.nio.file.Files.*;
+import static data.FileCache.*;import static java.nio.file.Files.*;
 import static java.nio.file.Paths.get;
 
 public interface FileManager {
 
-	static void saveFile(String fileAddress, byte[] export){
-
-		Path
-			filePath = get(fileAddress);
+/*	static void saveFile(Path filePath, byte[] export){
 
 		try {
 
@@ -24,7 +21,77 @@ public interface FileManager {
 
 			e.printStackTrace();
 		}
+	}*/	// ? disposable ?
+
+	static void exportToFile(Wave file){
+
+		FileAddress
+			fileAddress = file.getFileAddress();
+
+		fileAddress.setFileName(FileAddress.getTemporalName());
+
+		Path
+			filePath = get(fileAddress.toString());
+
+		byte[]
+			export = FileContentConverter.convertToBytes(file);
+
+		try {
+
+			write(filePath, export);
+
+			System.out.println(
+				"\n\tFile successfully saved as : "
+					+ fileAddress.toString() + '\n'
+			);
+		}
+
+		catch (IOException e) {
+
+			System.out.println(
+				"\n\tI'm sorry. Something went awfully wrong.\n\tFor more read the stack trace, please.\n"
+			);
+
+			e.printStackTrace();
+		}
+
 	}
+
+	static void exportCurrentToFile(){
+
+		Wave
+			file = loadCurrent();
+
+		FileAddress
+			fileAddress = file.getFileAddress();
+
+		Path
+			filePath = get(fileAddress.toString());
+
+		byte[]
+			export = FileContentConverter.convertToBytes(file);
+
+		try {
+
+			write(filePath, export);
+
+			System.out.println(
+				"\n\tFile successfully saved as : "
+				+ fileAddress.toString() + '\n'
+			);
+		}
+
+		catch (IOException e) {
+
+			System.out.println(
+				"\n\tI'm sorry. Something went awfully wrong.\n\tFor more read the stack trace, please.\n"
+			);
+
+			e.printStackTrace();
+		}
+	}
+
+
 
 	static byte[] loadFile(String fileAddress){
 

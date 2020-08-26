@@ -4,13 +4,67 @@ package algorithms.metaProcessors;
 
 import java.nio.*;
 import java.util.*;
-import data.FileContentStructure;
-import data.FormatTags;
+import data.*;
 
 import static data.FileContentStructure.*;
-import static data.FormatTags.*;
 
 public interface FileContentConverter {
+
+	static byte[] convertToBytes(Wave source){
+
+		WaveHeader
+			header = source.header;
+
+		int
+			bitDepth = header.bitsPerSample,
+			fileLength = source.header.getFileSize() + 8,
+			signalLength = 0;
+
+		byte[]
+			export = new byte[fileLength],
+
+			fileSize = writeDataField(header.getFileSize(), FILE_SIZE),
+			fmtSize = writeDataField(header.getFmtSize(), FMT_SIZE),
+			channels = writeDataField(header.getChannels(), CHANNELS),
+			samplePerSec = writeDataField(header.getChannels(), SAMPLE_PER_SEC),
+			avBytePerSec = writeDataField(header.getAvgBytesPerSec(), AV_BYTE_PER_SEC),
+			blockAlign = writeDataField(header.getBlockAlign(), BLOCK_ALIGN),
+			bitsPerSample = writeDataField(header.getBitsPerSample(), BITS_PER_SAMPLE),
+
+			dataSize = writeDataField(header.getDataSize(), DATA_SIZE);
+
+		byte[][]
+			fields = {
+
+			WaveHeader.getFileId(),
+			fileSize,
+			WaveHeader.getWaveId(),
+
+			WaveHeader.getFmt_Id(),
+			fmtSize,
+			header.getFormatTag().getBytes(),
+			channels,
+			samplePerSec,
+			avBytePerSec,
+			blockAlign,
+
+			WaveHeader.getDataId(),
+			dataSize,
+		};
+
+		for (int i = 0; i < fields.length ; i++) {
+
+			int
+				start = values()[i].getStart(),
+				length = values()[i] == SIGNAL
+					 ? header.getDataSize()
+					 : values()[i].getLength();
+
+			System.arraycopy(fields[i], 0, export, start, length);
+		}
+
+		return export;
+	}
 
 	static FormatTags readFormatTag(byte[]fileContent){
 
@@ -30,7 +84,7 @@ public interface FileContentConverter {
 		byte[]
 			b = Arrays.copyOfRange(fileContent, start, end);
 
-		for (byte[] pair : bytes){
+		for (byte[] pair : FormatTags.bytes){
 
 			boolean
 				arraysAreEqual = Arrays.equals(b, pair);
@@ -45,17 +99,9 @@ public interface FileContentConverter {
 		return 0;
 	}
 
-/*	static byte[] writeFormat(FormatTags format){
-
-		return FormatTags.bytes[format.ordinal()];
-	}*/		// ? disposable ?
 
 
-
-	static int[][] readSignalChannels(byte[] fileContent){
-
-		int[]
-			signal = readSignal(fileContent);
+	static int[][] readSignalChannels(int[] signal, byte[] fileContent){
 
 		int
 			numberOfInputs = readDataField(fileContent, CHANNELS),
@@ -76,12 +122,21 @@ public interface FileContentConverter {
 		return outputs;
 	}
 
+	static int[][] readSignalChannels(byte[] fileContent){
+
+		int[]
+			signal = readSignal(fileContent);
+
+		return readSignalChannels(signal, fileContent);
+	}
+
 	static int[] readSignal(byte[] fileContent) {
 
 		int
 			dataBlockLength = readDataField(fileContent, DATA_SIZE),
-			sampleSize = readDataField(fileContent, BLOCK_ALIGN),
-			start = starts[readFormatTagOrdinal(fileContent)],
+			sampleSize = readDataField(fileContent, BITS_PER_SAMPLE) >> 3,
+			tagNumber = readFormatTagOrdinal(fileContent),
+			start = FormatTags.starts[tagNumber],
 			index = 0;
 
 		int[]
@@ -94,26 +149,28 @@ public interface FileContentConverter {
 		return signal;
 	}
 
-	static byte[] writeSignalChannels(int[][] signalChannels, int sampleFrameSize){
+	static byte[] writeSignalChannels(int[][] signalChannels, int bitsPerSample){
 
 		int
-			sampleSize = sampleFrameSize / signalChannels.length,
-			signalLength = signalChannels.length * sampleFrameSize;
+			sampleSize =  (bitsPerSample >> 3),
+			signalLength = signalChannels.length * signalChannels[0].length * sampleSize,
+			channels = signalChannels.length;
 
 		byte[]
 			signal = new byte[signalLength];
 
-		for (int i = 0; i < signalChannels[0].length; i++)
+		for (int sampleIndex = 0; sampleIndex < signalChannels[0].length; sampleIndex++)								// * selecting sample
 
-			for (int j = 0; j < 2; j++){
+			for (int channel = 0; channel < channels; channel++){														// * selecting channel array
 
 				int
-					signalIndex = i * sampleFrameSize;
+					sampleInChannel = sampleIndex * sampleSize + channel * channels,
+					sample = signalChannels[channel][sampleIndex];
 
 				byte[]
-					bytes = writeDataSample(signalChannels[j][i],sampleSize);
+					bytes = writeDataSample(sample ,sampleSize);
 
-				System.arraycopy(bytes, 0, signal, signalIndex, bytes.length);
+				System.arraycopy(bytes, 0, signal, sampleInChannel , sampleSize);
 			}
 
 		return signal;
@@ -131,7 +188,8 @@ public interface FileContentConverter {
 		boolean
 			sampleIsNegative = bytes[sampleSize - 1] < 0;
 
-		if (sampleIsNegative){
+		if (sampleIsNegative)
+		{
 
 			for (int i = 3 ; i >= sampleSize ; i--)
 

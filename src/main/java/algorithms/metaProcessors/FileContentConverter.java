@@ -31,7 +31,8 @@ public interface FileContentConverter {
 			blockAlign = writeDataField(header.getBlockAlign(), BLOCK_ALIGN),
 			bitsPerSample = writeDataField(header.getBitsPerSample(), BITS_PER_SAMPLE),
 
-			dataSize = writeDataField(header.getDataSize(), DATA_SIZE);
+			dataSize = writeDataField(header.getDataSize(), DATA_SIZE),
+			signal = writeSignalChannels(source.getChannelSignals(), header.getBitsPerSample());
 
 		byte[][]
 			fields = {
@@ -47,6 +48,7 @@ public interface FileContentConverter {
 			samplePerSec,
 			avBytePerSec,
 			blockAlign,
+			bitsPerSample,
 
 			WaveHeader.getDataId(),
 			dataSize,
@@ -56,23 +58,81 @@ public interface FileContentConverter {
 
 			int
 				start = values()[i].getStart(),
+
 				length = values()[i] == SIGNAL
 					 ? header.getDataSize()
 					 : values()[i].getLength();
 
 			System.arraycopy(fields[i], 0, export, start, length);
 		}
-
 		return export;
 	}
 
-	static FormatTags readFormatTag(byte[]fileContent){
+
+
+	static int readDataSample(byte[] fileContent, int startIndex, int sampleSize){
+
+		byte[]
+			bytes = new byte[4];
+
+		System.arraycopy(fileContent, startIndex, bytes, 0, sampleSize);
+
+		boolean
+			sampleIsNegative = bytes[sampleSize - 1] < 0;
+
+		if (sampleIsNegative) {
+
+			for (int i = 3 ; i >= sampleSize ; i--)
+
+				bytes[i] |= 0xFF;
+
+			bytes[3] |= 0x80;
+		}
+
+		ByteBuffer
+			buffer = ByteBuffer.wrap(bytes);
+
+		buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+		return buffer.getInt();
+	}
+
+	static byte[] writeDataSample(int sample, int sampleLength){
+
+		if (sampleLength > 3)
+
+			sampleLength = 4;	// preventing possible errors with declared sampleLength being to big only
+
+		byte[]
+			bytes = new byte[sampleLength];
+
+		for (int i = 0; i < sampleLength; i++)
+
+			bytes[i] = (byte) (sample >>> (i << 3));
+
+		return bytes;
+	}
+
+
+
+	static int readDataField(byte[] fileContent, FileContentStructure field){
 
 		int
-			tagOrdinal = readFormatTagOrdinal(fileContent);
+			start = field.getStart(),
+			length = field.getLength();
 
-		return FormatTags.values()[tagOrdinal];
+		return readDataSample(fileContent, start, length);
 	}
+
+	static byte[] writeDataField(int input, FileContentStructure field){
+
+		int
+			length = field.getLength();
+
+		return writeDataSample(input, length);
+	}
+
+
 
 	static int readFormatTagOrdinal(byte[]fileContent){
 
@@ -99,7 +159,42 @@ public interface FileContentConverter {
 		return 0;
 	}
 
+	static FormatTags readFormatTag(byte[]fileContent){
 
+		int
+			tagOrdinal = readFormatTagOrdinal(fileContent);
+
+		return FormatTags.values()[tagOrdinal];
+	}
+
+
+
+	static int[] readSignal(byte[] fileContent) {
+
+		int
+			dataBlockLength = readDataField(fileContent, DATA_SIZE),
+			sampleSize = readDataField(fileContent, BITS_PER_SAMPLE) >> 3,
+			tagNumber = readFormatTagOrdinal(fileContent),
+			start = FormatTags.starts[tagNumber],
+			index = 0;
+
+		int[]
+			signal = new int[dataBlockLength / sampleSize];
+
+		for (int i = start; i < start + dataBlockLength; i += sampleSize)
+
+			signal[index++] = readDataSample(fileContent, i, sampleSize);
+
+		return signal;
+	}
+
+	static int[][] readSignalChannels(byte[] fileContent){
+
+		int[]
+			signal = readSignal(fileContent);
+
+		return readSignalChannels(signal, fileContent);
+	}
 
 	static int[][] readSignalChannels(int[] signal, byte[] fileContent){
 
@@ -120,33 +215,6 @@ public interface FileContentConverter {
 		}
 
 		return outputs;
-	}
-
-	static int[][] readSignalChannels(byte[] fileContent){
-
-		int[]
-			signal = readSignal(fileContent);
-
-		return readSignalChannels(signal, fileContent);
-	}
-
-	static int[] readSignal(byte[] fileContent) {
-
-		int
-			dataBlockLength = readDataField(fileContent, DATA_SIZE),
-			sampleSize = readDataField(fileContent, BITS_PER_SAMPLE) >> 3,
-			tagNumber = readFormatTagOrdinal(fileContent),
-			start = FormatTags.starts[tagNumber],
-			index = 0;
-
-		int[]
-			signal = new int[dataBlockLength / sampleSize];
-
-		for (int i = start; i < start + dataBlockLength; i += sampleSize)
-
-			signal[index++] = readDataSample(fileContent, i, sampleSize);
-
-		return signal;
 	}
 
 	static byte[] writeSignalChannels(int[][] signalChannels, int bitsPerSample){
@@ -174,82 +242,6 @@ public interface FileContentConverter {
 			}
 
 		return signal;
-	}
-
-
-
-	static int readDataSample(byte[] fileContent, int startIndex, int sampleSize){
-
-		byte[]
-			bytes = new byte[4];
-
-		System.arraycopy(fileContent, startIndex, bytes, 0, sampleSize);
-
-		boolean
-			sampleIsNegative = bytes[sampleSize - 1] < 0;
-
-		if (sampleIsNegative)
-		{
-
-			for (int i = 3 ; i >= sampleSize ; i--)
-
-				bytes[i] |= 0xFF;
-
-			bytes[3] |= 0x80;
-		}
-
-		ByteBuffer
-			buffer = ByteBuffer.wrap(bytes);
-
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-		return buffer.getInt();
-	}
-
-	static byte[] writeDataSample(int sample, int sampleLength){
-
-		if (sampleLength > 3)
-
-			sampleLength = 4;	// only preventing possible errors with declared sampleLength
-
-		boolean
-			isFrameNegative = sample < 0;
-
-		byte[]
-			bytes = new byte[sampleLength];
-
-		for (int i = 0; i < sampleLength; i++){
-
-			byte
-				cache = (byte) (sample & 0xFF);
-
-			if (isFrameNegative)
-
-				cache |= 0x80;
-
-			bytes[i] = cache;
-		}
-
-		return bytes;
-	}
-
-
-
-	static int readDataField(byte[] fileContent, FileContentStructure field){
-
-		int
-			start = field.getStart(),
-			length = field.getLength();
-
-		return readDataSample(fileContent, start, length);
-	}
-
-	static byte[] writeDataField(int input, FileContentStructure field){
-
-		int
-				length = field.getLength();
-
-		return writeDataSample(input, length);
 	}
 }
 

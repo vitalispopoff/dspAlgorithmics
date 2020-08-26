@@ -2,16 +2,16 @@
 
 package data;
 
-import static algorithms.metaProcessors.FileContentConverter.*;
 import static data.FileContentStructure.*;
+import static algorithms.metaProcessors.FileContentConverter.*;
 
 public class WaveHeader {
 
-	static byte[]
-		fileId = {(byte) 0x52, (byte) 0x49, (byte) 0x46, (byte) 0x46},
-		waveId = {(byte) 0x57, (byte) 0x41, (byte) 0x56, (byte) 0x45},
-		fmt_Id = {(byte) 0x66, (byte) 0x6D, (byte) 0x74, (byte) 0x20},
-		dataId = {(byte) 0x64, (byte) 0x61, (byte) 0x74, (byte) 0x61};
+	static final byte[]
+		fileId = {(byte) 0x52, (byte) 0x49, (byte) 0x46, (byte) 0x46},		// "RIFF"
+		waveId = {(byte) 0x57, (byte) 0x41, (byte) 0x56, (byte) 0x45},		// "WAVE"
+		fmt_Id = {(byte) 0x66, (byte) 0x6D, (byte) 0x74, (byte) 0x20},		// "fmt "
+		dataId = {(byte) 0x64, (byte) 0x61, (byte) 0x74, (byte) 0x61};		// "data"
 
 	public FormatTags
 		formatTag;
@@ -21,10 +21,10 @@ public class WaveHeader {
 		fileSize = 0,
 
 		fmtSize = 0,
+
 		channels = 0,
 		samplePerSec = 0,
 		avgBytesPerSec = 0,
-		bitsPerSec = 0,
 		blockAlign = 0,
 		bitsPerSample =0,
 
@@ -40,17 +40,16 @@ public class WaveHeader {
 
 		if (fileContent != null){
 
-			this.formatTag = readFormatTag(fileContent);
-			this.fileSize = readDataField(fileContent, FILE_SIZE);
+			fileSize = readDataField(fileContent, FILE_SIZE);
 
-			this.fmtSize = readDataField(fileContent, FMT_SIZE);
-			this.channels = readDataField(fileContent, CHANNELS);
-			this.samplePerSec = readDataField(fileContent, SAMPLE_PER_SEC);
-			this.avgBytesPerSec = readDataField(fileContent, BLOCK_ALIGN);
-			this.bitsPerSec = readDataField(fileContent, BITS_PER_SAMPLE);
-			this.blockAlign = readDataField(fileContent, DATA_SIZE);
-			this.bitsPerSample = readDataField(fileContent, BITS_PER_SAMPLE);
-			this.dataSize = readDataField(fileContent, DATA_SIZE);
+			fmtSize = readDataField(fileContent, FMT_SIZE);
+			formatTag = readFormatTag(fileContent);
+			channels = readDataField(fileContent, CHANNELS);
+			samplePerSec = readDataField(fileContent, SAMPLE_PER_SEC);
+			avgBytesPerSec = readDataField(fileContent, BLOCK_ALIGN);
+			blockAlign = readDataField(fileContent, DATA_SIZE);
+			bitsPerSample = readDataField(fileContent, BITS_PER_SAMPLE);
+			dataSize = readDataField(fileContent, DATA_SIZE);
 		}
 	}
 	
@@ -59,6 +58,7 @@ public class WaveHeader {
 	public static WaveHeader instanceOf(byte[] fileContent){
 
 		if (fileContent != null && fileContent.length > 0)
+
 			return new WaveHeader(fileContent);
 
 		else return new WaveHeader();
@@ -159,18 +159,6 @@ public class WaveHeader {
 
 
 
-	public void setBitsPerSec(int bitsPerSec){
-
-		this.bitsPerSec = bitsPerSec;
-	}
-
-	public int getBitsPerSec( ){
-
-		return bitsPerSec;
-	}
-
-
-
 	public void setBlockAlign(int blockAlign){
 
 		this.blockAlign = blockAlign;
@@ -211,12 +199,11 @@ public class WaveHeader {
 	public String toString( ){
 
 		return
-			"format = " + formatTag + '\n'
-			+ "fileSize = " + fileSize + '\n'
+			"fileSize = " + fileSize + '\n'
+			+ "format = " + formatTag + '\n'
 			+ "channels = " + channels + '\n'
 			+ "samplePerSec = " + samplePerSec + '\n'
 			+ "avgBytePerSec = " + avgBytesPerSec + '\n'
-			+ "bitsPerSec = " + bitsPerSec + '\n'
 			+ "blockAlign = " + blockAlign + '\n'
 			+ "bitsPerSample = " + bitsPerSample + '\n'
 			+ "dataSize = " + dataSize + '\n'

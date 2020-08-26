@@ -2,26 +2,16 @@
 
 package algorithms.metaProcessors;
 
-import data.FileAddress;import data.Wave;import java.io.*;
+import data.FileAddress;
+import data.Wave;
+import java.io.*;
 import java.nio.file.*;
 
-import static data.FileCache.*;import static java.nio.file.Files.*;
+import static data.FileCache.*;
+import static java.nio.file.Files.*;
 import static java.nio.file.Paths.get;
 
 public interface FileManager {
-
-/*	static void saveFile(Path filePath, byte[] export){
-
-		try {
-
-			write(filePath, export);
-		}
-
-		catch (IOException e) {
-
-			e.printStackTrace();
-		}
-	}*/	// ? disposable ?
 
 	static void exportToFile(Wave file){
 

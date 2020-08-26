@@ -4,9 +4,6 @@ package data;
 
 import java.util.ArrayList;
 
-import static algorithms.metaProcessors.FileContentConverter.*;
-import static data.FileContentStructure.*;
-
 public class FileCache extends ArrayList<Wave> {
 
 	static FileCache
@@ -25,9 +22,12 @@ public class FileCache extends ArrayList<Wave> {
 
 		fileCache.add(wave);
 
+		int
+			index = fileCache.size() - 1;
+
 		System.out.println(
 			"\n\tThe file is added to the cache at index: "
-			+ (fileCache.size() - 1) + '\n'
+			+ (index) + '\n'
 		);
 	}
 
@@ -64,16 +64,16 @@ public class FileCache extends ArrayList<Wave> {
 
 	public static void clearCacheHistory( ){
 
-		if(currentIndex > 0){
+		if (currentIndex > 0){
 
 			fileCache.removeRange(0, currentIndex);
-
 			currentIndex = 0;
 
-			System.out.println("\n\tHistory is cleared. Current incdex is 0");
+			System.out.println("\n\tHistory is cleared. Current index is 0");
 		}
 
 		else
+
 			System.out.println("\n\tHistory is already clear.");
 	}
 

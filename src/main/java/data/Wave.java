@@ -2,8 +2,6 @@
 
 package data;
 
-//import static data.FileAddress.getTemporalName;
-import static data.FileAddress.readFileAddress;
 import static data.WaveHeader.instanceOf;
 
 import static algorithms.metaProcessors.FileManager.*;
@@ -26,7 +24,6 @@ public class Wave {
 
 	public Wave(WaveHeader header){
 
-//		this.fileAddress = getTemporalName();
 		this.header = header;
 	}
 
@@ -35,7 +32,7 @@ public class Wave {
 		boolean
 			addressIsValid = verifyFile(fileAddress);
 
-			this.header = WaveHeader.instanceOf(null);	// prevents NullPointerException when file is not found.
+			this.header = WaveHeader.instanceOf(null);					// prevents NullPointerException when file is not found.
 
 		if(addressIsValid){
 

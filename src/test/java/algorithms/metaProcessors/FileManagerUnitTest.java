@@ -1,4 +1,4 @@
-package algorithms.metaProcessors.fileManager;
+package algorithms.metaProcessors;
 
 import org.junit.*;
 

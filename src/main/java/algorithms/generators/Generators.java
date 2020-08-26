@@ -21,8 +21,6 @@ public interface Generators {
 		return result;
 	}
 
-
-
 	static int getSignedGaussianInt(int bitDepth){
 
 		Random

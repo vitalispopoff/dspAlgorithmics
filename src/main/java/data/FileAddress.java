@@ -35,19 +35,14 @@ public class FileAddress {
 		this.fileExtension = fileExtension;
 	}
 
-	public FileAddress(String catalogPath, String fileExtension){
-
-//		this(catalogPath, getTemporalName(), fileExtension);
-	}
-
 	public FileAddress(String catalogPath){
 
-		this(catalogPath, fileExtensions.get("WAVE"));
+		this(catalogPath, getTemporalName(), fileExtensions.get("WAVE"));
 	}
 
 	public FileAddress(){
 
-		this(defaultCatalogPath, fileExtensions.get("WAVE"));
+		this(defaultCatalogPath, getTemporalName(), fileExtensions.get("WAVE"));
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------
@@ -92,13 +87,6 @@ public class FileAddress {
 			path = fileNameIndex > 0
 				? input.substring(0, fileNameIndex)
 				: defaultCatalogPath;
-
-		System.out.println(
-			"\textension : " + extension
-			+ "\n\tname : " + name
-			+ "\n\tpath : " + path
-			+ '\n'
-		);
 
 		return new FileAddress(path, name, extension);
 	}
@@ -186,8 +174,11 @@ public class FileAddress {
 	@Override
 	public String toString(){
 
+		int
+			index = catalogPath.length() - 1;
+
 		String
-			slash = catalogPath.charAt(catalogPath.length() - 1) == '\\'
+			slash = catalogPath.charAt(index) == '\\'
 				? ""
 				: "\\";
 

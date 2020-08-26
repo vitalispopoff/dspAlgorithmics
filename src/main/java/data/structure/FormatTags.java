@@ -1,6 +1,6 @@
 //	@formatter:off
 
-package data;
+package data.structure;
 
 public enum FormatTags{
 

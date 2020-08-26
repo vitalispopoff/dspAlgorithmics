@@ -1,24 +1,24 @@
 //	@formatter:off
 
-package data;
+package data.structure;
 
 import org.junit.*;
 
 import static _inputs.Data_InputData.*;
-import static data.FileAddress.*;
+import static data.structure.FileAddress.*;
 
 public class FileAddressUnitTest {
 
 	@Test
 	public void establishFileExtensionTest_0(){
 
-		Assert.assertEquals("wav", establishFileExtension(sample_mono_wav));
+		Assert.assertEquals("wav", establishExtension(sample_mono_wav));
 	}
 
 	@Test
 	public void establishFileExtensionTest_1(){
 
-		Assert.assertEquals("aiff", establishFileExtension(sample_mono_aiff));
+		Assert.assertEquals("aiff", establishExtension(sample_mono_aiff));
 	}
 }
 

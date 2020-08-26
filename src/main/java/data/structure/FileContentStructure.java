@@ -1,6 +1,6 @@
 //	@formatter:off
 
-package data;
+package data.structure;
 
 public enum FileContentStructure {
 
@@ -11,7 +11,7 @@ public enum FileContentStructure {
 
 			return new int[]{Integer.MIN_VALUE, 0x52494646};
 		}
-	},		// * returns actual big endian value of the field
+	},
 	FILE_SIZE,
 	WAVE_ID,
 
@@ -22,7 +22,7 @@ public enum FileContentStructure {
 
 			return new int[]{Integer.MIN_VALUE, 0x666D7420};
 		}
-	},		// * returns actual big endian value of the field
+	},
 	FMT_SIZE,
 	FORMAT_TAG,
 	CHANNELS,
@@ -38,7 +38,7 @@ public enum FileContentStructure {
 
 			return new int[]{Integer.MIN_VALUE, 0x64617461};
 		}
-	},		// * returns actual big endian value of the field
+	},
 	DATA_SIZE,
 	SIGNAL;
 
@@ -79,7 +79,7 @@ public enum FileContentStructure {
 
 		{36, 4},	//	dataId
 		{40, 4},	//	dataSize
-		{44, 0}		//	signal
+		{44, Integer.MIN_VALUE}		//	signal
 	};
 }
 

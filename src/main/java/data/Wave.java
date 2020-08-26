@@ -1,17 +1,14 @@
-//	@formatter:off
-
 package data;
 
-import java.util.Arrays;
-import static data.WaveHeader.instanceOf;
+import data.structure.FileAddress;
+import data.structure.WaveHeader;
 
-/*import static algorithms.metaProcessors.FileContentConverter.*;*/		// * disabled temporarily
+import java.util.Arrays;
+import static data.structure.WaveHeader.instanceOf;
+
 import static algorithms.metaProcessors.FileManager.*;
 
 public class Wave {
-
-/*	public int[][]
-		channelSignals;*/	// * disabled temporarily
 
 	public FileAddress
 		fileAddress;
@@ -25,11 +22,6 @@ public class Wave {
 //	--------------------------------------------------------------------------------------------------------------------
 
 	private Wave( ){ }
-
-	public Wave(WaveHeader header){
-
-		this.header = header;
-	}
 
 	public Wave (String fileAddress){
 
@@ -46,9 +38,6 @@ public class Wave {
 			header = instanceOf(fileContent);
 			signalSource = Arrays.copyOfRange(fileContent, 44, fileContent.length - 44);
 			setFileAddress(fileAddress);
-
-/*			this.channelSignals = readSignalChannels(fileContent);*/		// * disabled temporarily
-/*			FileCache.addToCache(this);*/		// * disabled temporarily
 		}
 	}
 
@@ -64,16 +53,6 @@ public class Wave {
 		return fileAddress;
 	}
 
-/*	public void setChannelSignals(int[][] channelSignals){
-
-		this.channelSignals = channelSignals;
-	}
-
-	public int[][] getChannelSignals( ){
-
-		return channelSignals;
-	}*/		// * disabled temporarily
-
 	public WaveHeader getHeader( ){
 
 		return header;
@@ -81,14 +60,4 @@ public class Wave {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	@Override
-	public String toString( ){
-
-		return "Wave = [\n"
-				+ "fileAddress = "
-				+ fileAddress + '\n'
-				+ header.toString() + "]\n";
-	}
 }
-
-//	@formatter:on

@@ -1,7 +1,3 @@
 package algorithms.generators;
 
-public interface IRKernels {
-
-
-
-}
+public interface IRKernels {}

@@ -1,5 +1,3 @@
-//	@formatter:off
-
 import data.*;
 
 public class Main {
@@ -35,16 +33,5 @@ public class Main {
 			temporal = new Wave(address);
 
 		}    // * load waveFile
-
-		int
-			dataBlockLength =
-				temporal.header.blockAlign,
-			sampleFrameSize =
-				temporal.header.avgBytesPerSec,
-			sampleRate =
-				temporal.header.samplePerSec,
-			channels = temporal.header.channels;
 	}
 }
-
-//	@formatter:on

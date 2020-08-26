@@ -8,7 +8,7 @@ public interface Difference {
 
 	static int[][] getDifference(Wave wave){
 
-		int[][]
+/*		int[][]
 			input = wave.getChannelSignals();
 
 		int
@@ -34,7 +34,8 @@ public interface Difference {
 			}
 		}
 
-		return output;
+		return output;*/	return null;	// TODO
+
 	}
 }
 

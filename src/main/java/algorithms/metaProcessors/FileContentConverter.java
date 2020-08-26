@@ -1,81 +1,21 @@
-//	@formatter:off
-
 package algorithms.metaProcessors;
 
-import java.nio.*;
-import java.util.*;
-import data.*;
+import data.FileContentStructure;
 
+import java.nio.*;
+//import java.util.Arrays;
+//import java.util.*;
 import static data.FileContentStructure.*;
+
 
 public interface FileContentConverter {
 
-	static byte[] convertToBytes(Wave source){
-
-		WaveHeader
-			header = source.header;
-
-		int
-			bitDepth = header.bitsPerSample,
-			fileLength = source.header.getFileSize() + 8,
-			signalLength = 0;
-
-		byte[]
-			export = new byte[fileLength],
-
-			fileSize = writeDataField(header.getFileSize(), FILE_SIZE),
-			fmtSize = writeDataField(header.getFmtSize(), FMT_SIZE),
-			channels = writeDataField(header.getChannels(), CHANNELS),
-			samplePerSec = writeDataField(header.getChannels(), SAMPLE_PER_SEC),
-			avBytePerSec = writeDataField(header.getAvgBytesPerSec(), AV_BYTE_PER_SEC),
-			blockAlign = writeDataField(header.getBlockAlign(), BLOCK_ALIGN),
-			bitsPerSample = writeDataField(header.getBitsPerSample(), BITS_PER_SAMPLE),
-
-			dataSize = writeDataField(header.getDataSize(), DATA_SIZE),
-			signal = writeSignalChannels(source.getChannelSignals(), header.getBitsPerSample());
-
-		byte[][]
-			fields = {
-
-			WaveHeader.getFileId(),
-			fileSize,
-			WaveHeader.getWaveId(),
-
-			WaveHeader.getFmt_Id(),
-			fmtSize,
-			header.getFormatTag().getBytes(),
-			channels,
-			samplePerSec,
-			avBytePerSec,
-			blockAlign,
-			bitsPerSample,
-
-			WaveHeader.getDataId(),
-			dataSize,
-		};
-
-		for (int i = 0; i < fields.length ; i++) {
-
-			int
-				start = values()[i].getStart(),
-
-				length = values()[i] == SIGNAL
-					 ? header.getDataSize()
-					 : values()[i].getLength();
-
-			System.arraycopy(fields[i], 0, export, start, length);
-		}
-		return export;
-	}
-
-
-
-	static int readDataSample(byte[] fileContent, int startIndex, int sampleSize){
+	static int readDataSample(byte[] source, int startIndex, int sampleSize){
 
 		byte[]
 			bytes = new byte[4];
 
-		System.arraycopy(fileContent, startIndex, bytes, 0, sampleSize);
+		System.arraycopy(source, startIndex, bytes, 0, sampleSize);
 
 		boolean
 			sampleIsNegative = bytes[sampleSize - 1] < 0;
@@ -101,7 +41,7 @@ public interface FileContentConverter {
 
 		if (sampleLength > 3)
 
-			sampleLength = 4;	// preventing possible errors with declared sampleLength being to big only
+			sampleLength = 4;
 
 		byte[]
 			bytes = new byte[sampleLength];
@@ -115,26 +55,33 @@ public interface FileContentConverter {
 
 
 
-	static int readDataField(byte[] fileContent, FileContentStructure field){
+	static int readDataField(byte[] source, FileContentStructure field){
 
-		int
-			start = field.getStart(),
-			length = field.getLength();
+		int[]
+			location = field.getLocation();
 
-		return readDataSample(fileContent, start, length);
+		if (location[0] == Integer.MIN_VALUE)
+
+			return location[1];
+
+		return readDataSample(source, location[0], location[1]);
 	}
 
-	static byte[] writeDataField(int input, FileContentStructure field){
+	static void writeDataField(byte[] source, int input, FileContentStructure field){
 
-		int
-			length = field.getLength();
+		int[]
+			location = field.getLocation();
 
-		return writeDataSample(input, length);
+		if (location[0] > 0 && field != WAVE_ID){
+
+			byte[]
+				bytes = writeDataSample(input, location[1]);
+
+			System.arraycopy(bytes, 0, source, location[0], location[1]);
+		}
 	}
 
-
-
-	static int readFormatTagOrdinal(byte[]fileContent){
+/*	static int readFormatTagOrdinal(byte[]fileContent){
 
 		int
 			start = FORMAT_TAG.getStart(),
@@ -165,11 +112,8 @@ public interface FileContentConverter {
 			tagOrdinal = readFormatTagOrdinal(fileContent);
 
 		return FormatTags.values()[tagOrdinal];
-	}
-
-
-
-	static int[] readSignal(byte[] fileContent) {
+	}*/		// * disposable
+/*	static int[] readSignal(byte[] fileContent) {
 
 		int
 			dataBlockLength = readDataField(fileContent, DATA_SIZE),
@@ -242,7 +186,6 @@ public interface FileContentConverter {
 			}
 
 		return signal;
-	}
-}
+	}*/		// * disposable
 
-//	@formatter:on
+}

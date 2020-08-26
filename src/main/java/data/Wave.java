@@ -2,21 +2,25 @@
 
 package data;
 
+import java.util.Arrays;
 import static data.WaveHeader.instanceOf;
 
+/*import static algorithms.metaProcessors.FileContentConverter.*;*/		// * disabled temporarily
 import static algorithms.metaProcessors.FileManager.*;
-import static algorithms.metaProcessors.FileContentConverter.*;
 
 public class Wave {
+
+/*	public int[][]
+		channelSignals;*/	// * disabled temporarily
 
 	public FileAddress
 		fileAddress;
 
+	byte[]
+		signalSource;
+
 	public WaveHeader
 		header;
-
-	public int[][]
-		channelSignals;
 
 //	--------------------------------------------------------------------------------------------------------------------
 
@@ -32,19 +36,19 @@ public class Wave {
 		boolean
 			addressIsValid = verifyFile(fileAddress);
 
-			this.header = WaveHeader.instanceOf(null);					// prevents NullPointerException when file is not found.
+			this.header = WaveHeader.instanceOf(null);
 
 		if(addressIsValid){
 
 			byte[]
 				fileContent = loadFile(fileAddress);
 
-			this.header = instanceOf(fileContent);
-			this.channelSignals = readSignalChannels(fileContent);
-
+			header = instanceOf(fileContent);
+			signalSource = Arrays.copyOfRange(fileContent, 44, fileContent.length - 44);
 			setFileAddress(fileAddress);
 
-			FileCache.addToCache(this);
+/*			this.channelSignals = readSignalChannels(fileContent);*/		// * disabled temporarily
+/*			FileCache.addToCache(this);*/		// * disabled temporarily
 		}
 	}
 
@@ -60,16 +64,7 @@ public class Wave {
 		return fileAddress;
 	}
 
-
-
-	public WaveHeader getHeader( ){
-
-		return header;
-	}
-
-
-
-	public void setChannelSignals(int[][] channelSignals){
+/*	public void setChannelSignals(int[][] channelSignals){
 
 		this.channelSignals = channelSignals;
 	}
@@ -77,6 +72,11 @@ public class Wave {
 	public int[][] getChannelSignals( ){
 
 		return channelSignals;
+	}*/		// * disabled temporarily
+
+	public WaveHeader getHeader( ){
+
+		return header;
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------

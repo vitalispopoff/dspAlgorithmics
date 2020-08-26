@@ -2,16 +2,14 @@
 
 package algorithms.metaProcessors;
 
-import data.Wave;import org.junit.*;
+import org.junit.*;
 
 import static _inputs.Data_InputData.*;
 import static algorithms.metaProcessors.FileContentConverter.*;
 
 public class FileContentConverterUnitTest {
 
-
-
-    @Test
+/*    @Test
     public void readFormatOrdinalTest(){
 
         int
@@ -19,7 +17,7 @@ public class FileContentConverterUnitTest {
             correct = 0;
 
         Assert.assertEquals(correct, 0);
-    }
+    }*/     // * disposable
 
 //  --------------------------------------------------------------------------------------------------------------------
 

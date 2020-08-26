@@ -4,11 +4,25 @@ package data;
 
 public enum FileContentStructure {
 
-	FILE_ID,
+	FILE_ID {
+
+		@Override
+		public int[] getLocation(){
+
+			return new int[]{Integer.MIN_VALUE, 0x52494646};
+		}
+	},		// * returns actual big endian value of the field
 	FILE_SIZE,
 	WAVE_ID,
 
-	FMT_ID,
+	FMT_ID {
+
+		@Override
+		public int[] getLocation(){
+
+			return new int[]{Integer.MIN_VALUE, 0x666D7420};
+		}
+	},		// * returns actual big endian value of the field
 	FMT_SIZE,
 	FORMAT_TAG,
 	CHANNELS,
@@ -17,7 +31,14 @@ public enum FileContentStructure {
 	BLOCK_ALIGN,
 	BITS_PER_SAMPLE,
 
-	DATA_ID,
+	DATA_ID {
+
+		@Override
+		public int[] getLocation(){
+
+			return new int[]{Integer.MIN_VALUE, 0x64617461};
+		}
+	},		// * returns actual big endian value of the field
 	DATA_SIZE,
 	SIGNAL;
 
@@ -31,6 +52,11 @@ public enum FileContentStructure {
 	public int getLength(){
 
 		return slotLocations[this.ordinal()][1];
+	}
+
+	public int[] getLocation(){
+
+		return slotLocations[this.ordinal()];
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------

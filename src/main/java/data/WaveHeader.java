@@ -1,19 +1,14 @@
-//	@formatter:off
-
 package data;
 
-import static data.FileContentStructure.*;
+import java.util.Arrays;
 import static algorithms.metaProcessors.FileContentConverter.*;
 
 public class WaveHeader {
 
-	static final byte[]
-		fileId = {(byte) 0x52, (byte) 0x49, (byte) 0x46, (byte) 0x46},		// "RIFF"
-		waveId = {(byte) 0x57, (byte) 0x41, (byte) 0x56, (byte) 0x45},		// "WAVE"
-		fmt_Id = {(byte) 0x66, (byte) 0x6D, (byte) 0x74, (byte) 0x20},		// "fmt "
-		dataId = {(byte) 0x64, (byte) 0x61, (byte) 0x74, (byte) 0x61};		// "data"
+	private byte[]
+		source;
 
-	public FormatTags
+/*	public FormatTags
 		formatTag;
 
 	public int
@@ -28,7 +23,7 @@ public class WaveHeader {
 		blockAlign = 0,
 		bitsPerSample =0,
 
-		dataSize =0;
+		dataSize =0;*/		// ? disposable ?
 
 //	--------------------------------------------------------------------------------------------------------------------
 	
@@ -40,7 +35,9 @@ public class WaveHeader {
 
 		if (fileContent != null){
 
-			fileSize = readDataField(fileContent, FILE_SIZE);
+			source = Arrays.copyOfRange(fileContent, 0, 44);
+
+/*			fileSize = readDataField(fileContent, FILE_SIZE);
 
 			fmtSize = readDataField(fileContent, FMT_SIZE);
 			formatTag = readFormatTag(fileContent);
@@ -49,7 +46,8 @@ public class WaveHeader {
 			avgBytesPerSec = readDataField(fileContent, BLOCK_ALIGN);
 			blockAlign = readDataField(fileContent, DATA_SIZE);
 			bitsPerSample = readDataField(fileContent, BITS_PER_SAMPLE);
-			dataSize = readDataField(fileContent, DATA_SIZE);
+			dataSize = readDataField(fileContent, DATA_SIZE);*/		// ? disposable ?
+
 		}
 	}
 	
@@ -66,149 +64,16 @@ public class WaveHeader {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	public static byte[] getFileId() {
+	public int getField(FileContentStructure field){
 
-		return fileId;
+		return readDataField(source, field);
 	}
 
-	public static byte[] getWaveId() {
+	public void setField(int value, FileContentStructure field){
 
-		return waveId;
-	}
-
-	public static byte[] getDataId() {
-
-		return dataId;
-	}
-
-	public static byte[] getFmt_Id() {
-
-		return fmt_Id;
-	}
-
-
-	public void setFmtSize(int fmtSize) {
-
-		this.fmtSize = fmtSize;
-	}
-
-	public int getFmtSize() {
-
-		return fmtSize;
-	}
-
-
-
-	public void setFormatTag(FormatTags formatTag){
-
-		this.formatTag = formatTag;
-	}
-
-	public FormatTags getFormatTag( ){
-
-		return formatTag;
-	}
-
-
-
-	public void setFileSize(int fileSize){
-
-		this.fileSize = fileSize;
-	}
-
-	public int getFileSize( ){
-
-		return fileSize;
-	}
-
-
-
-	public void setChannels(int channels){
-
-		this.channels = channels;
-	}
-
-	public int getChannels( ){
-
-		return channels;
-	}
-
-
-
-	public void setSamplePerSec(int sampleFrameSize){
-
-		this.samplePerSec = sampleFrameSize;
-	}
-
-	public int getSamplePerSec( ){
-
-		return samplePerSec;
-	}
-
-
-
-	public void setAvgBytesPerSec(int avgBytesPerSec){
-
-		this.avgBytesPerSec = avgBytesPerSec;
-	}
-
-	public int getAvgBytesPerSec( ){
-
-		return avgBytesPerSec;
-	}
-
-
-
-	public void setBlockAlign(int blockAlign){
-
-		this.blockAlign = blockAlign;
-	}
-
-	public int getBlockAlign( ){
-
-		return blockAlign;
-	}
-
-
-
-	public int getBitsPerSample() {
-
-		return bitsPerSample;
-	}
-
-	public void setBitsPerSample(int bitsPerSample) {
-
-		this.bitsPerSample = bitsPerSample;
-	}
-
-
-
-	public int getDataSize() {
-
-		return dataSize;
-	}
-
-	public void setDataSize(int dataSize) {
-
-		this.dataSize = dataSize;
+		writeDataField(source, value, field);
 	}
 
 	//	--------------------------------------------------------------------------------------------------------------------
-	
-	@Override
-	public String toString( ){
 
-		return
-			"fileSize = " + fileSize + '\n'
-			+ "format = " + formatTag + '\n'
-			+ "channels = " + channels + '\n'
-			+ "samplePerSec = " + samplePerSec + '\n'
-			+ "avgBytePerSec = " + avgBytesPerSec + '\n'
-			+ "blockAlign = " + blockAlign + '\n'
-			+ "bitsPerSample = " + bitsPerSample + '\n'
-			+ "dataSize = " + dataSize + '\n'
-		;
-	}
 }
-
-//	@formatter:on

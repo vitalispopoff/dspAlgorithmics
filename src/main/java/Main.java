@@ -1,4 +1,8 @@
+import algorithms.metaProcessors.FileManager;
 import data.*;
+import data.structure.FileContentStructure;
+
+import java.util.Arrays;
 
 public class Main {
 
@@ -33,5 +37,12 @@ public class Main {
 			temporal = new Wave(address);
 
 		}    // * load waveFile
+
+
+//		FileManager.saveFile(temporal);
+
+
+
+		System.out.println(Arrays.toString(temporal.getSignal().strips.toArray()));
 	}
 }

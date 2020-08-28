@@ -9,12 +9,14 @@ import static data.structure.FileAddress.*;
 
 public class FileAddressUnitTest {
 
+	@Ignore
 	@Test
 	public void establishFileExtensionTest_0(){
 
 		Assert.assertEquals("wav", establishExtension(sample_mono_wav));
 	}
 
+	@Ignore
 	@Test
 	public void establishFileExtensionTest_1(){
 

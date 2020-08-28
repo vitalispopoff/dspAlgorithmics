@@ -1,9 +1,12 @@
 package data;
 
 import data.structure.FileAddress;
+import data.structure.Signal;
 import data.structure.WaveHeader;
 
 import java.util.Arrays;
+
+import static data.structure.FileContentStructure.*;
 import static data.structure.WaveHeader.instanceOf;
 
 import static algorithms.metaProcessors.FileManager.*;
@@ -13,11 +16,11 @@ public class Wave {
 	public FileAddress
 		fileAddress;
 
-	byte[]
-		signalSource;
-
 	public WaveHeader
 		header;
+
+	Signal
+		signal;
 
 //	--------------------------------------------------------------------------------------------------------------------
 
@@ -36,9 +39,22 @@ public class Wave {
 				fileContent = loadFile(fileAddress);
 
 			header = instanceOf(fileContent);
-			signalSource = Arrays.copyOfRange(fileContent, 44, fileContent.length - 44);
+
+			int
+				start = 44,
+				end = 44 + header.getField(DATA_SIZE);
+			byte[]
+				signalSource = Arrays.copyOfRange(fileContent, start, end);
+
+			signal = new Signal(signalSource, header.getField(AV_BYTE_PER_SEC), header.getField(CHANNELS));
+
 			setFileAddress(fileAddress);
 		}
+	}
+
+	public static void main(String[] args) {
+
+
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------
@@ -56,6 +72,24 @@ public class Wave {
 	public WaveHeader getHeader( ){
 
 		return header;
+	}
+
+	public Signal getSignal(){
+
+		return signal;
+	}
+
+	public byte[] getSource(){
+
+		byte[]
+			headerSource = header.getSource(),
+			signalSource = signal.getSource(header.getField(AV_BYTE_PER_SEC)),
+			result = new byte[headerSource.length + signalSource.length];
+
+		System.arraycopy(headerSource, 0, result, 0, 44);
+		System.arraycopy(signalSource, 0, result, 44, signalSource.length);
+
+		return result;
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------

@@ -77,5 +77,4 @@ public interface FileContentConverter {
 			System.arraycopy(bytes, 0, source, location[0], location[1]);
 		}
 	}
-
 }

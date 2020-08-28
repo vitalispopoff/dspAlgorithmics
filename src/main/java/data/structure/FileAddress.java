@@ -157,8 +157,8 @@ public class FileAddress {
 
 		HashMap<String, String> map = new HashMap<>();
 
-		defaultExtensions.put("WAVE", "wav");
-		defaultExtensions.put("AIFF", "aiff");
+		map.put("WAVE", "wav");
+		map.put("AIFF", "aiff");
 
 		return map;
 	}

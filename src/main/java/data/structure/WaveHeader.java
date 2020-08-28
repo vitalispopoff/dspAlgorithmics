@@ -44,4 +44,9 @@ public class WaveHeader {
 
 		writeDataField(source, value, field);
 	}
+
+	public byte[] getSource(){
+
+		return source;
+	}
 }

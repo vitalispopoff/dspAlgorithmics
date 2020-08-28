@@ -1,6 +1,7 @@
-//	@formatter:off
-
 package algorithms.metaProcessors;
+
+import data.Wave;
+import data.structure.FileAddress;
 
 import java.io.*;
 import java.nio.file.*;
@@ -9,6 +10,39 @@ import static java.nio.file.Files.*;
 import static java.nio.file.Paths.get;
 
 public interface FileManager {
+
+	static void saveFile(Wave wave){
+
+	FileAddress
+		address = new FileAddress(wave.getFileAddress().getPath(), "", "wav");
+
+	address.setNameToDefault();
+
+
+
+	Path
+		path = get(address.toString());
+
+		try {
+
+			createFile(path);
+
+			write(path, wave.getSource());
+
+			System.out.println(
+				"\n\tFile saved to "
+				+ address
+				+'\n'
+			);
+		}
+
+		catch (IOException e) {
+
+			e.printStackTrace();
+
+			System.out.println("\n\tI'm sorry. Something went wrong.");
+		}
+	}
 
 	static byte[] loadFile(String fileAddress){
 
@@ -71,5 +105,3 @@ public interface FileManager {
 		}
 	}
 }
-
-//	@formatter:on

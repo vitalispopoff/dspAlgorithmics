@@ -46,15 +46,10 @@ public class Wave {
 			byte[]
 				signalSource = Arrays.copyOfRange(fileContent, start, end);
 
-			signal = new Signal(signalSource, header.getField(AV_BYTE_PER_SEC), header.getField(CHANNELS));
+			signal = new Signal(signalSource, header.getField(BLOCK_ALIGN), header.getField(CHANNELS));
 
 			setFileAddress(fileAddress);
 		}
-	}
-
-	public static void main(String[] args) {
-
-
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------
@@ -81,15 +76,30 @@ public class Wave {
 
 	public byte[] getSource(){
 
+		int[]
+			lengths = updateFileSize();
+
 		byte[]
 			headerSource = header.getSource(),
-			signalSource = signal.getSource(header.getField(AV_BYTE_PER_SEC)),
-			result = new byte[headerSource.length + signalSource.length];
+			signalSource = signal.getSource(header.getField(BLOCK_ALIGN)),
+			result = new byte[lengths[2]];
 
-		System.arraycopy(headerSource, 0, result, 0, 44);
-		System.arraycopy(signalSource, 0, result, 44, signalSource.length);
+		System.arraycopy(headerSource, 0, result, 0, lengths[0]);
+		System.arraycopy(signalSource, 0, result, lengths[0], lengths[1]);
 
 		return result;
+	}
+
+	int[] updateFileSize(){
+
+		int
+			headerLength = header.getSource().length,
+			signalLength = signal.getSource(header.getField(BLOCK_ALIGN)).length,
+			currentLength = headerLength + signalLength;
+
+		header.setField(currentLength - 8, FILE_SIZE);
+
+		return new int[] {headerLength, signalLength, currentLength};
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------

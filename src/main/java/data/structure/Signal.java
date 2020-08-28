@@ -27,11 +27,11 @@ public class Signal extends ArrayList<Integer>{
 			addChannel();
 	}
 
-	public Signal(byte[] source, int sampleSize, int channels){
+	public Signal(byte[] source, int blockAlign, int channels){
 
 		this(channels);
 
-		importToStrips(bytesToIntegers(source, sampleSize), channels);
+		importToStrips(bytesToIntegers(source, blockAlign), channels);
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------
@@ -70,13 +70,13 @@ public class Signal extends ArrayList<Integer>{
 
 
 
-	void importToStrips(Integer[] input, int numberOfChannels){
+	void importToStrips(Integer[] input, int channels){
 
 		if (strips != null && strips.size() > 0)
 
 			strips.clear();
 
-		for (int i = 0; i < numberOfChannels; i++)
+		for (int i = 0; i < channels; i++)
 
 			strips.add(new Strip());
 
@@ -85,23 +85,23 @@ public class Signal extends ArrayList<Integer>{
 
 		for (Integer i : input)
 
-			strips.get(index++ % numberOfChannels).add(i);
+			strips.get(index++ % channels).add(i);
 	}		// * tested
 
-	Integer[] bytesToIntegers(byte[] source, int sampleSize){
+	Integer[] bytesToIntegers(byte[] source, int blockAlign){
 
 		Strip
 			strip = new Strip();
 
 		int
-			stripLength = source.length / sampleSize;
+			stripLength = source.length / blockAlign;
 
 		Integer[]
 			result = new Integer[stripLength];
 
 		for (int i = 0; i < stripLength; i++)
 
-			result[i] =  FileContentConverter.readDataSample(source, i * sampleSize, sampleSize);
+			result[i] =  FileContentConverter.readDataSample(source, i * blockAlign, blockAlign);
 
 		return result;
 	}		// * tested
@@ -111,9 +111,9 @@ public class Signal extends ArrayList<Integer>{
 	Integer[] consolidateChannels(){
 
 		int
-			numberOfChannels = strips.size(),
+			channels = strips.size(),
 			numberOfSamples = strips.get(0).size(),
-			resultLength = numberOfChannels * numberOfSamples;
+			resultLength = channels * numberOfSamples;
 
 		Strip
 			sum = new Strip();
@@ -124,8 +124,8 @@ public class Signal extends ArrayList<Integer>{
 		for (int i = 0; i < resultLength; i++) {
 
 			int
-				channelIndex = i % numberOfChannels,
-				sampleIndex = (i - channelIndex) / numberOfChannels;
+				channelIndex = i % channels,
+				sampleIndex = (i - channelIndex) / channels;
 
 			result[i] = strips.get(channelIndex).get(sampleIndex);
 		}
@@ -133,20 +133,20 @@ public class Signal extends ArrayList<Integer>{
 		return result;
 	}								// * tested
 
-	byte[] integersToBytes(Integer[] signal, int sampleSize){
+	byte[] integersToBytes(Integer[] signal, int blockAlign){
 
 		byte[]
-			result = new byte[signal.length * sampleSize],
+			result = new byte[signal.length * blockAlign],
 			sample;
 
 		for(int i = 0 ; i < signal.length; i++) {
 
 			int
-				resultIndex = i * sampleSize;
+				resultIndex = i * blockAlign;
 
-			sample = writeDataSample(signal[i], sampleSize);
+			sample = writeDataSample(signal[i], blockAlign);
 
-			System.arraycopy(sample, 0, result, resultIndex, sampleSize);
+			System.arraycopy(sample, 0, result, resultIndex, blockAlign);
 		}
 
 		return result;
@@ -166,6 +166,12 @@ public class Signal extends ArrayList<Integer>{
 
 //	--------------------------------------------------------------------------------------------------------------------
 
+	public Strip getStrip(int index){
+
+		return strips.get(index);
+	}
+
+
 	public int getSample(int channel, int index){
 
 		if(coordinatesInRange(channel, index))
@@ -184,19 +190,12 @@ public class Signal extends ArrayList<Integer>{
 
 
 
-	public byte[] getSource(int sampleSize){
+	public byte[] getSource(int blockAlign){
 
-		return integersToBytes(consolidateChannels(), sampleSize);
+		return integersToBytes(consolidateChannels(), blockAlign);
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	class Strip extends ArrayList<Integer>{
 
-		public void removeSamples(int fromIndex, int toIndex){
-
-			super.removeRange(fromIndex, toIndex);
-		}
-
-	}
 }

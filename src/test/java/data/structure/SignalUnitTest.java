@@ -3,14 +3,12 @@ package data.structure;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import data.structure.Signal.Strip;
+import java.util.Arrays;
 
 public class SignalUnitTest {
 
 	static Signal
 		dummy = new Signal();
-
 
 //	--------------------------------------------------------------------------------------------------------------------
 
@@ -142,14 +140,13 @@ public class SignalUnitTest {
 
 		returned.importToStrips(input_1, input_2);
 
+		for (Strip s : returned.strips) System.out.println("\t" + Arrays.toString(s.toArray()));
+
 		for (int i = 0; i < 3; i++)
 
 			for (int j = 0; j < 3; j++)
 
-				Assert.assertEquals(
-					correct.strips.get(i).get(j),
-					returned.strips.get(i).get(j)
-				);
+				Assert.assertEquals(correct.strips.get(i).get(j), returned.strips.get(i).get(j));
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------
@@ -190,5 +187,4 @@ public class SignalUnitTest {
 
 		Assert.assertArrayEquals(correct, returned);
 	}
-
 }

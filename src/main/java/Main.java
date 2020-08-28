@@ -1,48 +1,42 @@
 import algorithms.metaProcessors.FileManager;
 import data.*;
-import data.structure.FileContentStructure;
-
-import java.util.Arrays;
 
 public class Main {
 
-	public static void main(String[] args){
+    public static void main(String[] args) {
 
-		Wave
-			temporal,
-			temporal1;
+        Wave
+                temporal,
+                temporal1;
 
-		String
-			address;
+        String
+                address;
 
-		{
-			String
-				address_folder_0 = "src\\main\\resources\\",
-				address_folder_1 = "C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\",
+        {
+            String
+                    address_folder_0 = "src\\main\\resources\\",
+                    address_folder_1 = "C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\",
 
-				address_shortie = "shortie-mono-16bit.wav",
+                    address_shortie = "shortie-mono-16bit.wav",
 
-				address_0 = "sample-mono.wav",
-				address_1 = "sample-mono-byte.wav",
-				address_2 = "sample-mono-byte_unsigned.wav",
-				address_3 = "sample-mono-byte.wav",
-				address_4 = "sample-mono-float.wav",
-				address_5 = "sample-mono-double.wav",
+                    address_0 = "sample-mono.wav",
+                    address_1 = "sample-mono-byte.wav",
+                    address_2 = "sample-mono-byte_unsigned.wav",
+                    address_3 = "sample-mono-byte.wav",
+                    address_4 = "sample-mono-float.wav",
+                    address_5 = "sample-mono-double.wav",
 
-				address_400 = "*.wav",
-				address_404 = "nope.wave";
+                    address_400 = "*.wav",
+                    address_404 = "nope.wave";
 
-				address =  address_folder_0 + address_0;
+            address = address_folder_0 + address_0;
 
-			temporal = new Wave(address);
+            temporal = new Wave(address);
 
-		}    // * load waveFile
+        }    // * load waveFile
 
-
-//		FileManager.saveFile(temporal);
-
+        FileManager.saveFile(temporal);
 
 
-		System.out.println(Arrays.toString(temporal.getSignal().strips.toArray()));
-	}
+    }
 }

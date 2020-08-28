@@ -37,16 +37,38 @@ public class WaveHeader {
 
 	public int getField(FileContentStructure field){
 
-		return readDataField(source, field);
+		if (field.getLength() > 0)
+
+			return readDataField(source, field);
+
+		return 0;
 	}
 
 	public void setField(int value, FileContentStructure field){
 
-		writeDataField(source, value, field);
+		if (field.getLength() > 0)
+
+			writeDataField(source, value, field);
 	}
 
 	public byte[] getSource(){
 
 		return source;
+	}
+
+	public String toString() {
+
+		StringBuilder
+			output = new StringBuilder("\n\t fields \n\t");
+
+		for (FileContentStructure e : FileContentStructure.values())
+
+			output
+				.append("\n\t")
+				.append(e)
+				.append(" : ")
+				.append(getField(e));
+
+		return output.toString();
 	}
 }

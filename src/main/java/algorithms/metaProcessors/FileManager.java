@@ -19,6 +19,8 @@ public interface FileManager {
 	address.setNameToDefault();
 
 
+	byte[]
+		source = wave.getSource();
 
 	Path
 		path = get(address.toString());
@@ -27,7 +29,7 @@ public interface FileManager {
 
 			createFile(path);
 
-			write(path, wave.getSource());
+			write(path, source);
 
 			System.out.println(
 				"\n\tFile saved to "

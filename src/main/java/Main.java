@@ -1,11 +1,10 @@
 import data.*;
+
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -42,11 +41,6 @@ public class Main extends Application {
             event -> System.out.println(new Wave(address).getHeader().toString())
         );
 
-/*        StackPane
-            root = new StackPane();
-
-        root.getChildren().add(button);*/   // * simplest layout (?)
-
         GridPane
             grid = new GridPane();
 
@@ -55,6 +49,12 @@ public class Main extends Application {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
+        grid.add(button, 0, 1);
+
+/*        StackPane
+            root = new StackPane();
+
+        root.getChildren().add(button);*/   // * simplest layout (?)
 
 
 

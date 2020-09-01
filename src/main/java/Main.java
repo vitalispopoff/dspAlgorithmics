@@ -1,15 +1,19 @@
 import data.*;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.geometry.*;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    static String
+/*    static String
             address_folder_0 = "src\\main\\resources\\",
             address_folder_1 = "C:\\Users\\Voo\\Desktop\\unpeak\\shortie\\",
 
@@ -23,69 +27,67 @@ public class Main extends Application {
             address_5 = "sample-mono-double.wav",
 
     address_400 = "*.wav",
-            address_404 = "nope.wave";
+            address_404 = "nope.wave";*/
 
     @Override
-    public void start(Stage primaryStage){
+    public void start(Stage stage){
 
-        String
-            title = "Hello World",
-                address = address_folder_0 + address_0;
+        MenuBar
+            bar = new MenuBar();
 
-        Button
-            button = new Button();
+        Menu
+            menuFile = new Menu("File"),
+            menuEdit = new Menu("Edit"),
+            menuView = new Menu("View"),
+            menuAbout = new Menu("About");
 
-        button.setText(title);
 
-        button.setOnAction(
-            event -> System.out.println(new Wave(address).getHeader().toString())
+
+        MenuItem
+            openFile = new MenuItem("Open"),
+            closeFile = new MenuItem("Close"),
+            saveAs = new MenuItem("Save as"),
+            closeApp = new MenuItem("Close app");
+
+        openFile.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));
+        closeFile.setAccelerator(KeyCombination.keyCombination("Ctrl+W"));
+        saveAs.setAccelerator(KeyCombination.keyCombination("Ctrl+Shift+S"));
+        closeApp.setAccelerator(KeyCombination.keyCombination("Ctrl+Q"));
+
+        closeApp.setOnAction((ActionEvent t ) -> {
+
+            System.exit(0);
+        });
+
+        menuFile.getItems().addAll(
+            openFile,
+            closeFile,
+            new SeparatorMenuItem(),
+            saveAs,
+            new SeparatorMenuItem(),
+            closeApp
         );
 
-        GridPane
-            grid = new GridPane();
+        bar.getMenus().addAll(menuFile, menuEdit, menuView, menuAbout);
 
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(25, 25, 25, 25));
+        /*        FileChooser
+                browser = new FileChooser();
 
-        grid.add(button, 0, 1);
-
-/*        StackPane
-            root = new StackPane();
-
-        root.getChildren().add(button);*/   // * simplest layout (?)
-
-
-
-        int
-            width = 300,
-            height = 275;
+            browser.setTitle("Open File");
+            browser.showOpenDialog(stage);*/    // file browser
 
         Scene
-            scene = new Scene(grid, width, height);
+            scene = new Scene(new VBox(), 800, 600);
 
-        primaryStage.setTitle(title);
-        primaryStage.setScene(scene);
+        ((VBox)scene.getRoot()).getChildren().addAll(bar);
 
-        primaryStage.show();
+        stage.setScene(scene);
+
+        stage.show();
     }
 
     public static void main(String[] args) {
 
         launch(args);
-
-/*        Wave
-                temporal,
-                temporal1;
-
-        String
-                address;
-
-            address = address_folder_0 + address_0;
-
-            temporal = new Wave(address);
-
-        FileManager.saveFile(temporal);*/   // ? disposable ?
     }
 }

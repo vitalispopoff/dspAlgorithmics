@@ -5,6 +5,7 @@ import data.structure.FileAddress;
 
 import java.io.*;
 import java.nio.file.*;
+import java.util.Arrays;
 
 import static java.nio.file.Files.*;
 import static java.nio.file.Paths.get;
@@ -52,9 +53,10 @@ public interface FileManager {
 			fileContent = { };
 
 		boolean
-			fileExists = verifyFile(fileAddress);
+			fileExists = verifyFile(fileAddress),
+			fileIsValid = verifyFileType(fileAddress);
 
-		if (fileExists) {
+		if (fileExists && fileIsValid) {
 
 			Path
 				filePath = get(fileAddress);
@@ -105,5 +107,41 @@ public interface FileManager {
 
 			return false;
 		}
+	}
+
+	static boolean verifyFileType(String filePath){
+
+		byte[]
+			bytes = new byte[12],
+			riff = new byte[]{(byte) 0x52, (byte) 0x49, (byte) 0x46, (byte) 0x46},
+			wave = new byte[]{(byte) 0x57, (byte) 0x41, (byte) 0x56, (byte) 0x45},
+			aiff = new byte[]{(byte) 0x41, (byte) 0x49, (byte) 0x46, (byte) 0x46};
+
+		try {
+
+			FileInputStream
+				input = new FileInputStream(filePath);
+
+			input.read(bytes, 0, 12);
+
+			input.close();
+		}
+
+		catch (IOException e) {
+
+			e.printStackTrace();
+			return false;
+		}
+
+		byte[]
+			fileId = Arrays.copyOfRange(bytes, 0, 4),
+			waveId = Arrays.copyOfRange(bytes, 8, 12);
+
+		boolean
+			fileIsRIFF = Arrays.equals(fileId, riff),
+			fileIsWAVE = Arrays.equals(waveId, wave),
+			fileIsAIFF = Arrays.equals(waveId, aiff);
+
+		return fileIsRIFF && (fileIsWAVE || fileIsAIFF);
 	}
 }

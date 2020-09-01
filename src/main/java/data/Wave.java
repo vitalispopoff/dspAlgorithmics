@@ -4,6 +4,7 @@ import data.structure.FileAddress;
 import data.structure.Signal;
 import data.structure.WaveHeader;
 
+import java.io.File;
 import java.util.Arrays;
 
 import static data.structure.FileContentStructure.*;
@@ -25,6 +26,26 @@ public class Wave {
 //	--------------------------------------------------------------------------------------------------------------------
 
 	private Wave( ){ }
+
+	public Wave (File file){
+
+		byte[]
+			fileContent = loadFile(file);
+
+		header = instanceOf(fileContent);
+
+		int
+			start = 44,
+			end = 44 + header.getField(DATA_SIZE);
+		byte[]
+			signalSource = Arrays.copyOfRange(fileContent, start, end);
+
+		signal = new Signal(signalSource, header.getField(BLOCK_ALIGN), header.getField(CHANNELS));
+
+		setFileAddress(file.getPath());
+
+		System.out.println(getHeader().toString());
+	}
 
 	public Wave (String fileAddress){
 

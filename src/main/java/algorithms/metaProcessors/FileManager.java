@@ -47,6 +47,25 @@ public interface FileManager {
 		}
 	}
 
+	static byte[] loadFile(File file){
+
+		byte[]
+			fileContent = { };
+
+		try{
+
+			fileContent = readAllBytes(file.toPath());
+
+		}
+
+		catch (IOException e){
+
+			e.printStackTrace();;
+		}
+
+		return fileContent;
+	}
+
 	static byte[] loadFile(String fileAddress){
 
 		byte[]

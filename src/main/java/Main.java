@@ -1,5 +1,6 @@
 import data.*;
 
+import gui.MainMenu;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.*;
@@ -32,43 +33,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage){
 
-        MenuBar
-            bar = new MenuBar();
-
-        Menu
-            menuFile = new Menu("File"),
-            menuEdit = new Menu("Edit"),
-            menuView = new Menu("View"),
-            menuAbout = new Menu("About");
-
-
-
-        MenuItem
-            openFile = new MenuItem("Open"),
-            closeFile = new MenuItem("Close"),
-            saveAs = new MenuItem("Save as"),
-            closeApp = new MenuItem("Close app");
-
-        openFile.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));
-        closeFile.setAccelerator(KeyCombination.keyCombination("Ctrl+W"));
-        saveAs.setAccelerator(KeyCombination.keyCombination("Ctrl+Shift+S"));
-        closeApp.setAccelerator(KeyCombination.keyCombination("Ctrl+Q"));
-
-        closeApp.setOnAction((ActionEvent t ) -> {
-
-            System.exit(0);
-        });
-
-        menuFile.getItems().addAll(
-            openFile,
-            closeFile,
-            new SeparatorMenuItem(),
-            saveAs,
-            new SeparatorMenuItem(),
-            closeApp
-        );
-
-        bar.getMenus().addAll(menuFile, menuEdit, menuView, menuAbout);
+        MainMenu
+            bar = new MainMenu(stage);
 
         /*        FileChooser
                 browser = new FileChooser();

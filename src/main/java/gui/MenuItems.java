@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 
 import static javafx.scene.input.KeyCombination.*;
@@ -13,12 +14,17 @@ public enum MenuItems {
 	MENU_FILE,
 		OPEN_FILE,
 		CLOSE_FILE,
-		SAVE_AS,
-		EXIT_APP,
+		SAVE,
+		QUIT,
 
 	MENU_EDIT,
 
+	MENU_ANALYZE,
+
 	MENU_VIEW,
+		FILE_WAVEFORM,
+		FILE_AMPLITUDE_DISTRIBUTION,
+		FILE_PROPERTIES,
 
 	MENU_HELP,
 
@@ -47,7 +53,10 @@ public enum MenuItems {
 
 	public KeyCombination getKeyCombination(){
 
-		return (KeyCombination) menuItemParams[this.ordinal()][1];
+		KeyCombination
+			keyStroke = (KeyCombination) menuItemParams[this.ordinal()][1];
+
+		return keyStroke;
 	}
 
 	public MenuItem getMenuItem (){
@@ -65,12 +74,15 @@ public enum MenuItems {
 		Menu
 			menu = new Menu((String) menuItemParams[this.ordinal()][0]);
 
+		menu.setMnemonicParsing(true);
+
 		menu.setAccelerator((KeyCombination) menuItemParams[this.ordinal()][1]);
 
-		for(MenuItems item : items)
+		for(MenuItems item : items) {
 
 			menu.getItems().add(item.getMenuItem());
-
+			item.getMenuItem().setMnemonicParsing(true);
+		}
 		return menu;
 	}
 
@@ -79,17 +91,22 @@ public enum MenuItems {
 	Object[][]
 		menuItemParams = {
 
-			{"File", keyCombination("Alt+F")},
-			{"Open", keyCombination("Ctrl+O")},
-			{"Close", keyCombination("Ctrl+W")},
-			{"Save as", keyCombination("Ctrl+Shift+S")},
-			{"Exit", keyCombination("Ctrl+Q"), },
+			{"_File", keyCombination("Alt+F")},
+				{"_Open", keyCombination("Ctrl+O")},
+				{"Close", keyCombination("Ctrl+W")},
+				{"_Save", keyCombination("Ctrl+S")},
+				{"_Quit", keyCombination("Ctrl+Q"), },
 
-			{"Edit", keyCombination("Alt+E")},
+			{"_Edit", keyCombination("Alt+E")},
 
-			{"View", keyCombination("Alt+V"), },
+			{"_Analyze", keyCombination("Alt+A")},
 
-			{"Help", keyCombination("Alt+H"), }
+			{"_View", keyCombination("Alt+V"), },
+				{"_Waveform", keyCombination("Alt+W")},
+				{"Amplitude _Distribution", keyCombination("Alt+D")},
+				{"File _Properties", keyCombination("Alt+P")},
+
+			{"Help", keyCombination("Alt+H")}
 	};
 
 	ActionEvent[]

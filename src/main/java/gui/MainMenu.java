@@ -8,6 +8,7 @@ import javafx.stage.*;
 import java.io.File;
 import java.util.List;
 
+import static algorithms.metaProcessors.FileManager.saveFile;
 import static gui.MenuItems.*;
 
 public class MainMenu extends MenuBar {
@@ -16,21 +17,24 @@ public class MainMenu extends MenuBar {
 		stage;
 
 	Menu
-		menuFile = MENU_FILE.getMenu(OPEN_FILE, CLOSE_FILE, SEPARATOR, SAVE_AS, SEPARATOR, EXIT_APP),
+		menuFile = MENU_FILE.getMenu(OPEN_FILE, CLOSE_FILE, SEPARATOR, SAVE, SEPARATOR, QUIT),
 		menuEdit = MENU_EDIT.getMenu(),
-		menuView = MENU_VIEW.getMenu(),
+		menuAnalyze = MENU_ANALYZE.getMenu(),
+		menuView = MENU_VIEW.getMenu(FILE_WAVEFORM, FILE_AMPLITUDE_DISTRIBUTION, SEPARATOR,  FILE_PROPERTIES),
 		menuHelp = MENU_HELP.getMenu();
 
-	FileChooser
-		browser = new FileChooser();
+/*	FileChooser
+		browser = new FileChooser();*/
 
 //	--------------------------------------------------------------------------------------------------------------------
 
 	public MainMenu(Stage stage){
 
+
+
 		this.stage = stage;
 
-		this.getMenus().addAll(menuFile, menuEdit, menuView, menuHelp);
+		this.getMenus().addAll(menuFile, menuEdit, menuAnalyze, menuView, menuHelp);
 
 		setActionsToMenuFile();
 	}
@@ -43,15 +47,28 @@ public class MainMenu extends MenuBar {
 
 		items.get(0).setOnAction((ActionEvent e) -> {
 
+			FileChooser
+				browser = new FileChooser();
+
+			browser.setTitle("Open File");
+
 			browser.setInitialDirectory(new File(System.getProperty("user.home")));
 			File file = browser.showOpenDialog(stage);
 			Wave wave = new Wave(file);
 		});
 
-/*		items.get(3).setOnAction((ActionEvent e) -> {
+		items.get(3).setOnAction((ActionEvent e) -> {
 
-			browser.showOpenDialog(stage);
-		});*/	// * TODO save as
+			FileChooser
+				browser = new FileChooser();
+
+			browser.setTitle("Save As");
+
+			File
+				file = browser.showSaveDialog(stage);
+
+			saveFile(file);
+		});
 
 		items.get(5).setOnAction(close -> stage.close());
 

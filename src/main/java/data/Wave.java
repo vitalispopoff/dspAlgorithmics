@@ -7,6 +7,7 @@ import data.structure.WaveHeader;
 import java.io.File;
 import java.util.Arrays;
 
+import static data.FileCache.addToCache;
 import static data.structure.FileContentStructure.*;
 import static data.structure.WaveHeader.instanceOf;
 
@@ -44,7 +45,7 @@ public class Wave {
 
 		setFileAddress(file.getPath());
 
-		System.out.println(getHeader().toString());
+		addToCache(this);
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------

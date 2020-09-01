@@ -1,5 +1,6 @@
 package algorithms.metaProcessors;
 
+import data.FileCache;
 import data.Wave;
 import data.structure.FileAddress;
 
@@ -11,6 +12,25 @@ import static java.nio.file.Files.*;
 import static java.nio.file.Paths.get;
 
 public interface FileManager {
+
+	static void saveFile(File file){
+
+		Wave
+			wave = FileCache.loadCurrent();
+
+		byte[]
+			source = wave.getSource();
+
+		try {
+
+			write(file.toPath(), source);
+		}
+
+		catch (IOException e) {
+
+			e.printStackTrace();
+		}
+	}
 
 	static void saveFile(Wave wave){
 

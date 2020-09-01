@@ -3,71 +3,58 @@ package gui;
 import data.Wave;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
-import javafx.scene.input.*;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
+import javafx.stage.*;
 
 import java.io.File;
+import java.util.List;
+
+import static gui.MenuItems.*;
 
 public class MainMenu extends MenuBar {
 
-	static Menu
-		menuFile = new Menu("File"),
-		menuEdit = new Menu("Edit"),
-		menuView = new Menu("View"),
-		menuAbout = new Menu("About");
+	Stage
+		stage;
 
-	static MenuItem
-		openFile = new MenuItem("Open"),
-		closeFile = new MenuItem("Close"),
-		saveAs = new MenuItem("Save as"),
-		exitApp = new MenuItem("Exit");
+	Menu
+		menuFile = MENU_FILE.getMenu(OPEN_FILE, CLOSE_FILE, SEPARATOR, SAVE_AS, SEPARATOR, EXIT_APP),
+		menuEdit = MENU_EDIT.getMenu(),
+		menuView = MENU_VIEW.getMenu(),
+		menuHelp = MENU_HELP.getMenu();
 
-	static FileChooser
+	FileChooser
 		browser = new FileChooser();
-
-	static {
-		openFile.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));
-		closeFile.setAccelerator(KeyCombination.keyCombination("Ctrl+W"));
-		saveAs.setAccelerator(KeyCombination.keyCombination("Ctrl+Shift+S"));
-		exitApp.setAccelerator(KeyCombination.keyCombination("Ctrl+Q"));
-
-		exitApp.setOnAction((ActionEvent close) -> System.exit(0));
-
-		menuFile.getItems().addAll(
-			openFile,
-			closeFile,
-			new SeparatorMenuItem(),
-			saveAs,
-			new SeparatorMenuItem(),
-			exitApp
-		);
-	}
 
 //	--------------------------------------------------------------------------------------------------------------------
 
 	public MainMenu(Stage stage){
 
-		this.getMenus().addAll(menuFile, menuEdit, menuView, menuAbout);
+		this.stage = stage;
 
-		setOpenAction(stage);
-		setSaveAsAction(stage);
+		this.getMenus().addAll(menuFile, menuEdit, menuView, menuHelp);
+
+		setActionsToMenuFile();
 	}
 
-//	--------------------------------------------------------------------------------------------------------------------
 
-	void setOpenAction(Stage stage){
 
-		openFile.setOnAction((ActionEvent open) -> {
+	private void setActionsToMenuFile(){
+
+		List<MenuItem> items = menuFile.getItems();
+
+		items.get(0).setOnAction((ActionEvent e) -> {
 
 			browser.setInitialDirectory(new File(System.getProperty("user.home")));
 			File file = browser.showOpenDialog(stage);
 			Wave wave = new Wave(file);
 		});
-	}
 
-	void setSaveAsAction(Stage stage){
+/*		items.get(3).setOnAction((ActionEvent e) -> {
 
-		saveAs.setOnAction((ActionEvent e) -> browser.showOpenDialog(stage));
+			browser.showOpenDialog(stage);
+		});*/	// * TODO save as
+
+		items.get(5).setOnAction(close -> stage.close());
+
+
 	}
 }

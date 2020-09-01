@@ -32,9 +32,7 @@ public class MainMenu extends MenuBar {
 		saveAs.setAccelerator(KeyCombination.keyCombination("Ctrl+Shift+S"));
 		exitApp.setAccelerator(KeyCombination.keyCombination("Ctrl+Q"));
 
-
 		exitApp.setOnAction((ActionEvent close) -> System.exit(0));
-
 
 		menuFile.getItems().addAll(
 			openFile,

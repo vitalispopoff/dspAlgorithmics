@@ -47,32 +47,6 @@ public class Wave {
 		System.out.println(getHeader().toString());
 	}
 
-	public Wave (String fileAddress){
-
-		boolean
-			addressIsValid = verifyFile(fileAddress);
-
-			this.header = WaveHeader.instanceOf(null);
-
-		if(addressIsValid){
-
-			byte[]
-				fileContent = loadFile(fileAddress);
-
-			header = instanceOf(fileContent);
-
-			int
-				start = 44,
-				end = 44 + header.getField(DATA_SIZE);
-			byte[]
-				signalSource = Arrays.copyOfRange(fileContent, start, end);
-
-			signal = new Signal(signalSource, header.getField(BLOCK_ALIGN), header.getField(CHANNELS));
-
-			setFileAddress(fileAddress);
-		}
-	}
-
 //	--------------------------------------------------------------------------------------------------------------------
 
 	public void setFileAddress(String fileAddress){

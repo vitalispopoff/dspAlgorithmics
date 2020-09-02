@@ -1,12 +1,12 @@
 import data.structure.FileContentStructure;
 import gui.MainMenu;
+
 import javafx.application.Application;
 import javafx.scene.*;
-import javafx.scene.chart.XYChart;
+import javafx.scene.canvas.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import java.util.Arrays;
 
 public class Main extends Application {
 
@@ -16,12 +16,19 @@ public class Main extends Application {
         MainMenu
             bar = new MainMenu(stage);
 
+        int
+            barHeight = 25;
+
+        bar.setMinHeight(barHeight);
+        bar.setMaxHeight(barHeight);
+
+        VBox
+            vBox = new VBox(bar);
+
         Scene
-            scene = new Scene(new VBox(), 800, 600);
+            scene = new Scene(vBox, 800, 600);
 
-        ((VBox)scene.getRoot()).getChildren().addAll(bar);
-
-    //  -------------------------------------------------------------
+    //  ---------------------------------------------------------------------------------------
 
         /*{
             javafx.scene.shape.Path
@@ -57,6 +64,8 @@ public class Main extends Application {
 
         ((VBox) scene.getRoot()).getChildren().add(button);*/   // button
 
+    //  ---------------------------------------------------------------------------------------
+
 
         data.Wave
             wave = new data.Wave (new java.io.File("src\\main\\resources\\shortie-mono-16bit.wav"));
@@ -70,65 +79,62 @@ public class Main extends Application {
             averagingJumps = signalLength / averagingScope,
             averageAmp = windowHeight / signalAmp;
 
-        System.out.println(wave.getHeader().toString());
-
-
         java.util.ArrayList<Integer>
             averagedSignal = new java.util.ArrayList<>();
 
         for (int i = 0 ; i < averagingJumps ; i ++){
 
-            Integer
+            int
                 localAverage = 0;
 
             for (int j = i * averagingScope; j < (i + 1) *  averagingScope ; j ++){
 
                 localAverage += Math.abs(wave.getSignal().getStrip(0).get(j));
             }
-            averagedSignal.add(localAverage / averagingScope);
+            averagedSignal.add((localAverage / averagingScope)* averageAmp);
         }
 
-        for (int sample : averagedSignal) sample *= (averageAmp);
+    //  ---------------------------------------------------------------------------------------
 
+        Group
+            graphGroup = new Group();
 
-        javafx.scene.chart.NumberAxis
-            xAxis = new javafx.scene.chart.NumberAxis(),
-            yAxis = new javafx.scene.chart.NumberAxis();
+        Canvas
+            canvas = new Canvas(scene.getWidth() - (barHeight << 1), scene.getHeight() - (barHeight << 1));
 
-        javafx.scene.chart.AreaChart<Number, Number>
-            chart = new javafx.scene.chart.AreaChart<>(xAxis, yAxis);
+        GraphicsContext
+            gc = canvas.getGraphicsContext2D();
 
-        javafx.scene.chart.XYChart.Series
-            positiveSeries = new XYChart.Series(),
-            negativeSeries = new XYChart.Series();
+        drawShapes(canvas, gc);
 
-        for(int i = 0; i < averagedSignal.size(); i++) {
+        ((VBox) scene.getRoot()).getChildren().add(canvas);
 
-            positiveSeries.getData().add(new XYChart.Data<>(i, averagedSignal.get(i)));
-            negativeSeries.getData().add(new XYChart.Data<>(i, -1 * averagedSignal.get(i)));
-        }
+        /*{
+            javafx.scene.chart.NumberAxis
+                xAxis = new javafx.scene.chart.NumberAxis(),
+                yAxis = new javafx.scene.chart.NumberAxis();
 
-        chart.getData().add(positiveSeries);
-        chart.getData().add(negativeSeries);
+            javafx.scene.chart.AreaChart<Number, Number>
+                chart = new javafx.scene.chart.AreaChart<>(xAxis, yAxis);
 
-        ((VBox) scene.getRoot()).getChildren().addAll(chart);
+            javafx.scene.chart.XYChart.Series
+                positiveSeries = new XYChart.Series(),
+                negativeSeries = new XYChart.Series();
 
+            for (int i = 0; i < averagedSignal.size(); i++) {
 
+                positiveSeries.getData().add(new XYChart.Data<>(i, averagedSignal.get(i)));
+                negativeSeries.getData().add(new XYChart.Data<>(i, -1 * averagedSignal.get(i)));
+            }
 
+            chart.getData().add(positiveSeries);
+            chart.getData().add(negativeSeries);
 
+            ((VBox) scene.getRoot()).getChildren().addAll(chart);
+        }*/     // lineChart
 
-
-
-
-        System.out.println(
-            "\n\tsignalLength = " + signalLength
-            + "\n\twindowLength = " + windowLength
-            + "\n\tsignalAmp = " + signalAmp
-            + "\n\twindowHeight = " + windowHeight);
-
-
-
-    //  -------------------------------------------------------------
+        { }
+    //  ---------------------------------------------------------------------------------------
 
         stage.setScene(scene);
 
@@ -138,5 +144,25 @@ public class Main extends Application {
     public static void main(String[] args) {
 
         launch(args);
+    }
+
+    private void drawShapes(Canvas canvas, GraphicsContext gc){
+
+        gc.setStroke(Color.DARKGREY);
+
+        gc.setLineWidth(1);
+        gc.strokeLine(
+            canvas.getWidth() - 10,
+            ((int)canvas.getHeight()) >>> 1,
+            10,
+            ((int)canvas.getHeight()) >>> 1)
+        ;
+
+        gc.strokeLine(
+            10,                         // x start
+            10,                         // y start
+            10,                         // x send
+            canvas.getHeight() -35      // y end
+        );
     }
 }

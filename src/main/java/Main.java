@@ -5,15 +5,25 @@ import gui.MainMenu;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.canvas.*;
-import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.*;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage stage){
+
+        MainMenu
+            bar = new MainMenu(stage);
+
+        ScrollPane
+            grid = new ScrollPane();
+
+        VBox
+            vBox = new VBox(bar, grid);
 
         int
             sceneHeight = 600,
@@ -24,98 +34,84 @@ public class Main extends Application {
             sceneWidth = 1200,
             canvasWidth = sceneWidth - 10;
 
-        MainMenu
-            bar = new MainMenu(stage);
-
         bar.setMinHeight(barHeight);
         bar.setMaxHeight(barHeight);
-
-        VBox
-            vBox = new VBox(bar);
 
         Scene
             scene = new Scene(vBox, sceneWidth, sceneHeight);
 
-
-
-    //  ---------------------------------------------------------------------------------------
-
         data.Wave
             wave = new data.Wave (new java.io.File("src\\main\\resources\\shortie-mono-16bit.wav"));
+
+        int
+            hScale = 10,
+            vScale = 4 - wave.getHeader().getField(FileContentStructure.BLOCK_ALIGN);
 
         Strip
             strip = wave.getSignal().getStrip(0);
 
-        ScrollBar
-            scroller = new ScrollBar();
-
-        scroller.setMinHeight(scrollerHeight);
-        scroller.setMaxHeight(scrollerHeight);
-
-        scroller.setMax(strip.size() - canvasWidth);
-        scroller.setMin(0);
-
         Canvas
-            canvas = new Canvas(canvasWidth, canvasHeight);
+            canvas = new Canvas(strip.size() / (double) hScale, canvasHeight);
 
         GraphicsContext
             gc = canvas.getGraphicsContext2D();
 
-        gc.setStroke(Color.BLACK);
+        Path line = setLine(gc, strip, canvas, canvasHeight, hScale, vScale);
 
+/*        gc.setStroke(Color.BLACK);
         gc.setLineWidth(1);
 
-        for (int i = 0; i < strip.size() - 1 ; i ++){
+        Path
+            line = new Path();
+
+        line.getElements().add(new MoveTo(0 , strip.get(0) - canvasHeight >>> 1));
+
+        for (int i = 1; i < strip.size() - 1 ; i += hScale){
 
             double
                 maxHeight = (int) canvas.getHeight() >>> 1,
-                sample = (double) strip.get(i),
+                sample = (strip.get(i) << vScale),
                 nextSample = (double) strip.get(i + 1);
 
-            gc.strokeLine(
-                i + 10,
-                maxHeight - sample / maxHeight,
-                i + 11,
-                maxHeight - nextSample / maxHeight
-            );
-        }
+            LineTo
+                lineTo = new LineTo((double) i / hScale, maxHeight - (sample / maxHeight));
 
+            line.getElements().add(lineTo);
+        }*/
 
+    //  ----------------------------------------------------------------------------------------------------------------
 
-
-    //  private void drawCoordinateSystem(Canvas canvas, GraphicsContext gc){   //--------------------------------------
-
-        gc.setStroke(Color.LIGHTBLUE);
+/*        gc.setStroke(Color.LIGHTBLUE);
 
         int
             logDistance = ((int)canvas.getHeight()) >>> 2,
             trueDistance = logDistance;
 
         gc.strokeLine(
-            10,
-            10,
-            canvas.getWidth() - 10,
-            10);
+            0,
+            0,
+            (double)strip.size() / (double)hScale,
+            0);
 
         gc.strokeLine(
-            10,
-            canvas.getHeight() - 10,
-            canvas.getWidth() - 10,
-            canvas.getHeight() - 10);
+            0,
+            canvas.getHeight(),
+            canvas.getWidth(),
+            canvas.getHeight());
 
-        while (logDistance > 2 && trueDistance + 10 < ((int)canvas.getHeight() >>> 1)) {
-
-            gc.strokeLine(
-                10,
-                10 + trueDistance,
-                canvas.getWidth() - 10,
-                10 + trueDistance);
+        while (logDistance > 2 && trueDistance < ((int)canvas.getHeight() >>> 1)) {
 
             gc.strokeLine(
-                10,
-                canvas.getHeight() - 10 - trueDistance,
-                canvas.getWidth() - 10,
-                canvas.getHeight() - 10 - trueDistance);
+                0,
+                trueDistance,
+                (double)strip.size() / (double)hScale,
+                trueDistance);
+
+            gc.strokeLine(
+                0,
+                canvas.getHeight() - trueDistance,
+                (double) strip.size() / (double)hScale,
+                canvas.getHeight() - trueDistance);
 
             logDistance >>>= 1;
             trueDistance += logDistance;
@@ -123,60 +119,114 @@ public class Main extends Application {
 
             gc.setStroke(Color.DODGERBLUE);
 
-            gc.setLineWidth(1);
+            gc.setLineWidth(1);*/
 
-            gc.strokeLine(
-                canvas.getWidth() - 10,
-                ((int)canvas.getHeight()) >>> 1,
-                10,
-                ((int)canvas.getHeight()) >>> 1);
+        whatever(gc, canvas, strip, hScale);
 
-            gc.strokeLine(
-                10,                         // x start
-                10,                         // y start
-                10,                         // x send
-                canvas.getHeight() - 10     // y end
-            );
-    //    }     //------------------------------------------------------------------------------------------------------
-
-    //  drawCoordinateSystem(canvas, gc);
-
+    //  ----------------------------------------------------------------------------------------------------------------
 
         Group
-            graphGroup = new Group(canvas);
+            graphGroup = new Group(canvas, line);
 
-        ((VBox) scene.getRoot()).getChildren().addAll(graphGroup, scroller);
-
-//        ((VBox) scene.getRoot()).getChildren().add(canvas);
-
-    //  ---------------------------------------------------------------------------------------
+            grid.setContent(graphGroup);
 
         stage.setScene(scene);
 
         stage.show();
     }
 
-    public static void main(String[] args) {
+    Path setLine(GraphicsContext gc, Strip strip, Canvas canvas, int canvasHeight, int hScale, int vScale){
 
-        launch(args);
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(1);
+
+        Path
+            line = new Path();
+
+        line.getElements().add(new MoveTo(0 , strip.get(0) - canvasHeight >>> 1));
+
+        for (int i = 1; i < strip.size() - 1 ; i += hScale){
+
+            double
+                maxHeight = (int) canvas.getHeight() >>> 1,
+                sample = (strip.get(i) << vScale),
+                nextSample = (double) strip.get(i + 1);
+
+            LineTo
+                lineTo = new LineTo((double) i / hScale, maxHeight - (sample / maxHeight));
+
+            line.getElements().add(lineTo);
+        }
+
+        return line;
     }
 
-    private void drawCoordinateSystem(Canvas canvas, GraphicsContext gc){
+
+    void whatever(GraphicsContext gc, Canvas canvas, Strip strip, int hScale){
+        gc.setStroke(Color.LIGHTBLUE);
+
+        int
+            logDistance = ((int)canvas.getHeight()) >>> 2,
+            trueDistance = logDistance;
+
+        gc.strokeLine(
+            0,
+            0,
+            (double)strip.size() / (double)hScale,
+            0);
+
+        gc.strokeLine(
+            0,
+            canvas.getHeight(),
+            canvas.getWidth(),
+            canvas.getHeight());
+
+        while (logDistance > 2 && trueDistance < ((int)canvas.getHeight() >>> 1)) {
+
+            gc.strokeLine(
+                0,
+                trueDistance,
+                (double)strip.size() / (double)hScale,
+                trueDistance);
+
+            gc.strokeLine(
+                0,
+                canvas.getHeight() - trueDistance,
+                (double) strip.size() / (double)hScale,
+                canvas.getHeight() - trueDistance);
+
+            logDistance >>>= 1;
+            trueDistance += logDistance;
+        }
+
+        gc.setStroke(Color.DODGERBLUE);
+
+        gc.setLineWidth(1);
+    }
+
+/*    private void drawCoordinateSystem(Canvas canvas, GraphicsContext gc){
 
         gc.setStroke(Color.DARKGREY);
 
         gc.setLineWidth(1);
         gc.strokeLine(
-            canvas.getWidth() - 10,
+            canvas.getWidth(),
             ((int)canvas.getHeight()) >>> 1,
             10,
             ((int)canvas.getHeight()) >>> 1);
 
         gc.strokeLine(
-            10,                         // x start
-            10,                         // y start
-            10,                         // x send
-            canvas.getHeight() - 10     // y end
+            0,
+            10,
+            10,
+            canvas.getHeight() - 10
         );
+    }*/
+
+    public static void main(String[] args) {
+
+        launch(args);
     }
+
+
 }

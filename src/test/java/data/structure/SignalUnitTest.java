@@ -53,7 +53,7 @@ public class SignalUnitTest {
 			input_1 = { 1, -1, (int) Short.MIN_VALUE, Integer.MAX_VALUE >>> 8};
 
 		int
-			input_2 = 4;
+			input_2 = 32;
 
 		byte[]
 			correct = {
@@ -74,7 +74,7 @@ public class SignalUnitTest {
 			input_1 = { 1, -1, (int) Short.MIN_VALUE, Integer.MAX_VALUE >>> 8};
 
 		int
-			input_2 = 3;
+			input_2 = 24;
 
 		byte[]
 			correct = {
@@ -167,7 +167,7 @@ public class SignalUnitTest {
 		for (Integer i : strip_3) input_0.strips.get(2).add(i);
 
 		int
-			input_1 = 3;
+			input_1 = 24;
 
 		byte[]
 			correct = {

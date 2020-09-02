@@ -77,7 +77,7 @@ public class Wave {
 
 		byte[]
 			headerSource = header.getSource(),
-			signalSource = signal.getSource(header.getField(BLOCK_ALIGN)),
+			signalSource = signal.getSource(header.getField(BITS_PER_SAMPLE)),
 			result = new byte[lengths[2]];
 
 		System.arraycopy(headerSource, 0, result, 0, lengths[0]);
@@ -90,7 +90,7 @@ public class Wave {
 
 		int
 			headerLength = header.getSource().length,
-			signalLength = signal.getSource(header.getField(BLOCK_ALIGN)).length,
+			signalLength = signal.getSource(header.getField(BITS_PER_SAMPLE)).length,
 			currentLength = headerLength + signalLength;
 
 		header.setField(currentLength - 8, FILE_SIZE);

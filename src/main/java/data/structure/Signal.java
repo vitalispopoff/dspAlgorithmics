@@ -31,7 +31,7 @@ public class Signal extends ArrayList<Integer>{
 
 		this(channels);
 
-		importToStrips(bytesToIntegers(source, blockAlign), channels);
+		importToStrips(bytesToIntegers(source, blockAlign / channels), channels);
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------
@@ -88,20 +88,28 @@ public class Signal extends ArrayList<Integer>{
 			strips.get(index++ % channels).add(i);
 	}		// * tested
 
-	Integer[] bytesToIntegers(byte[] source, int blockAlign){
+		/**
+		 *
+	 * Converts raw byte source into signal array (interlaced channels).
+	 *
+	 * @param source ruff import from audio file
+	 * @param sampleLength length of a single sample in bytes, must comply with number of channels.
+	 * */	// ? description
+
+	Integer[] bytesToIntegers(byte[] source, int sampleLength){
 
 		Strip
 			strip = new Strip();
 
 		int
-			stripLength = source.length / blockAlign;
+			stripLength = source.length / (sampleLength);
 
 		Integer[]
 			result = new Integer[stripLength];
 
 		for (int i = 0; i < stripLength; i++)
 
-			result[i] =  FileContentConverter.readDataSample(source, i * blockAlign, blockAlign);
+			result[i] =  FileContentConverter.readDataSample(source, i * sampleLength, sampleLength);
 
 		return result;
 	}		// * tested
@@ -133,20 +141,23 @@ public class Signal extends ArrayList<Integer>{
 		return result;
 	}								// * tested
 
-	byte[] integersToBytes(Integer[] signal, int blockAlign){
+	byte[] integersToBytes(Integer[] signal, int bitsPerSample){
+
+		int
+			sampleLength = bitsPerSample >>> 3;
 
 		byte[]
-			result = new byte[signal.length * blockAlign],
+			result = new byte[signal.length * sampleLength],
 			sample;
 
 		for(int i = 0 ; i < signal.length; i++) {
 
 			int
-				resultIndex = i * blockAlign;
+				resultIndex = i * sampleLength;
 
-			sample = writeDataSample(signal[i], blockAlign);
+			sample = writeDataSample(signal[i], sampleLength);
 
-			System.arraycopy(sample, 0, result, resultIndex, blockAlign);
+			System.arraycopy(sample, 0, result, resultIndex, sampleLength);
 		}
 
 		return result;
@@ -190,9 +201,9 @@ public class Signal extends ArrayList<Integer>{
 
 
 
-	public byte[] getSource(int blockAlign){
+	public byte[] getSource(int bitsPerSample){
 
-		return integersToBytes(consolidateChannels(), blockAlign);
+		return integersToBytes(consolidateChannels(), bitsPerSample);
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------

@@ -2,15 +2,11 @@ import gui.MainMenu;
 import gui.WavePane;
 
 import javafx.application.Application;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.stage.*;
 
 public class Main extends Application {
@@ -21,28 +17,45 @@ public class Main extends Application {
         Rectangle2D
             screenBounds = Screen.getPrimary().getBounds();
 
-        double
-            sceneWidth = screenBounds.getWidth() * 0.75,
-            sceneHeight = screenBounds.getHeight() * 0.75;
-
         MainMenu
             bar = new MainMenu(stage);
 
         VBox
             root = new VBox(bar);
 
+        Scene
+            scene = new Scene(root, 640, 480);
+
+        stage.setScene(scene);
+
         WavePane
-            wavePane = new WavePane(sceneWidth, sceneHeight);
+            wavePane = new WavePane(stage);
+
+/*        Line
+            center = new Line(0, 250, 1000, 250);
+
+        center.setStroke(Color.BLUE);
+
+        wavePane.getChildren().add(center);*/
 
         root.getChildren().add(wavePane);
 
-        Scene
-            scene = new Scene(root, sceneWidth, sceneHeight);
-
     // !  temporal  //-------------------------------------------------------------------------
 
+    /*
+            stage.widthProperty().addListener((observable, oldValue, newValue) -> {
 
-        Text
+            wavePane.setWidth((Double) newValue * 0.75);
+        });
+
+        stage.heightProperty().addListener((observable, oldValue, newValue) -> {
+
+            wavePane.setHeight((Double) newValue * 0.75);
+        });
+    */     // * disposable
+
+    /*
+            Text
             text1 = new Text(),
             text2 = new Text();
 
@@ -59,10 +72,44 @@ public class Main extends Application {
         stage.heightProperty().addListener(
             (observable, oldValue, newValue) ->
                 text2.setText(String.valueOf(newValue)));
+    */     // * temporal disposable
+
+    // ! rebuild wavePane ---------------------------------------------------------------------
+
+/*        Line
+            center = new Line(0, 0, 1920, 0);
+
+        center.setStroke(Color.BLUE);*/
+
+/*
+        stage.heightProperty().addListener(
+            (observable, oldValue, newValue) -> {
+
+                wavePane.setHeight((double) newValue);
+                center.setTranslateY(((double)oldValue - (double) newValue) / 2.);
+
+            }
+        );
+*/
+
+//        wavePane.getChildren().add(center);
+
+/*        for (int i = 2; i < yScale / 2; i <<= 1) {
+
+            Line
+                line1 = new Line(0, 0, yScale, 0),
+                line2 = new Line(0, 0, yScale, 0);
+
+            line1.setStroke(Color.LIGHTBLUE);
+            line2.setStroke(Color.LIGHTBLUE);
+
+            line1.setTranslateY(i);
+            line2.setTranslateY(-i);
+
+            wavePane.getChildren().addAll(line1, line2);*/
 
     //  ---------------------------------------------------------------------------------------
 
-        stage.setScene(scene);
         stage.show();
 
 //        stage.close();

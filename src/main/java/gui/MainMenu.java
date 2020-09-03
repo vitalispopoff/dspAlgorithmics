@@ -23,23 +23,33 @@ public class MainMenu extends MenuBar {
 		menuView = MENU_VIEW.getMenu(FILE_WAVEFORM, FILE_AMPLITUDE_DISTRIBUTION, SEPARATOR,  FILE_PROPERTIES),
 		menuHelp = MENU_HELP.getMenu();
 
-/*	FileChooser
-		browser = new FileChooser();*/
-
 //	--------------------------------------------------------------------------------------------------------------------
 
 	public MainMenu(Stage stage){
-
-
 
 		this.stage = stage;
 
 		this.getMenus().addAll(menuFile, menuEdit, menuAnalyze, menuView, menuHelp);
 
 		setActionsToMenuFile();
+
+	//	! TEMPORAL	//-------------------------------------------------------------------------
+
+		MenuItem
+			button = new MenuItem("window size");
+
+		button.setOnAction(e ->{ System.out.println(stage.getWidth() + ", " + stage.getHeight());});
+
+		Menu
+			temporal = new Menu("TEMPORAL");
+
+		temporal.getItems().add(button);
+
+		getMenus().add(temporal);
+
+	//	!  //-----------------------------------------------------------------------------------
+
 	}
-
-
 
 	private void setActionsToMenuFile(){
 

@@ -1,10 +1,8 @@
 package gui;
 
-import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 
 import static javafx.scene.input.KeyCombination.*;
@@ -107,13 +105,5 @@ public enum MenuItems {
 				{"File _Properties", keyCombination("Alt+P")},
 
 			{"Help", keyCombination("Alt+H")}
-	};
-
-	ActionEvent[]
-		actions = {
-
-			new ActionEvent(),
-
-
 	};
 }

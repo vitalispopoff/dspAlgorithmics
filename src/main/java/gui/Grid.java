@@ -1,9 +1,12 @@
 package gui;
 
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+
+import java.util.ArrayList;
 
 import static javafx.scene.paint.Color.*;
 
@@ -14,6 +17,56 @@ public class Grid extends VBox{
 		int
 			initHeightParam = (int) root.getHeight() - 50,
 			initWidthParam = (int) root.getWidth() - 20;
+
+		Color
+			color = Color.LIGHTBLUE;
+
+		Background
+			bcg = new Background(new BackgroundFill(GRAY, CornerRadii.EMPTY, Insets.EMPTY));
+
+		ArrayList<Node>
+			elements = new ArrayList<>();
+
+		int
+			elementIndex = 18;
+
+		for (int i = 1; i < elementIndex ; i++) {
+
+			if (i % 2 == 0) {
+
+				int
+					shift = 1 + (Math.min(i, elementIndex - i) >>> 1);
+
+				System.out.println("i = " + i + ", shift = " + shift);
+				Rectangle
+					r = new Rectangle(0, 0, initWidthParam, (initHeightParam >> shift) - 1);
+
+				r.setOpacity(0);
+				elements.add(r);
+			}
+
+			else {
+
+				Line
+					l = new Line(0, 0, initWidthParam, 0);
+
+				l.setStrokeWidth(1);
+				l.setStroke(color);
+				elements.add(l);
+			}
+		}
+
+		Rectangle
+			topBlock = new Rectangle(0, 0, initWidthParam, initHeightParam >>> 5),
+			bottomBlock = new Rectangle(0, 0, initWidthParam, initHeightParam >>> 5);
+
+		topBlock.setOpacity(0);
+		bottomBlock.setOpacity(0);
+
+		elements.add(0, topBlock);
+		elements.add(bottomBlock);
+
+	//	---------------------------------------------------------------------------------------
 
 		Rectangle
 			borderTop = new Rectangle(0, 0, initWidthParam, initHeightParam >> 5),
@@ -38,7 +91,7 @@ public class Grid extends VBox{
 			_half = new Line(0, 0, initWidthParam, 0),
 			_full = new Line(0, 0, initWidthParam, 0);
 
-		VBox
+/*		VBox
 			grid = new VBox(
 			borderTop,
 			full, block_0,
@@ -51,13 +104,7 @@ public class Grid extends VBox{
 			block_1last, _half,
 			block_last, _full,
 			borderBottom
-		);
-
-		Color
-			color = Color.LIGHTBLUE;
-
-		Background
-			bcg = new Background(new BackgroundFill(GRAY, CornerRadii.EMPTY, Insets.EMPTY));
+		);*/
 
         this.setBackground(bcg);
 
@@ -116,7 +163,7 @@ public class Grid extends VBox{
 			double
 				parameter = ((double)newValue) - 20;
 
-			grid.setPrefWidth(parameter);
+			setPrefWidth(parameter);
 
 			block_0.setWidth(parameter);
 			block_last.setWidth(parameter);
@@ -163,21 +210,21 @@ public class Grid extends VBox{
 			}
 		});
 
+		getChildren().addAll(elements);
 
-
-		this.getChildren().addAll(
-			borderTop,
-			full, block_0,
-			half, block_1,
-			quarter, block_2,
-			eighth, block_3,
-			center,
-			block_3last, _eighth,
-			block_2last, _quarter,
-			block_1last, _half,
-			block_last, _full,
-			borderBottom
-		);
+//		this.getChildren().addAll(
+//			borderTop,
+//			full, block_0,
+//			half, block_1,
+//			quarter, block_2,
+//			eighth, block_3,
+//			center,
+//			block_3last, _eighth,
+//			block_2last, _quarter,
+//			block_1last, _half,
+//			block_last, _full,
+//			borderBottom
+//		);
 
 		root.setCenter(this);
 	}

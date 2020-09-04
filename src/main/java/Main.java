@@ -1,13 +1,21 @@
+import gui.Grid;
 import gui.MainMenu;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 
+import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.*;
+
+import java.util.ArrayList;
+
 import static javafx.scene.paint.Color.*;
 
 public class Main extends Application {
@@ -24,110 +32,127 @@ public class Main extends Application {
         MainMenu
             bar = new MainMenu(stage);
 
-//        VBox root = new VBox(bar);
-
         BorderPane
             root = new BorderPane();
 
         root.setTop(bar);
-
 
         Scene
             scene = new Scene(root, 640, 480);
 
         stage.setScene(scene);
 
-        int
-            initHeightParam = (int) root.getHeight() - 50;
+/*        int
+            initHeightParam = (int) root.getHeight() - 50,
+            initWidthParam = (int) root.getWidth() - 20;
 
         Rectangle
-            borderTop = new Rectangle(0, 0, 640, initHeightParam >> 5),
-            block_0 = new Rectangle(0, 0, 640, (initHeightParam >> 2) - 1),
-            block_1 = new Rectangle(0, 0, 640, (initHeightParam >> 3) - 1),
-            block_2 = new Rectangle(0, 0, 640, (initHeightParam >> 4) - 1),
-            block_3 = new Rectangle(0, 0, 640, (initHeightParam >> 5) - 1),
-            block_3last = new Rectangle(0, 0, 640, (initHeightParam >> 5) - 1),
-            block_2last = new Rectangle(0, 0, 640, (initHeightParam >> 4) - 1),
-            block_1last = new Rectangle(0, 0, 640, (initHeightParam >> 3) - 1),
-            block_last = new Rectangle(0, 0, 640, (initHeightParam >> 2) - 1),
-            borderBottom = new Rectangle(0, 0, 640, initHeightParam >> 5);
-
-        borderTop.setOpacity(0);
-        block_0.setOpacity(0);
-        block_1.setOpacity(0);
-        block_2.setOpacity(0);
-        block_3.setOpacity(0);
-        block_3last.setOpacity(0);
-        block_2last.setOpacity(0);
-        block_1last.setOpacity(0);
-        block_last.setOpacity(0);
-        borderBottom.setOpacity(0);
+            borderTop = new Rectangle(0, 0, initWidthParam, initHeightParam >> 5),
+            block_0 = new Rectangle(0, 0, initWidthParam, (initHeightParam >> 2) - 1),
+            block_1 = new Rectangle(0, 0, initWidthParam, (initHeightParam >> 3) - 1),
+            block_2 = new Rectangle(0, 0, initWidthParam, (initHeightParam >> 4) - 1),
+            block_3 = new Rectangle(0, 0, initWidthParam, (initHeightParam >> 5) - 1),
+            block_3last = new Rectangle(0, 0, initWidthParam, (initHeightParam >> 5) - 1),
+            block_2last = new Rectangle(0, 0, initWidthParam, (initHeightParam >> 4) - 1),
+            block_1last = new Rectangle(0, 0, initWidthParam, (initHeightParam >> 3) - 1),
+            block_last = new Rectangle(0, 0, initWidthParam, (initHeightParam >> 2) - 1),
+            borderBottom = new Rectangle(0, 0, initWidthParam, initHeightParam >> 5);
 
         Line
-            full = new Line(0, 0, 640, 0),
-            half = new Line(0, 0, 640, 0),
-            quarter = new Line(0, 0, 640, 0),
-            eighth = new Line(0, 0, 640, 0),
-            center = new Line(0, 0, 640, 0),
-            _eighth = new Line(0, 0, 640, 0),
-            _quarter = new Line(0, 0, 640, 0),
-            _half = new Line(0, 0, 640, 0),
-            _full = new Line(0, 0, 640, 0);
-
-        center.setStroke(RED);
-        center.setStrokeWidth(1);
-        half.setStroke(RED);
-        half.setStrokeWidth(1);
-        _half.setStroke(RED);
-        _half.setStrokeWidth(1);
-        quarter.setStroke(RED);
-        quarter.setStrokeWidth(1);
-        _quarter.setStroke(RED);
-        _quarter.setStrokeWidth(1);
-        eighth.setStroke(RED);
-        eighth.setStrokeWidth(1);
-        _eighth.setStroke(RED);
-        _eighth.setStrokeWidth(1);
-        full.setStroke(RED);
-        full.setStrokeWidth(1);
-        _full.setStroke(RED);
-        full.setStrokeWidth(1);
+            full = new Line(0, 0, initWidthParam, 0),
+            half = new Line(0, 0, initWidthParam, 0),
+            quarter = new Line(0, 0, initWidthParam, 0),
+            eighth = new Line(0, 0, initWidthParam, 0),
+            center = new Line(0, 0, initWidthParam, 0),
+            _eighth = new Line(0, 0, initWidthParam, 0),
+            _quarter = new Line(0, 0, initWidthParam, 0),
+            _half = new Line(0, 0, initWidthParam, 0),
+            _full = new Line(0, 0, initWidthParam, 0);
 
         VBox
             grid = new VBox(
-                borderTop,
-               full,
-                block_0,
-                half,
-                block_1,
-                quarter,
-                block_2,
-                eighth,
-                block_3,
-                center,
-                block_3last,
-                _eighth,
-                block_2last,
-                _quarter,
-                block_1last,
-                _half,
-                block_last,
-                _full,
-                borderBottom
+            borderTop,
+            full, block_0,
+            half, block_1,
+            quarter, block_2,
+            eighth, block_3,
+            center,
+            block_3last, _eighth,
+            block_2last, _quarter,
+            block_1last, _half,
+            block_last, _full,
+            borderBottom
         );
 
-//        StackPane wavePane = new StackPane(grid);
+        Color
+            color = Color.LIGHTBLUE;
 
-//        grid.setAlignment(Pos.CENTER_LEFT);
-//        wavePane.setAlignment(Pos.CENTER_LEFT);
+        Background
+            bcg = new Background(new BackgroundFill(GRAY, CornerRadii.EMPTY, Insets.EMPTY));
+
+        grid.setBackground(bcg);
+
+        StackPane
+            left = new StackPane(),
+            rite = new StackPane(),
+            bottom = new StackPane();
+
+        left.setBackground(bcg);
+        rite.setBackground(bcg);
+        bottom.setBackground(bcg);
+        left.setPrefWidth(10);
+        rite.setPrefWidth(10);
+        bottom.setMinHeight(25);
+
+        root.setLeft(left);
+        root.setRight(rite);
+        root.setBottom(bottom);
+
+
+
+        {
+
+            borderTop.setOpacity(0);
+            block_0.setOpacity(0);
+            block_1.setOpacity(0);
+            block_2.setOpacity(0);
+            block_3.setOpacity(0);
+            block_3last.setOpacity(0);
+            block_2last.setOpacity(0);
+            block_1last.setOpacity(0);
+            block_last.setOpacity(0);
+            borderBottom.setOpacity(0);
+
+            center.setStroke(color);
+            center.setStrokeWidth(1);
+            half.setStroke(color);
+            half.setStrokeWidth(1);
+            _half.setStroke(color);
+            _half.setStrokeWidth(1);
+            quarter.setStroke(color);
+            quarter.setStrokeWidth(1);
+            _quarter.setStroke(color);
+            _quarter.setStrokeWidth(1);
+            eighth.setStroke(color);
+            eighth.setStrokeWidth(1);
+            _eighth.setStroke(color);
+            _eighth.setStrokeWidth(1);
+            full.setStroke(color);
+            full.setStrokeWidth(1);
+            _full.setStroke(color);
+            full.setStrokeWidth(1);
+
+        }   // * setting colors & opacity
 
 
 
 
-        root./*getScene().*/widthProperty().addListener((observable, oldValue, newValue) -> {
+        root.widthProperty().addListener((observable, oldValue, newValue) -> {
 
             double
-                parameter = ((double)newValue) - 50;
+                parameter = ((double)newValue) - 20;
+
+            grid.setPrefWidth(parameter);
 
             block_0.setWidth(parameter);
             block_last.setWidth(parameter);
@@ -174,78 +199,12 @@ public class Main extends Application {
             }
         });
 
-        root.setCenter(grid);
+        root.setCenter(grid);*/     // * moved to Grid class
 
+        Grid
+            grid = new Grid(root);
 
-
-
-    // !  temporal  //-------------------------------------------------------------------------
-
-    /*
-            stage.widthProperty().addListener((observable, oldValue, newValue) -> {
-
-            wavePane.setWidth((Double) newValue * 0.75);
-        });
-
-        stage.heightProperty().addListener((observable, oldValue, newValue) -> {
-
-            wavePane.setHeight((Double) newValue * 0.75);
-        });
-    */     // * disposable
-
-    /*
-            Text
-            text1 = new Text(),
-            text2 = new Text();
-
-        root.getChildren().addAll(text1, text2);
-
-        ReadOnlyDoubleProperty
-            currentWidth = scene.widthProperty(),
-            currentHeight = scene.heightProperty();
-
-        stage.widthProperty().addListener(
-            ((observable, oldValue, newValue) ->
-                 text1.setText(String.valueOf(newValue))));
-
-        stage.heightProperty().addListener(
-            (observable, oldValue, newValue) ->
-                text2.setText(String.valueOf(newValue)));
-    */     // * temporal disposable
-
-    // ! rebuild wavePane ---------------------------------------------------------------------
-
-/*        Line
-            center = new Line(0, 0, 1920, 0);
-
-        center.setStroke(Color.BLUE);*/
-
-/*
-        stage.heightProperty().addListener(
-            (observable, oldValue, newValue) -> {
-
-                wavePane.setHeight((double) newValue);
-                center.setTranslateY(((double)oldValue - (double) newValue) / 2.);
-
-            }
-        );
-*/
-
-//        wavePane.getChildren().add(center);
-
-/*        for (int i = 2; i < yScale / 2; i <<= 1) {
-
-            Line
-                line1 = new Line(0, 0, yScale, 0),
-                line2 = new Line(0, 0, yScale, 0);
-
-            line1.setStroke(Color.LIGHTBLUE);
-            line2.setStroke(Color.LIGHTBLUE);
-
-            line1.setTranslateY(i);
-            line2.setTranslateY(-i);
-
-            wavePane.getChildren().addAll(line1, line2);*/
+//        root.setCenter(grid);
 
     //  ---------------------------------------------------------------------------------------
 

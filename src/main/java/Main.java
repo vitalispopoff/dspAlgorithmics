@@ -24,30 +24,35 @@ public class Main extends Application {
         MainMenu
             bar = new MainMenu(stage);
 
-        VBox
-            root = new VBox(bar);
+//        VBox root = new VBox(bar);
+
+        BorderPane
+            root = new BorderPane();
+
+        root.setTop(bar);
+
 
         Scene
             scene = new Scene(root, 640, 480);
 
         stage.setScene(scene);
 
-    /*
-        WavePane
-            wavePane = new WavePane(stage);
-        root.getChildren().add(wavePane);
-*/  // ! stackPane - fails miserably
+        int
+            initHeightParam = (int) root.getHeight() - 50;
 
         Rectangle
-            block_0 = new Rectangle(0, 0, 640, 119),
-            block_1 = new Rectangle(0, 0, 640, 59),
-            block_2 = new Rectangle(0, 0, 640, 29),
-            block_3 = new Rectangle(0, 0, 640, 14),
-            block_3last = new Rectangle(0, 0, 640, 14),
-            block_2last = new Rectangle(0, 0, 640, 24),
-            block_1last = new Rectangle(0, 0, 640, 59),
-            block_last = new Rectangle(0, 0, 640, 119);
+            borderTop = new Rectangle(0, 0, 640, initHeightParam >> 5),
+            block_0 = new Rectangle(0, 0, 640, (initHeightParam >> 2) - 1),
+            block_1 = new Rectangle(0, 0, 640, (initHeightParam >> 3) - 1),
+            block_2 = new Rectangle(0, 0, 640, (initHeightParam >> 4) - 1),
+            block_3 = new Rectangle(0, 0, 640, (initHeightParam >> 5) - 1),
+            block_3last = new Rectangle(0, 0, 640, (initHeightParam >> 5) - 1),
+            block_2last = new Rectangle(0, 0, 640, (initHeightParam >> 4) - 1),
+            block_1last = new Rectangle(0, 0, 640, (initHeightParam >> 3) - 1),
+            block_last = new Rectangle(0, 0, 640, (initHeightParam >> 2) - 1),
+            borderBottom = new Rectangle(0, 0, 640, initHeightParam >> 5);
 
+        borderTop.setOpacity(0);
         block_0.setOpacity(0);
         block_1.setOpacity(0);
         block_2.setOpacity(0);
@@ -56,6 +61,7 @@ public class Main extends Application {
         block_2last.setOpacity(0);
         block_1last.setOpacity(0);
         block_last.setOpacity(0);
+        borderBottom.setOpacity(0);
 
         Line
             full = new Line(0, 0, 640, 0),
@@ -89,38 +95,39 @@ public class Main extends Application {
 
         VBox
             grid = new VBox(
+                borderTop,
                full,
-            block_0,
-            half,
-            block_1,
-            quarter,
-            block_2,
-            eighth,
-            block_3,
-            center,
-            block_3last,
-            _eighth,
-            block_2last,
-            _quarter,
-            block_1last,
-            _half,
-            block_last,
-            _full
+                block_0,
+                half,
+                block_1,
+                quarter,
+                block_2,
+                eighth,
+                block_3,
+                center,
+                block_3last,
+                _eighth,
+                block_2last,
+                _quarter,
+                block_1last,
+                _half,
+                block_last,
+                _full,
+                borderBottom
         );
 
-        StackPane
-            wavePane = new StackPane(grid);
+//        StackPane wavePane = new StackPane(grid);
 
 //        grid.setAlignment(Pos.CENTER_LEFT);
 //        wavePane.setAlignment(Pos.CENTER_LEFT);
 
-        root.getChildren().add(wavePane);
 
 
-        stage.getScene().widthProperty().addListener((observable, oldValue, newValue) -> {
+
+        root./*getScene().*/widthProperty().addListener((observable, oldValue, newValue) -> {
 
             double
-                parameter = ((double)newValue);
+                parameter = ((double)newValue) - 50;
 
             block_0.setWidth(parameter);
             block_last.setWidth(parameter);
@@ -144,15 +151,14 @@ public class Main extends Application {
 
         root.heightProperty().addListener((observable, oldValue, newValue) -> {
 
-            wavePane.setMinHeight((double)newValue);
-
-
-
             int
                 barHeight = (int) bar.getHeight(),
-                parameter = (int) (double)newValue ;
+                parameter = (int) (double)newValue - 50 ;
 
             if (block_0.getHeight() != (parameter >>> 2) - 1.){
+
+                borderTop.setHeight(parameter >> 5);
+                borderBottom.setHeight(parameter >> 5);
 
                 block_0.setHeight((parameter >>> 2) - 1.);
                 block_last.setHeight((parameter >>> 2) - 1.);
@@ -166,9 +172,9 @@ public class Main extends Application {
                 block_3.setHeight((parameter >>> 5) - 1.);
                 block_3last.setHeight((parameter >>> 5) - 1.);
             }
-
-
         });
+
+        root.setCenter(grid);
 
 
 

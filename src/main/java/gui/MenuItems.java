@@ -51,10 +51,7 @@ public enum MenuItems {
 
 	public KeyCombination getKeyCombination(){
 
-		KeyCombination
-			keyStroke = (KeyCombination) menuItemParams[this.ordinal()][1];
-
-		return keyStroke;
+		return (KeyCombination) menuItemParams[this.ordinal()][1];
 	}
 
 	public MenuItem getMenuItem (){

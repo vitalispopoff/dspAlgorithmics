@@ -38,7 +38,7 @@ public class MainMenu extends MenuBar {
 		MenuItem
 			button = new MenuItem("window size");
 
-		button.setOnAction(e ->{ System.out.println(stage.getWidth() + ", " + stage.getHeight());});
+		button.setOnAction(e -> System.out.println(stage.getWidth() + ", " + stage.getHeight()));
 
 		Menu
 			temporal = new Menu("TEMPORAL");

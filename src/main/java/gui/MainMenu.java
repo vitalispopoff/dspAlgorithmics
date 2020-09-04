@@ -27,6 +27,8 @@ public class MainMenu extends MenuBar {
 
 	public MainMenu(Stage stage){
 
+//		setHeight(25);
+
 		this.stage = stage;
 
 		this.getMenus().addAll(menuFile, menuEdit, menuAnalyze, menuView, menuHelp);
@@ -45,7 +47,7 @@ public class MainMenu extends MenuBar {
 
 		temporal.getItems().add(button);
 
-		getMenus().add(temporal);
+//		getMenus().add(temporal);
 
 	//	!  //-----------------------------------------------------------------------------------
 

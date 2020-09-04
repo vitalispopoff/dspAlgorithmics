@@ -15,6 +15,9 @@ public class Main extends Application {
     @Override
     public void start(Stage stage){
 
+        stage.setMinHeight(240);
+        stage.setMinWidth(320);
+
         Rectangle2D
             screenBounds = Screen.getPrimary().getBounds();
 
@@ -55,13 +58,15 @@ public class Main extends Application {
         block_last.setOpacity(0);
 
         Line
+            full = new Line(0, 0, 640, 0),
             half = new Line(0, 0, 640, 0),
             quarter = new Line(0, 0, 640, 0),
             eighth = new Line(0, 0, 640, 0),
             center = new Line(0, 0, 640, 0),
             _eighth = new Line(0, 0, 640, 0),
             _quarter = new Line(0, 0, 640, 0),
-            _half = new Line(0, 0, 640, 0);
+            _half = new Line(0, 0, 640, 0),
+            _full = new Line(0, 0, 640, 0);
 
         center.setStroke(RED);
         center.setStrokeWidth(1);
@@ -77,9 +82,14 @@ public class Main extends Application {
         eighth.setStrokeWidth(1);
         _eighth.setStroke(RED);
         _eighth.setStrokeWidth(1);
+        full.setStroke(RED);
+        full.setStrokeWidth(1);
+        _full.setStroke(RED);
+        full.setStrokeWidth(1);
 
         VBox
             grid = new VBox(
+               full,
             block_0,
             half,
             block_1,
@@ -94,10 +104,17 @@ public class Main extends Application {
             _quarter,
             block_1last,
             _half,
-            block_last
+            block_last,
+            _full
         );
 
-        root.getChildren().add(grid);
+        StackPane
+            wavePane = new StackPane(grid);
+
+//        grid.setAlignment(Pos.CENTER_LEFT);
+//        wavePane.setAlignment(Pos.CENTER_LEFT);
+
+        root.getChildren().add(wavePane);
 
 
         stage.getScene().widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -121,12 +138,19 @@ public class Main extends Application {
             _quarter.setEndX(parameter);
             eighth.setEndX(parameter);
             _eighth.setEndX(parameter);
+            full.setEndX(parameter);
+            _full.setEndX(parameter);
         });
 
-        stage.getScene().heightProperty().addListener((observable, oldValue, newValue) -> {
+        root.heightProperty().addListener((observable, oldValue, newValue) -> {
+
+            wavePane.setMinHeight((double)newValue);
+
+
 
             int
-                parameter = (int) (double)newValue;
+                barHeight = (int) bar.getHeight(),
+                parameter = (int) (double)newValue ;
 
             if (block_0.getHeight() != (parameter >>> 2) - 1.){
 

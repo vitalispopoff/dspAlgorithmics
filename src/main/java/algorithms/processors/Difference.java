@@ -2,11 +2,11 @@
 
 package algorithms.processors;
 
-import data.Wave;
+import data.WaveFile;
 
 public interface Difference {
 
-	static int[][] getDifference(Wave wave){
+	static int[][] getDifference(WaveFile waveFile){
 
 /*		int[][]
 			input = wave.getChannelSignals();

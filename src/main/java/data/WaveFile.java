@@ -13,7 +13,7 @@ import static data.structure.WaveHeader.instanceOf;
 
 import static algorithms.metaProcessors.FileManager.*;
 
-public class Wave {
+public class WaveFile {
 
 	public FileAddress
 		fileAddress;
@@ -26,9 +26,9 @@ public class Wave {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	private Wave( ){ }
+	private WaveFile( ){ }
 
-	public Wave (File file){
+	public WaveFile(File file){
 
 		byte[]
 			fileContent = loadFile(file);

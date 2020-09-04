@@ -4,7 +4,7 @@ package data;
 
 import java.util.ArrayList;
 
-public class FileCache extends ArrayList<Wave> {
+public class FileCache extends ArrayList<WaveFile> {
 
 	static FileCache
 		fileCache = new FileCache();
@@ -18,9 +18,9 @@ public class FileCache extends ArrayList<Wave> {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	public static void addToCache(Wave wave){
+	public static void addToCache(WaveFile waveFile){
 
-		fileCache.add(wave);
+		fileCache.add(waveFile);
 
 		int
 			index = fileCache.size() - 1;
@@ -31,14 +31,14 @@ public class FileCache extends ArrayList<Wave> {
 		);
 	}
 
-	public static Wave loadFromCache(int index){
+	public static WaveFile loadFromCache(int index){
 
 		currentIndex = index;
 
 		return fileCache.get(index);
 	}
 
-	public static Wave loadCurrent(){
+	public static WaveFile loadCurrent(){
 
 		return loadFromCache(currentIndex);
 	}

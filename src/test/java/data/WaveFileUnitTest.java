@@ -4,7 +4,7 @@ import org.junit.*;
 
 import static _inputs.Data_InputData.sample_mono_wav;
 
-public class WaveUnitTest {
+public class WaveFileUnitTest {
 
 	@Ignore
 	@Test

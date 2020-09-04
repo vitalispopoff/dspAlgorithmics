@@ -1,16 +1,29 @@
 package gui;
 
+import data.WaveFile;
+import data.structure.Strip;
+
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 import java.util.ArrayList;
 
 import static javafx.scene.paint.Color.*;
 
 public class Grid extends VBox{
+
+	Canvas
+		canvas;
+
+	public GraphicsContext
+		gc;
 
 	Color
 		color = Color.LIGHTBLUE;
@@ -26,8 +39,21 @@ public class Grid extends VBox{
 
 		populateBorders(root);
 		populateGrid(root);
-		observeWindow(root);
-		root.setCenter(this);
+		updateToWindow(root);
+
+		canvas = new Canvas(getWidth(), getHeight());
+
+		StackPane
+			stack = new StackPane(this);
+
+		root.setCenter(stack);
+
+
+
+		gc = canvas.getGraphicsContext2D();
+
+//		stack.getChildren().add(canvas);
+
 	}
 
 //	-------------------------------------------------------------------------------------------
@@ -84,7 +110,7 @@ public class Grid extends VBox{
 		getChildren().addAll(elements);
 	}
 
-	private void observeWindow(BorderPane root){
+	private void updateToWindow(BorderPane root){
 
 		root.widthProperty().addListener((observable, oldValue, newValue) -> {
 

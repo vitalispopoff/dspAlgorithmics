@@ -1,6 +1,6 @@
 package gui;
 
-import data.Wave;
+import data.WaveFile;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.stage.*;
@@ -66,7 +66,7 @@ public class MainMenu extends MenuBar {
 
 			browser.setInitialDirectory(new File(System.getProperty("user.home")));
 			File file = browser.showOpenDialog(stage);
-			Wave wave = new Wave(file);
+			WaveFile waveFile = new WaveFile(file);
 		});
 
 		items.get(3).setOnAction((ActionEvent e) -> {

@@ -1,7 +1,7 @@
 package algorithms.metaProcessors;
 
 import data.FileCache;
-import data.Wave;
+import data.WaveFile;
 import data.structure.FileAddress;
 
 import java.io.*;
@@ -15,11 +15,11 @@ public interface FileManager {
 
 	static void saveFile(File file){
 
-		Wave
-			wave = FileCache.loadCurrent();
+		WaveFile
+			waveFile = FileCache.loadCurrent();
 
 		byte[]
-			source = wave.getSource();
+			source = waveFile.getSource();
 
 		try {
 
@@ -32,16 +32,16 @@ public interface FileManager {
 		}
 	}
 
-	static void saveFile(Wave wave){
+	static void saveFile(WaveFile waveFile){
 
 	FileAddress
-		address = new FileAddress(wave.getFileAddress().getPath(), "", "wav");
+		address = new FileAddress(waveFile.getFileAddress().getPath(), "", "wav");
 
 	address.setNameToDefault();
 
 
 	byte[]
-		source = wave.getSource();
+		source = waveFile.getSource();
 
 	Path
 		path = get(address.toString());

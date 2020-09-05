@@ -1,12 +1,10 @@
-import data.WaveFile;
-import data.structure.Strip;
-import gui.Grid;
 import gui.MainMenu;
-
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.*;
 
 import static javafx.scene.paint.Color.*;
@@ -16,59 +14,110 @@ public class Main extends Application {
     @Override
     public void start(Stage stage){
 
-        stage.setMinHeight(240);
+/*
         stage.setMinWidth(320);
-
-        Rectangle2D
-            screenBounds = Screen.getPrimary().getBounds();
-
-        MainMenu
-            bar = new MainMenu(stage);
+        stage.setMinHeight(240);
+*/
 
         BorderPane
-            root = new BorderPane();
+            b = new BorderPane();
 
-        root.setTop(bar);
+        Canvas
+            canvas = new Canvas();
 
         Scene
-            scene = new Scene(root, 640, 480);
+            scene = new Scene(new Group(canvas), 320, 240);
 
-        stage.setScene(scene);
+        double
+            s = 20;
 
-        Grid
-            grid = new Grid(root);
+        Rectangle
+            rT = new Rectangle(0, 0, s, s),
+            rL = new Rectangle(0, 0, s, s),
+            rR = new Rectangle(0, 0, s, s),
+            rB = new Rectangle(0, 0, s, s);
 
-    //  ? temporal  //-------------------------------------------------------------------------
+        rT.setOpacity(1);
+        rL.setOpacity(0);
+        rR.setOpacity(1);
+        rB.setOpacity(1);
+        rT.setFill(BLACK);
+        rL.setFill(BLACK);
+        rR.setFill(BLACK);
+        rB.setFill(BLACK);
 
-        WaveFile
-            waveFile = new WaveFile(new java.io.File("src\\main\\resources\\shortie-mono-16bit.wav"));
+        VBox
+            gT = new VBox(/*new MainMenu(stage),*/ rT),
+            gL = new VBox (rL),
+            gR = new VBox (rR),
+            gB = new VBox (rB);
 
-        Strip
-            strip = waveFile.getSignal().getStrip(0);
+        b.setTop(gT);
+        b.setLeft(gL);
+        b.setRight(gR);
+        b.setBottom(gB);
 
-        grid.gc.setStroke(BLUE);
-        grid.gc.setLineWidth(1);
 
-        for(int i = 0; i < strip.size() - 1; i++){
 
-            double
-                maxHeight = (int) grid.gc.getCanvas().getHeight() >>> 1,
-                sample = (double) strip.get(i),
-                nextSample = (double) strip.get(i + 1);
+//        b.setCenter(canvas);
 
-            grid.gc.strokeLine(
-                i + 10,
-                maxHeight - sample / maxHeight,
-                i + 11,
-                maxHeight - nextSample / maxHeight
-            );
-        }
+
+        stage.widthProperty().addListener(
+            ( (observable, oldValue, newValue) -> {
+
+                double
+                    d = (double) newValue /*- (2 * s)*/ - 15 - 2;
+
+                if (canvas.getWidth() != d) {
+
+                    canvas.setWidth(d);
+                    redraw(canvas);
+                }
+            })
+        );
+
+        stage.heightProperty().addListener(
+            ( ((observable, oldValue, newValue) -> {
+
+                double
+                    d = (double) newValue /*- (2 * s)*/ /*- 25*/ - 31 - 7 - 2;
+
+                if (b.getHeight() != d) {
+
+                    canvas.setHeight(d);
+                    redraw(canvas);
+                }
+            }))
+        );
 
     //  ---------------------------------------------------------------------------------------
 
+        stage.setScene(scene);
         stage.show();
 
 //        stage.close();
+    }
+
+    void redraw(Canvas canvas){
+
+        GraphicsContext
+            context= canvas.getGraphicsContext2D();
+
+        context.clearRect(0 , 0 ,canvas.getWidth(), canvas.getHeight());
+
+        context.setFill(BLACK);
+        context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        double
+            x = canvas.getWidth(),
+            y = canvas.getHeight() / 2 ;
+
+//        context.strokeLine(0, y, x, y);
+
+        context.setStroke(BLUE);
+        context.setLineWidth(1);
+
+
     }
 
     public static void main(String[] args) {

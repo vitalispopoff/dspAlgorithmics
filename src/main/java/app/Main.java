@@ -1,4 +1,5 @@
-import gui.MainMenu;
+package app;
+
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.canvas.Canvas;

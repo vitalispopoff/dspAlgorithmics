@@ -3,6 +3,8 @@ package algorithms.metaProcessors;
 import data.FileCache;
 import data.WaveFile;
 import data.structure.FileAddress;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.io.*;
 import java.nio.file.*;
@@ -182,5 +184,30 @@ public interface FileManager {
 			fileIsAIFF = Arrays.equals(waveId, aiff);
 
 		return fileIsRIFF && (fileIsWAVE || fileIsAIFF);
+	}
+
+//	-------------------------------------------------------------------------------------------
+
+	abstract class FileManagerSettings {
+
+		private	static final BooleanProperty
+			autoSaveDue = new SimpleBooleanProperty(false);
+
+		public static boolean getAutoSave(){
+
+			return autoSaveDue.get();
+		}
+
+		public static void setAutoSave(boolean b){
+
+			autoSaveDue.set(b);
+		}
+
+		public static BooleanProperty getAutoSaveDueProperty(){
+
+			return autoSaveDue;
+		}
+
+
 	}
 }

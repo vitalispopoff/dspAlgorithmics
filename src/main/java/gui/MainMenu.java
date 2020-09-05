@@ -1,5 +1,7 @@
 package gui;
 
+import algorithms.metaProcessors.FileManager;
+import data.FileCache;
 import data.WaveFile;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
@@ -21,7 +23,7 @@ public class MainMenu extends MenuBar {
 		menuEdit = MENU_EDIT.getMenu(),
 		menuAnalyze = MENU_ANALYZE.getMenu(),
 		menuView = MENU_VIEW.getMenu(FILE_WAVEFORM, FILE_AMPLITUDE_DISTRIBUTION, SEPARATOR,  FILE_PROPERTIES),
-		menuHelp = MENU_HELP.getMenu();
+		menuHelp = MENU_HELP.getMenu(AUTO_SAVE);
 
 //	--------------------------------------------------------------------------------------------------------------------
 
@@ -35,6 +37,7 @@ public class MainMenu extends MenuBar {
 
 		setActionsToMenuFile();
 
+/*
 	//	! TEMPORAL	//-------------------------------------------------------------------------
 
 		MenuItem
@@ -50,14 +53,16 @@ public class MainMenu extends MenuBar {
 //		getMenus().add(temporal);
 
 	//	!  //-----------------------------------------------------------------------------------
+*/	// * disposable
 
 	}
 
 	private void setActionsToMenuFile(){
 
-		List<MenuItem> items = menuFile.getItems();
+		List<MenuItem>
+			fileItems = menuFile.getItems();
 
-		items.get(0).setOnAction((ActionEvent e) -> {
+		fileItems.get(0).setOnAction((ActionEvent e) -> {
 
 			FileChooser
 				browser = new FileChooser();
@@ -69,7 +74,12 @@ public class MainMenu extends MenuBar {
 			WaveFile waveFile = new WaveFile(file);
 		});
 
-		items.get(3).setOnAction((ActionEvent e) -> {
+		fileItems.get(1).setOnAction((ActionEvent e) ->{
+
+			FileCache.purgeCache();
+		});
+
+		fileItems.get(3).setOnAction((ActionEvent e) -> {
 
 			FileChooser
 				browser = new FileChooser();
@@ -82,7 +92,17 @@ public class MainMenu extends MenuBar {
 			saveFile(file);
 		});
 
-		items.get(5).setOnAction(close -> stage.close());
+		fileItems.get(5).setOnAction(close -> stage.close());
+
+		List<MenuItem>
+			helpItems = menuHelp.getItems();
+
+		helpItems.get(0).setOnAction((ActionEvent e) -> {
+
+			FileManager.FileManagerSettings.setAutoSave(((CheckMenuItem)helpItems.get(0)).isSelected());
+
+			System.out.println("autosave enable : " + FileManager.FileManagerSettings.getAutoSave());
+		});
 
 
 	}

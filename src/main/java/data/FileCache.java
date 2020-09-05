@@ -1,16 +1,18 @@
-
-
 package data;
+
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
 
 import java.util.ArrayList;
 
 public class FileCache extends ArrayList<WaveFile> {
 
-	static FileCache
+	public static FileCache
 		fileCache = new FileCache();
 
-	static int
-		currentIndex = 0;
+	private static final IntegerProperty
+		currentIndexDue = new SimpleIntegerProperty(-1);
 
 //	--------------------------------------------------------------------------------------------------------------------
 
@@ -25,6 +27,8 @@ public class FileCache extends ArrayList<WaveFile> {
 		int
 			index = fileCache.size() - 1;
 
+		setCurrentIndex(index);
+
 		System.out.println(
 			"\n\tThe file is added to the cache at index: "
 			+ (index) + '\n'
@@ -33,27 +37,30 @@ public class FileCache extends ArrayList<WaveFile> {
 
 	public static WaveFile loadFromCache(int index){
 
-		currentIndex = index;
+		setCurrentIndex(index);
 
 		return fileCache.get(index);
 	}
 
 	public static WaveFile loadCurrent(){
 
-		return loadFromCache(currentIndex);
+		return loadFromCache(getCurrentIndex());
 	}
 
 
 
 	public static void updatedCache( ){
 
-		if(currentIndex < fileCache.size() - 1) {
+		int
+			cI = getCurrentIndex();
 
-			fileCache.removeRange(currentIndex + 1, fileCache.size());
+		if(cI < fileCache.size() - 1) {
+
+			fileCache.removeRange(cI + 1, fileCache.size());
 
 			System.out.println(
 				"\n\tThe cache has been updated. Current index ("
-				+ currentIndex
+				+ cI
 				+ ") is the the last."
 			);
 		}
@@ -64,10 +71,13 @@ public class FileCache extends ArrayList<WaveFile> {
 
 	public static void clearCacheHistory( ){
 
-		if (currentIndex > 0){
+		int
+			cI = getCurrentIndex();
 
-			fileCache.removeRange(0, currentIndex);
-			currentIndex = 0;
+		if (cI > 0){
+
+			fileCache.removeRange(0, cI);
+			setCurrentIndex(0);
 
 			System.out.println("\n\tHistory is cleared. Current index is 0");
 		}
@@ -80,7 +90,7 @@ public class FileCache extends ArrayList<WaveFile> {
 	public static void purgeCache( ){
 
 		fileCache.clear();
-		currentIndex = 0;
+		setCurrentIndex(-1);
 
 		System.out.println("\n\tCache is empty.");
 	}
@@ -90,7 +100,17 @@ public class FileCache extends ArrayList<WaveFile> {
 
 	public static int getCurrentIndex() {
 
-		return currentIndex;
+		return currentIndexDue.get();
+	}
+
+	public static void setCurrentIndex(int value){
+
+		currentIndexDue.set(value);
+	}
+
+	public static IntegerProperty currentIndexDueProperty(){
+
+		return currentIndexDue;
 	}
 }
 

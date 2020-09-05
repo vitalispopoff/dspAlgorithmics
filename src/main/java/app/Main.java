@@ -1,5 +1,9 @@
 package app;
 
+import data.FileCache;
+import data.WaveFile;
+import data.structure.Strip;
+import gui.MainMenu;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
@@ -8,121 +12,165 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.*;
 
+import java.io.File;
+
 import static javafx.scene.paint.Color.*;
 
 public class Main extends Application {
 
-    @Override
-    public void start(Stage stage){
+	@Override
+	public void start(Stage stage) {
 
-/*
-        stage.setMinWidth(320);
-        stage.setMinHeight(240);
-*/
+		stage.setMinWidth(320);
+		stage.setMinHeight(240);
 
-        BorderPane
-            b = new BorderPane();
+		BorderPane
+			b = new BorderPane();
 
-        Canvas
-            canvas = new Canvas();
+		Canvas
+			canvas = new Canvas();
 
-        Scene
-            scene = new Scene(new Group(canvas), 320, 240);
+		Scene
+			scene = new Scene(b, 320, 240);
 
-        double
-            s = 20;
+//        scene.setFill(DARKGRAY);
 
-        Rectangle
-            rT = new Rectangle(0, 0, s, s),
-            rL = new Rectangle(0, 0, s, s),
-            rR = new Rectangle(0, 0, s, s),
-            rB = new Rectangle(0, 0, s, s);
+		double
+			s = 5;
 
-        rT.setOpacity(1);
-        rL.setOpacity(0);
-        rR.setOpacity(1);
-        rB.setOpacity(1);
-        rT.setFill(BLACK);
-        rL.setFill(BLACK);
-        rR.setFill(BLACK);
-        rB.setFill(BLACK);
+		Rectangle
+			rT = new Rectangle(0, 0, s, s),
+			rL = new Rectangle(0, 0, s, s),
+			rR = new Rectangle(0, 0, s, s),
+			rB = new Rectangle(0, 0, s, s);
 
-        VBox
-            gT = new VBox(/*new MainMenu(stage),*/ rT),
-            gL = new VBox (rL),
-            gR = new VBox (rR),
-            gB = new VBox (rB);
+		rT.setOpacity(0);
+		rL.setOpacity(0);
+		rR.setOpacity(0);
+		rB.setOpacity(0);
+//        rT.setFill(BLACK);
+//        rL.setFill(BLACK);
+//        rR.setFill(BLACK);
+//        rB.setFill(BLACK);
 
-        b.setTop(gT);
-        b.setLeft(gL);
-        b.setRight(gR);
-        b.setBottom(gB);
+		VBox
+			gT = new VBox(new MainMenu(stage), rT),
+			gL = new VBox(rL),
+			gR = new VBox(rR),
+			gB = new VBox(rB);
+
+		b.setTop(gT);
+		b.setLeft(gL);
+		b.setRight(gR);
+		b.setBottom(gB);
+
+		b.setCenter(canvas);
+
+		FileCache.currentIndexDueProperty().addListener(
+			(((observable, oldValue, newValue) -> {
+
+//				if ((int) newValue >= 0 )
 
 
 
-//        b.setCenter(canvas);
+				redraw(canvas, (int) newValue >= 0);
+			}))
+		);
 
+		stage.widthProperty().addListener(
+			((observable, oldValue, newValue) -> {
 
-        stage.widthProperty().addListener(
-            ( (observable, oldValue, newValue) -> {
+				double
+					d = (double) newValue - (2 * s) - 16;
 
-                double
-                    d = (double) newValue /*- (2 * s)*/ - 15 - 2;
+				if (canvas.getWidth() != d) {
 
-                if (canvas.getWidth() != d) {
+					canvas.setWidth(d);
 
-                    canvas.setWidth(d);
-                    redraw(canvas);
-                }
-            })
-        );
+					redraw(canvas, FileCache.getCurrentIndex() >= 0);
+				}
+			})
+		);
 
-        stage.heightProperty().addListener(
-            ( ((observable, oldValue, newValue) -> {
+		stage.heightProperty().addListener(
+			(((observable, oldValue, newValue) -> {
 
-                double
-                    d = (double) newValue /*- (2 * s)*/ /*- 25*/ - 31 - 7 - 2;
+				double
+					d = (double) newValue - (2 * s) - 25 - 32 - 7;
 
-                if (b.getHeight() != d) {
+				if (b.getHeight() != d) {
 
-                    canvas.setHeight(d);
-                    redraw(canvas);
-                }
-            }))
-        );
+					canvas.setHeight(d);
 
-    //  ---------------------------------------------------------------------------------------
+					redraw(canvas, FileCache.getCurrentIndex() >= 0);
+				}
+			}))
+		);
 
-        stage.setScene(scene);
-        stage.show();
+		//  ---------------------------------------------------------------------------------------
+
+		stage.setScene(scene);
+		stage.show();
 
 //        stage.close();
-    }
+	}
 
-    void redraw(Canvas canvas){
+	void drawVerticalGrid(Canvas canvas) {
 
-        GraphicsContext
-            context= canvas.getGraphicsContext2D();
+		GraphicsContext
+			context = canvas.getGraphicsContext2D();
 
-        context.clearRect(0 , 0 ,canvas.getWidth(), canvas.getHeight());
+		clean(canvas);
+		context.setLineWidth(1);
 
-        context.setFill(BLACK);
-        context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		double
+			verticalScale = 1., // TODO to be taken from mouseScroll
+			height = canvas.getHeight(),
+			width = canvas.getWidth(),
+			scaledHeight = height * verticalScale,
+			adjustToVerticalCenter = (scaledHeight / 2.),
+			accountForMinResolution = adjustToVerticalCenter / 4;
 
-        double
-            x = canvas.getWidth(),
-            y = canvas.getHeight() / 2 ;
+		context.setStroke(DODGERBLUE);
+		context.strokeLine(0, height / 2, width, height / 2);
 
-//        context.strokeLine(0, y, x, y);
+		int
+			numberOfLines = (32 - Integer.numberOfLeadingZeros((int) accountForMinResolution));
 
-        context.setStroke(BLUE);
-        context.setLineWidth(1);
+		context.setStroke(LIGHTBLUE);
 
+		for (int i = 1; i <= numberOfLines; i++) {
 
-    }
+			double
+				y1 = (height / 2) - scaledHeight / (1 << i),
+				y2 = (height / 2) + scaledHeight / (1 << i);
 
-    public static void main(String[] args) {
+			if (y1 >= 0) context.strokeLine(0, y1, width, y1);
 
-        launch(args);
-    }
+			if (y2 <= height && y1 != y2) context.strokeLine(0, y2, width, y2);
+		}
+	}
+
+	void redraw(Canvas canvas, boolean waveIsLoaded) {
+
+		GraphicsContext
+			context = canvas.getGraphicsContext2D();
+
+		context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+		if (waveIsLoaded) drawVerticalGrid(canvas);
+	}
+
+	void clean(Canvas canvas) {
+
+		GraphicsContext
+			context = canvas.getGraphicsContext2D();
+
+		context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+	}
+
+	public static void main(String[] args) {
+
+		launch(args);
+	}
 }

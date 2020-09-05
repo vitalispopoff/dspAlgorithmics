@@ -3,6 +3,7 @@ package gui;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 
 import static javafx.scene.input.KeyCombination.*;
@@ -25,6 +26,7 @@ public enum MenuItems {
 		FILE_PROPERTIES,
 
 	MENU_HELP,
+		AUTO_SAVE,
 
 	SEPARATOR {
 
@@ -71,36 +73,40 @@ public enum MenuItems {
 
 		menu.setMnemonicParsing(true);
 
-		menu.setAccelerator((KeyCombination) menuItemParams[this.ordinal()][1]);
+		KeyCombination
+			k = (KeyCombination) menuItemParams[this.ordinal()][1];
+
+		if (k != null) menu.setAccelerator(k);
 
 		for(MenuItems item : items) {
 
 			menu.getItems().add(item.getMenuItem());
-			item.getMenuItem().setMnemonicParsing(true);
+			item.getMenuItem().setMnemonicParsing(k != null);
 		}
 		return menu;
 	}
 
-
+//	--------------------------------------------------------------------------------------------------------------------
 
 	Object[][]
 		menuItemParams = {
 
-			{"_File", keyCombination("Alt+F")},
-				{"_Open", keyCombination("Ctrl+O")},
-				{"Close", keyCombination("Ctrl+W")},
-				{"_Save", keyCombination("Ctrl+S")},
-				{"_Quit", keyCombination("Ctrl+Q"), },
+			{"_File", keyCombination("Alt+F"), "Menu"},
+				{"_Open", keyCombination("Ctrl+O"), "MenuItem"},
+				{"Close", keyCombination("Ctrl+W"), "MenuItem"},
+				{"_Save", keyCombination("Ctrl+S"), "MenuItem"},
+				{"_Quit", keyCombination("Ctrl+Q"), "MenuItem"},
 
-			{"_Edit", keyCombination("Alt+E")},
+			{"_Edit", keyCombination("Alt+E"), "Menu"},
 
-			{"_Analyze", keyCombination("Alt+A")},
+			{"_Analyze", keyCombination("Alt+A"), "Menu"},
 
-			{"_View", keyCombination("Alt+V"), },
-				{"_Waveform", keyCombination("Alt+W")},
-				{"Amplitude _Distribution", keyCombination("Alt+D")},
-				{"File _Properties", keyCombination("Alt+P")},
+			{"_View", keyCombination("Alt+V"), "Menu"},
+				{"_Waveform", keyCombination("Alt+W"), "MenuItem"},
+				{"Amplitude _Distribution", keyCombination("Alt+D"), "MenuItem"},
+				{"File _Properties", keyCombination("Alt+P"), "MenuItem"},
 
-			{"Help", keyCombination("Alt+H")}
+			{"Help", keyCombination("Alt+H"), "Menu"},
+			{"Autosave",null, "checkItem"}
 	};
 }

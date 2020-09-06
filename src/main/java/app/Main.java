@@ -2,6 +2,7 @@ package app;
 
 import data.FileCache;
 import data.WaveFile;
+import data.structure.FileContentStructure;
 import data.structure.Strip;
 import gui.MainMenu;
 import javafx.application.Application;
@@ -32,8 +33,6 @@ public class Main extends Application {
 
 		Scene
 			scene = new Scene(b, 320, 240);
-
-//        scene.setFill(DARKGRAY);
 
 		double
 			s = 5;
@@ -66,12 +65,15 @@ public class Main extends Application {
 
 		b.setCenter(canvas);
 
+	//	? temporal	//-------------------------------------------------------------------------
+
+		WaveFile
+			file = new WaveFile(new File("src\\main\\resources\\shortie-mono-16bit.wav"));
+
+	//	---------------------------------------------------------------------------------------
+
 		FileCache.currentIndexDueProperty().addListener(
 			(((observable, oldValue, newValue) -> {
-
-//				if ((int) newValue >= 0 )
-
-
 
 				redraw(canvas, (int) newValue >= 0);
 			}))
@@ -107,15 +109,15 @@ public class Main extends Application {
 			}))
 		);
 
-		//  ---------------------------------------------------------------------------------------
+	//  ---------------------------------------------------------------------------------------
 
 		stage.setScene(scene);
 		stage.show();
-
-//        stage.close();
 	}
 
-	void drawVerticalGrid(Canvas canvas) {
+//	--------------------------------------------------------------------------------------------------------------------
+
+	void drawEverything(Canvas canvas) {
 
 		GraphicsContext
 			context = canvas.getGraphicsContext2D();
@@ -131,13 +133,13 @@ public class Main extends Application {
 			adjustToVerticalCenter = (scaledHeight / 2.),
 			accountForMinResolution = adjustToVerticalCenter / 4;
 
-		context.setStroke(DODGERBLUE);
+		context.setStroke(BLUE);
 		context.strokeLine(0, height / 2, width, height / 2);
 
 		int
 			numberOfLines = (32 - Integer.numberOfLeadingZeros((int) accountForMinResolution));
 
-		context.setStroke(LIGHTBLUE);
+		context.setStroke(DODGERBLUE);
 
 		for (int i = 1; i <= numberOfLines; i++) {
 
@@ -149,6 +151,31 @@ public class Main extends Application {
 
 			if (y2 <= height && y1 != y2) context.strokeLine(0, y2, width, y2);
 		}
+
+		Strip
+			strip = FileCache.loadCurrent().getSignal().getStrip(0);
+
+		int
+			bitsPerSample = FileCache.loadCurrent().getHeader().getField(FileContentStructure.BITS_PER_SAMPLE) - 1;
+
+		context.setStroke(RED);
+
+		for (int i = 1; i < Math.min(width, strip.size() - width); i++){
+
+			double
+				prevSample = (double) strip.get(i - 1),
+				sample = (double) strip.get(i),
+				verticalCenter = height / 2,
+
+				prevSampleAmplitude = prevSample / (double) ( 1 << bitsPerSample),
+				prevDcOffset = verticalCenter * (1 - prevSampleAmplitude),
+
+				sampleAmplitude = sample / (double) (1 << bitsPerSample),
+				dcOffset = verticalCenter * (1 - sampleAmplitude);
+
+			context.strokeLine(i, prevDcOffset, i + 1, dcOffset);
+
+		}
 	}
 
 	void redraw(Canvas canvas, boolean waveIsLoaded) {
@@ -158,7 +185,7 @@ public class Main extends Application {
 
 		context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-		if (waveIsLoaded) drawVerticalGrid(canvas);
+		if (waveIsLoaded) drawEverything(canvas);
 	}
 
 	void clean(Canvas canvas) {

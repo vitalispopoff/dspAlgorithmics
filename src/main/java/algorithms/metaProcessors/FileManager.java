@@ -77,7 +77,6 @@ public interface FileManager {
 		try{
 
 			fileContent = readAllBytes(file.toPath());
-
 		}
 
 		catch (IOException e){

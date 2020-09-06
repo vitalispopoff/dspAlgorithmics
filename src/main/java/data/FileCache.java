@@ -112,6 +112,11 @@ public class FileCache extends ArrayList<WaveFile> {
 
 		return currentIndexDue;
 	}
+
+	public static boolean fileIsLoaded(){
+
+		return getCurrentIndex() >= 0;
+	}
 }
 
 //	@formatter:on

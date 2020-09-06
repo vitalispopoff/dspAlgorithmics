@@ -1,5 +1,6 @@
 package gui;
 
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -56,9 +57,16 @@ public enum MenuItems {
 		return (KeyCombination) menuItemParams[this.ordinal()][1];
 	}
 
+	//	! TODO - inner logic need refactoring to generic programming techniques
 	public MenuItem getMenuItem (){
 
 		MenuItem
+			item;
+
+		if (menuItemParams[this.ordinal()][2] == "checkItem")
+			item = new CheckMenuItem((String) menuItemParams[this.ordinal()][0]);
+
+		else
 			item = new MenuItem((String) menuItemParams[this.ordinal()][0]);
 
 		item.setAccelerator(this.getKeyCombination());

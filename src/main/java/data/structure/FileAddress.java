@@ -109,6 +109,8 @@ public class FileAddress {
 			nowFormat = DateTimeFormatter.ofPattern("yyyy-DDD-HH-mm-ss");
 
 		name =  "temp_" + now.format(nowFormat);
+
+		System.out.println("\n\tFileAddress> name changed to "+ name);
 	}
 
 

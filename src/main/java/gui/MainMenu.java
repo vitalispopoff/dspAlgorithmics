@@ -76,6 +76,16 @@ public class MainMenu extends MenuBar {
 
 		fileItems.get(1).setOnAction((ActionEvent e) ->{
 
+			if (FileManager.FileManagerSettings.getAutoSave()) {
+
+				WaveFile
+					file = FileCache.loadCurrent();
+
+				file.getFileAddress().setNameToDefault();
+
+				FileManager.saveFile(file);
+			}
+
 			FileCache.purgeCache();
 		});
 

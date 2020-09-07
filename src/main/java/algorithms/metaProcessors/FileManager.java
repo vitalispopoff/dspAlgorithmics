@@ -68,14 +68,18 @@ public interface FileManager {
 		}
 	}
 
-	static byte[] loadFile(File file){
 
-/*		byte[]
-			fileContent = { };*/
+	static byte[] loadFile(File file){
 
 		try { return readAllBytes(file.toPath()); }
 
-		catch (IOException e){ e.printStackTrace(); }
+		catch (IOException e){
+
+			System.out.println(
+				"FileManager> loadFile> readAllBytes has failed");
+
+			e.printStackTrace();
+		}
 
 		return new byte[0];
 	}
@@ -96,11 +100,18 @@ public interface FileManager {
 
 			try { fileContent = readAllBytes(filePath); }
 
-			catch (IOException e) { e.printStackTrace(); }
+			catch (IOException e) {
+
+				System.out.println(
+					"FileManager> loadFile> readAllBytes has failed"
+				);
+
+				e.printStackTrace(); }
 		}
 
 		return fileContent;
 	}
+
 
 	static boolean verifyFile(String fileAddress){
 
@@ -127,6 +138,10 @@ public interface FileManager {
 		catch (InvalidPathException e){
 
 			System.out.println(
+				"FileManager> verifyFile> get has failed"
+			);
+
+			System.out.println(
 				"\n\tI can't read the fileAddress: "
 				+ fileAddress
 				+ "\n\tYou may need to check the spelling.\n"
@@ -147,14 +162,30 @@ public interface FileManager {
 		try {
 
 			FileInputStream
-				input = new FileInputStream(filePath);
+				input = new FileInputStream(filePath);	// TODO this calls for a further investigation
+
+			System.out.println(
+				"FileManager> verifyFileType> fileInputStream initialized"
+			);
 
 			input.read(bytes, 0, 12);
 
+			System.out.println(
+				"FileManager> verifyFileType> read succeeded"
+			);
+
 			input.close();
+
+			System.out.println(
+				"FileManager> verifyFileType> FileInputStream closed"
+			);
 		}
 
 		catch (IOException e) {
+
+			System.out.println(
+				"FileManager> verifyFileType> FileInputStream failed"
+			);
 
 			e.printStackTrace();
 			return false;
@@ -193,7 +224,5 @@ public interface FileManager {
 
 			return autoSaveDue;
 		}
-
-
 	}
 }

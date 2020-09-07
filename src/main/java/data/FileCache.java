@@ -9,7 +9,7 @@ public class FileCache extends ArrayList<WaveFile> {
 		fileCache = new FileCache();
 
 	private static final IntegerProperty
-		currentIndexDue = new SimpleIntegerProperty();
+		currentIndexDue = new SimpleIntegerProperty(-1);
 
 //	--------------------------------------------------------------------------------------------------------------------
 
@@ -23,18 +23,30 @@ public class FileCache extends ArrayList<WaveFile> {
 		updateCurrentIndex();
 
 		System.out.println(
-			"\n\tThe file is added to the cache at index: "
-			+ (getCurrentIndex()) + '\n'
-		);
+			"\n\tThe file is added to the cache at index: " + (getCurrentIndex()) + '\n');
 	}
+
+
 
 	public static WaveFile loadFromCache(int index){
 
-		if(index >= 0 && index < fileCache.size())
+//		if(index >= 0 && index < fileCache.size())
 
-			setCurrentIndex(index);
+		try {
+
+			if (index != getCurrentIndex())
+
+				setCurrentIndex(index);
 
 			return fileCache.get(index);
+		}
+
+		catch (ArrayIndexOutOfBoundsException e){
+
+			System.out.println("WaveFile> loadFromCache> no file to load");
+		}
+
+		return null;	// dummy return i hope.
 	}
 
 	public static WaveFile loadCurrent(){
@@ -54,10 +66,7 @@ public class FileCache extends ArrayList<WaveFile> {
 			fileCache.removeRange(cI + 1, fileCache.size());
 
 			System.out.println(
-				"\n\tThe cache has been updated. Current index ("
-				+ cI
-				+ ") is the the last."
-			);
+				"\n\tThe cache has been updated. Current index (" + cI + ") is the the last.");
 		}
 
 		else
@@ -85,7 +94,9 @@ public class FileCache extends ArrayList<WaveFile> {
 	public static void purgeCache( ){
 
 		fileCache.clear();
-//		setCurrentIndex(-1);
+//		updateCurrentIndex();
+
+		System.out.println("TEMPORAL : fileCache.size = " + fileCache.size());
 
 		System.out.println("FileCache>\n\tCache is empty.");
 	}

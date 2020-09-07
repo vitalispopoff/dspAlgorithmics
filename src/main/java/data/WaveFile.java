@@ -97,7 +97,4 @@ public class WaveFile {
 
 		return new int[] {headerLength, signalLength, currentLength};
 	}
-
-//	--------------------------------------------------------------------------------------------------------------------
-
 }

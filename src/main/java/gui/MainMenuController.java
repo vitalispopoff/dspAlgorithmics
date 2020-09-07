@@ -47,7 +47,7 @@ public class MainMenuController {
 
 	public void openFile(ActionEvent event){
 
-		FileCache.purgeCache();
+		if(FileCache.fileCache.size() > 0) FileCache.purgeCache();
 
 		FileChooser
 			browser = new FileChooser();

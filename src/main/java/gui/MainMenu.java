@@ -4,6 +4,7 @@ import algorithms.metaProcessors.FileManager;
 import data.FileCache;
 import data.WaveFile;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.*;
 
@@ -11,9 +12,15 @@ import java.io.File;
 import java.util.List;
 
 import static algorithms.metaProcessors.FileManager.saveFile;
-import static gui.MenuItems.*;
+import static gui.Menus.MenuItems.*;
 
 public class MainMenu extends MenuBar {
+
+	@FXML
+		public static MainMenu
+		mainMenu;
+
+
 
 	Stage
 		stage;

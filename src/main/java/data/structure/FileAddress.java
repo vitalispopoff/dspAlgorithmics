@@ -56,17 +56,9 @@ public class FileAddress {
 		}
 
 		String
-			extension = /*extensionIndex > 0
-				? */input.substring(extensionIndex)
-				/*: fileExtensions.get("WAVE")*/,
-
-			name = /*fileNameIndex > 0
-				? */input.substring(fileNameIndex, extensionIndex - 1)
-				/*: getTemporalName()*/,
-
-			path = /*fileNameIndex > 0
-				? */input.substring(0, fileNameIndex)
-				/*: defaultCatalogPath*/;
+			extension = input.substring(extensionIndex),
+			name = input.substring(fileNameIndex, extensionIndex - 1),
+			path = input.substring(0, fileNameIndex);
 
 		return new FileAddress(path, name, extension);
 	}
@@ -172,7 +164,8 @@ public class FileAddress {
 			index = path.length() - 1;
 
 		String
-			slash = path.charAt(index) == '\\'
+			slash =
+				path.charAt(index) == '\\'
 				? ""
 				: "\\";
 

@@ -1,22 +1,25 @@
 package app;
 
 import data.FileCache;
-import data.WaveFile;
-import data.structure.FileContentStructure;
-import data.structure.Strip;
-import data.structure.WaveHeader;
+import data.structure.*;
 import gui.MainMenu;
 import javafx.application.Application;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.scene.*;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.canvas.*;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.*;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 
 import static javafx.scene.paint.Color.*;
 
@@ -40,14 +43,13 @@ public class Main extends Application {
 		double
 			s = 5;
 
-	//	borderPane ----------------------------------------------------------------------------
+	//*	borderPane ----------------------------------------------------------------------------
 
 		ScrollBar
-			scroller = new ScrollBar();
+			horizontalScroll = new ScrollBar(),
+			verticalScroll = new ScrollBar();
 
-		scroller.setOrientation(Orientation.HORIZONTAL);
-
-
+		horizontalScroll.setOrientation(Orientation.HORIZONTAL);
 
 		Rectangle
 			rT = new Rectangle(0, 0, s, s),
@@ -62,14 +64,34 @@ public class Main extends Application {
 //        rT.setFill(BLACK);
 //        rL.setFill(BLACK);
 //        rR.setFill(BLACK);
-        rB.setFill(BLACK);
+//        rB.setFill(BLACK);
+
+
 
 
 		VBox
-			gT = new VBox(new MainMenu(stage), rT),
+			gT = new VBox(/*new MainMenu(stage), rT*/),
 			gL = new VBox(rL),
 			gR = new VBox(rR),
-			gB = new VBox(rB, scroller);
+			gB = new VBox(rB, horizontalScroll);
+
+		String
+			location = "E:\\_LAB\\pl\\popoff\\dspAlgorithmics\\src\\main\\resources\\FXMLMainMenu.fxml";
+
+		try {
+
+			URL url = new File(location).toURI().toURL();
+
+			gT.getChildren().add(0,
+				FXMLLoader.load(url
+//					getClass().getResource(location)
+//					getClass().getClassLoader().getResource(location)
+				)/*,
+				rT*/);
+		}
+		catch (IOException e){ e.printStackTrace();}
+
+	 // fxml load attempt makes no sense for now
 
 		gB.setPrefHeight(20);
 
@@ -80,34 +102,29 @@ public class Main extends Application {
 
 		b.setCenter(canvas);
 
-	//	---------------------------------------------------------------------------------------
+	//*	listeners	---------------------------------------------------------------------------
 
-		scroller.valueProperty().addListener(
-			((observable, oldValue, newValue) -> redraw(/*true,*/ canvas, scroller, null)));
+		horizontalScroll.valueProperty()
+			.addListener((observable, oldValue, newValue) -> redraw(canvas, horizontalScroll, null));
 
-		FileCache.currentIndexDueProperty().addListener(
-			(observable, oldValue, newValue) -> {
+		FileCache.currentIndexDueProperty()
+			.addListener((observable, oldValue, newValue) -> {
 
 				int
 				waveLength = FileCache.loadCurrent().getSignal().getStrip(0).size();
 
-				System.out.println(waveLength);
-
-
-
-				scroller.setMin(0.);
-				scroller.setMax(
+				horizontalScroll.setMin(0.);
+				horizontalScroll.setMax(
 					scene.getWidth() > waveLength
 					? 0.
 					: (waveLength - scene.getWidth())
 				);
 
-				redraw(/*(int) newValue >= 0,*/ canvas, scroller, null);
-
+				redraw(canvas, horizontalScroll, null);
 			});
 
-		stage.widthProperty().addListener(
-			(observable, oldValue, newValue) -> {
+		stage.widthProperty()
+			.addListener((observable, oldValue, newValue) -> {
 
 				double
 					d = (double) newValue - (2 * s) - 16;
@@ -116,13 +133,12 @@ public class Main extends Application {
 
 					canvas.setWidth(d);
 
-					redraw(/*FileCache.getCurrentIndex() >= 0,*/ canvas, scroller, null);
+					redraw(canvas, horizontalScroll, null);
 				}
-			}
-		);
+			});
 
-		stage.heightProperty().addListener(
-			(((observable, oldValue, newValue) -> {
+		stage.heightProperty()
+			.addListener((observable, oldValue, newValue) -> {
 
 				double
 					d = (double) newValue
@@ -137,10 +153,9 @@ public class Main extends Application {
 
 					canvas.setHeight(d);
 
-					redraw(/*FileCache.getCurrentIndex() >= 0,*/ canvas, scroller, null);
+					redraw(canvas, horizontalScroll, null);
 				}
-			}))
-		);
+			});
 
 	//  ---------------------------------------------------------------------------------------
 
@@ -174,13 +189,15 @@ public class Main extends Application {
 		double
 			verticalScale = 1., // TODO to be taken from mouseScroll
 			horizontalScale = 1.,	// TODO as above
+
 			height = canvas.getHeight(),
 			width = canvas.getWidth(),
+
 			scaledHeight = height * verticalScale,
 			adjustToVerticalCenter = (scaledHeight / 2.),
 			accountForMinResolution = adjustToVerticalCenter / 4;
 
-	//	horizontals  --------------------------------------------------------------------------
+	//*	horizontals  --------------------------------------------------------------------------
 
 		context.setStroke(BLUE);
 		context.strokeLine(0, height / 2, width, height / 2);
@@ -209,7 +226,7 @@ public class Main extends Application {
 		int
 			bitsPerSample = FileCache.loadCurrent().getHeader().getField(FileContentStructure.BITS_PER_SAMPLE) - 1;
 
-	//	verticals  ----------------------------------------------------------------------------
+	//*	verticals  ----------------------------------------------------------------------------
 
 		context.setStroke(DODGERBLUE);
 
@@ -217,7 +234,7 @@ public class Main extends Application {
 		context.strokeLine(width, 0, width, height);
 
 
-	//	waveForm  -----------------------------------------------------------------------------
+	//*	waveForm  -----------------------------------------------------------------------------
 
 		context.setStroke(RED);
 
@@ -237,13 +254,11 @@ public class Main extends Application {
 				sampleAmplitude = sample / (double) (1 << bitsPerSample),
 				dcOffset = verticalCenter * (1 - sampleAmplitude);
 
-
 			context.strokeLine(i, prevDcOffset, i + 1, dcOffset);
-
 		}
 	}
 
-	void redraw(/*boolean waveIsLoaded,*/ Canvas canvas, ScrollBar horizontal, ScrollBar vertical) {
+	void redraw(Canvas canvas, ScrollBar horizontal, ScrollBar vertical) {
 
 		GraphicsContext
 			context = canvas.getGraphicsContext2D();

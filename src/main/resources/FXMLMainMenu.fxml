@@ -1,0 +1,32 @@
+<?import javafx.scene.control.*?>
+
+<MenuBar
+    xmlns="http://javafx.com/javafx/8"
+    id="mainMenu">
+
+    <Menu
+        id="menuFile">
+
+    </Menu>
+
+    <Menu
+        id="menuEdit">
+
+    </Menu>
+
+    <Menu
+        id="menuAnalyze">
+
+    </Menu>
+
+    <Menu
+        id="menuView">
+
+    </Menu>
+
+    <Menu
+        id="menuHelp">
+
+    </Menu>
+
+</MenuBar>

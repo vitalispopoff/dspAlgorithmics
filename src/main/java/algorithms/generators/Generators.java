@@ -1,5 +1,3 @@
-//	@formatter:off
-
 package algorithms.generators;
 
 import java.util.Random;
@@ -37,5 +35,3 @@ public interface Generators {
 		return (result / 12) - (bits >> 1);
 	}
 }
-
-//	@formatter:on

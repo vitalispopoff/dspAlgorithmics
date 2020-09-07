@@ -1,5 +1,3 @@
-//	@formatter:off
-
 package algorithms.analyzers;
 
 import static java.lang.String.format;
@@ -48,5 +46,3 @@ public interface BitRepresent {
 		return s.replace(' ', '0');
 	}
 }
-
-//	@formatter:on

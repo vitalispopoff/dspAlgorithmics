@@ -1,5 +1,3 @@
-//	@formatter:off
-
 package algorithms.analyzers;
 
 import static java.lang.Integer.*;
@@ -16,13 +14,9 @@ public interface Peaks {
 
 		for (int sample : signal) {
 
-			if (sample < result[0])
+			if (sample < result[0]) result[0] = sample;
 
-				result[0] = sample;
-
-			if (sample > result[1])
-
-				result[1] = sample;
+			if (sample > result[1]) result[1] = sample;
 		}
 		
 		return result;
@@ -36,28 +30,15 @@ public interface Peaks {
 
 		for (int sample : signal){
 
-			if (sample > supremum)
+			if (sample > supremum) supremum = sample;
 
-				supremum = sample;
-
-			if (sample < infimum)
-
-				infimum = sample;
+			if (sample < infimum) infimum = sample;
 		}
 
-		infimum = Math.abs(infimum);
-
 		int
-			maximum = Math.max(infimum, supremum);
+			maximum = Math.max(Math.abs(infimum), supremum),
+			msB = Integer.numberOfLeadingZeros(maximum);
 
-		String
-			string = Integer.toBinaryString(maximum);
-
-		int
-			index = string.indexOf('1');
-
-		return string.length() - index;
+		return 32 - msB;
 	}
 }
-
-//	@formatter:on

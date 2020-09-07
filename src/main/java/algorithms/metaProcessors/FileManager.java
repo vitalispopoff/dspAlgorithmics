@@ -3,8 +3,7 @@ package algorithms.metaProcessors;
 import data.FileCache;
 import data.WaveFile;
 import data.structure.FileAddress;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.*;
 
 import java.io.*;
 import java.nio.file.*;
@@ -74,15 +73,9 @@ public interface FileManager {
 		byte[]
 			fileContent = { };
 
-		try{
+		try { fileContent = readAllBytes(file.toPath()); }
 
-			fileContent = readAllBytes(file.toPath());
-		}
-
-		catch (IOException e){
-
-			e.printStackTrace();;
-		}
+		catch (IOException e){ e.printStackTrace(); }
 
 		return fileContent;
 	}
@@ -101,15 +94,9 @@ public interface FileManager {
 			Path
 				filePath = get(fileAddress);
 
-			try {
+			try { fileContent = readAllBytes(filePath); }
 
-				fileContent = readAllBytes(filePath);
-			}
-
-			catch (IOException e) {
-
-				e.printStackTrace();
-			}
+			catch (IOException e) { e.printStackTrace(); }
 		}
 
 		return fileContent;

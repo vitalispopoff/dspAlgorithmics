@@ -57,7 +57,7 @@ public class Main extends Application {
 			rR = new Rectangle(0, 0, s, s),
 			rB = new Rectangle(0, 0, s, s);
 
-		rT.setOpacity(0);
+		rT.setOpacity(1);
 		rL.setOpacity(0);
 		rR.setOpacity(0);
 		rB.setOpacity(1);
@@ -82,12 +82,14 @@ public class Main extends Application {
 
 			URL url = new File(location).toURI().toURL();
 
-			gT.getChildren().add(0,
-				FXMLLoader.load(url
+			gT.getChildren().addAll(
+				FXMLLoader.load(
+					url
 //					getClass().getResource(location)
 //					getClass().getClassLoader().getResource(location)
-				)/*,
-				rT*/);
+				),
+				rT
+			);
 		}
 		catch (IOException e){ e.printStackTrace();}
 

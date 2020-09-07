@@ -1,31 +1,42 @@
 <?import javafx.scene.control.*?>
 
 <MenuBar
-    xmlns="http://javafx.com/javafx/8"
-    id="mainMenu">
+        xmlns="http://javafx.com/javafx/8"
+        id="mainMenu">
 
-    <Menu
-        id="menuFile">
+    <Menu id="MENU_FILE" text="_File">
 
-    </Menu>
+        <MenuItem id="OPEN_FILE" text="_Open"/>
+        <MenuItem id="CLOSE_FILE" text="Close"/>
 
-    <Menu
-        id="menuEdit">
+        <SeparatorMenuItem />
 
-    </Menu>
+        <MenuItem id="SAVE" text="_Save"/>
 
-    <Menu
-        id="menuAnalyze">
+        <SeparatorMenuItem />
 
-    </Menu>
-
-    <Menu
-        id="menuView">
+        <MenuItem id="QUIT" text="_Quit"/>
 
     </Menu>
 
-    <Menu
-        id="menuHelp">
+    <Menu id="MENU_EDIT" text="_Edit" disable="true"> </Menu>
+
+    <Menu id="menuAnalyze" text="_Analyze" disable="true"> </Menu>
+
+    <Menu id="menuView" text="_View" disable="true">
+
+        <MenuItem id="FILE_WAVEFORM" text="[_Waveform]" disable="true"/>
+        <MenuItem id="FILE_AMPLITUDE_DISTRIBUTION" text="[Amplitude _Distribution]" disable="true"/>
+
+        <SeparatorMenuItem />
+
+        <MenuItem id="FILE_PROPERTIES" text="[File _Properties]" disable="true"/>
+
+    </Menu>
+
+    <Menu id="menuHelp" text="_Help">
+
+        <CheckMenuItem id="AUTO_SAVE" text="Auto saving"/>
 
     </Menu>
 

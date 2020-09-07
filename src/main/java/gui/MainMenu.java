@@ -64,6 +64,14 @@ public class MainMenu extends MenuBar {
 
 	}
 
+//	---------------------------------------------------------------------------------------------------
+
+	public static void whatevah(){
+
+		System.exit(0);
+	}
+
+
 	private void setActionsToMenuFile(){
 
 		List<MenuItem>

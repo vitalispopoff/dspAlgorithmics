@@ -2,9 +2,8 @@ package app;
 
 import data.FileCache;
 import data.structure.*;
-import gui.MainMenu;
+import gui.MainMenuController;
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.scene.*;
@@ -15,10 +14,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.*;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 
 import static javafx.scene.paint.Color.*;
@@ -27,6 +23,8 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) {
+
+		MainMenuController.setStage(stage);
 
 		stage.setMinWidth(320);
 		stage.setMinHeight(240);

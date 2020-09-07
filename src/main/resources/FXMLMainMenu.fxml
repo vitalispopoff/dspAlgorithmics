@@ -1,43 +1,71 @@
 <?import javafx.scene.control.*?>
 
-<MenuBar
-        xmlns="http://javafx.com/javafx/8"
-        id="mainMenu">
+<MenuBar id="MAIN_MENU"
+         xmlns="http://javafx.com/javafx/8"
+         fx:controller="gui.MainMenuController"
+         xmlns:fx="http://javafx.com/fxml/1">
 
-    <Menu id="MENU_FILE" text="_File">
-
-        <MenuItem id="OPEN_FILE" text="_Open"/>
-        <MenuItem id="CLOSE_FILE" text="Close"/>
-
+    <Menu id="MENU_FILE"
+          text="_File"
+    >
+        <MenuItem id="OPEN_FILE"
+                text="_Open"
+                  onAction="#openFile"
+        />
+        <MenuItem id="CLOSE_FILE"
+                  text="Close"
+                  onAction="#autoSave"
+        />
         <SeparatorMenuItem />
-
-        <MenuItem id="SAVE" text="_Save"/>
-
+        <MenuItem id="SAVE"
+                  text="_Save"
+                  onAction="#save"
+        />
         <SeparatorMenuItem />
-
-        <MenuItem id="QUIT" text="_Quit"/>
-
+        <MenuItem id="QUIT"
+                  text="_Quit"
+                  onAction="#quit"
+        />
     </Menu>
 
-    <Menu id="MENU_EDIT" text="_Edit" disable="true"> </Menu>
-
-    <Menu id="menuAnalyze" text="_Analyze" disable="true"> </Menu>
-
-    <Menu id="menuView" text="_View" disable="true">
-
-        <MenuItem id="FILE_WAVEFORM" text="[_Waveform]" disable="true"/>
-        <MenuItem id="FILE_AMPLITUDE_DISTRIBUTION" text="[Amplitude _Distribution]" disable="true"/>
-
-        <SeparatorMenuItem />
-
-        <MenuItem id="FILE_PROPERTIES" text="[File _Properties]" disable="true"/>
-
+    <Menu id="MENU_EDIT"
+          text="_Edit"
+          disable="true"
+    >
     </Menu>
 
-    <Menu id="menuHelp" text="_Help">
+    <Menu id="MENU_ANALYZE"
+          text="_Analyze"
+          disable="true"
+    >
+    </Menu>
 
-        <CheckMenuItem id="AUTO_SAVE" text="Auto saving"/>
+    <Menu id="MENU_VIEW"
+          text="_View"
+          disable="true"
+    >
+        <MenuItem id="FILE_WAVEFORM"
+                  text="[_Waveform]"
+                  disable="true"
+        />
+        <MenuItem id="FILE_AMPLITUDE_DISTRIBUTION"
+                  text="[Amplitude _Distribution]"
+                  disable="true"
+        />
+        <SeparatorMenuItem />
+        <MenuItem id="FILE_PROPERTIES"
+                  text="[File _Properties]"
+                  disable="true"
+        />
+    </Menu>
 
+    <Menu id="MENU_HELP"
+          text="_Help"
+    >
+        <CheckMenuItem id="AUTO_SAVE"
+                       text="Auto saving"
+                       disable="true"
+        />
     </Menu>
 
 </MenuBar>

@@ -1,82 +1,107 @@
 package gui;
 
 import algorithms.metaProcessors.FileManager;
+import app.Main;
 import data.FileCache;
 import data.WaveFile;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
 import javafx.stage.*;
 
 import java.io.File;
-import java.util.List;
 
 import static algorithms.metaProcessors.FileManager.saveFile;
-import static gui.Menus.MenuItems.*;
 
-public class MainMenu extends MenuBar {
+public class MainMenuController {
 
 	@FXML
-		public static MainMenu
-		mainMenu;
+		public static MainMenuController
+		mainMenuController;
 
-
-
-	Stage
+	static Stage
 		stage;
 
+	public static void setStage(Stage s){
+		stage = s;
+	}
+/*
 	Menu
 		menuFile = MENU_FILE.getMenu(OPEN_FILE, CLOSE_FILE, SEPARATOR, SAVE, SEPARATOR, QUIT),
 		menuEdit = MENU_EDIT.getMenu(),
 		menuAnalyze = MENU_ANALYZE.getMenu(),
 		menuView = MENU_VIEW.getMenu(FILE_WAVEFORM, FILE_AMPLITUDE_DISTRIBUTION, SEPARATOR,  FILE_PROPERTIES),
-		menuHelp = MENU_HELP.getMenu(AUTO_SAVE);
+		menuHelp = MENU_HELP.getMenu(AUTO_SAVE);*/
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	public MainMenu(Stage stage){
+/*
+	public MainMenuController(Stage stage){
+
 
 //		setHeight(25);
-
-		this.stage = stage;
-
-		this.getMenus().addAll(menuFile, menuEdit, menuAnalyze, menuView, menuHelp);
-
-		setActionsToMenuFile();
-
-/*
-	//	! TEMPORAL	//-------------------------------------------------------------------------
-
-		MenuItem
-			button = new MenuItem("window size");
-
-		button.setOnAction(e -> System.out.println(stage.getWidth() + ", " + stage.getHeight()));
-
-		Menu
-			temporal = new Menu("TEMPORAL");
-
-		temporal.getItems().add(button);
-
-//		getMenus().add(temporal);
-
-	//	!  //-----------------------------------------------------------------------------------
-*/	// * disposable
-
+//		this.getMenus().addAll(menuFile, menuEdit, menuAnalyze, menuView, menuHelp);
+//		setActionsToMenuFile();
 	}
+*/
 
 //	---------------------------------------------------------------------------------------------------
 
-	public static void whatevah(){
+	public void openFile(ActionEvent event){
+		FileChooser
+			browser = new FileChooser();
 
-		System.exit(0);
+		browser.setTitle("Open File");
+
+		browser.setInitialDirectory(new File(System.getProperty("user.home")));
+		File file = browser.showOpenDialog(stage);
+		WaveFile waveFile = new WaveFile(file);
 	}
 
+	public void autoSave(ActionEvent event){
+
+		if (FileManager.FileManagerSettings.getAutoSave()) {
+
+			WaveFile
+				file = FileCache.loadCurrent();
+
+			file.getFileAddress().setNameToDefault();
+
+			FileManager.saveFile(file);
+		}
+
+		FileCache.purgeCache();
+	}
+
+	public void save(ActionEvent event){
+
+		FileChooser
+			browser = new FileChooser();
+
+		browser.setTitle("Save As");
+
+		File
+			file = browser.showSaveDialog(stage);
+
+		saveFile(file);
+	}
+
+	public void quit(ActionEvent event){
+
+		stage.close();
+	}
+
+	public void setAutoSaveStatus(ActionEvent event ){
+
+		FileManager.FileManagerSettings.setAutoSave(/*((CheckMenuItem)helpItems.get(0)).isSelected()*/ false);
+
+		System.out.println("autosave enable : " + FileManager.FileManagerSettings.getAutoSave());
+	}
 
 	private void setActionsToMenuFile(){
 
-		List<MenuItem>
-			fileItems = menuFile.getItems();
+//		List<MenuItem> fileItems = menuFile.getItems();
 
+/*
 		fileItems.get(0).setOnAction((ActionEvent e) -> {
 
 			FileChooser
@@ -88,7 +113,9 @@ public class MainMenu extends MenuBar {
 			File file = browser.showOpenDialog(stage);
 			WaveFile waveFile = new WaveFile(file);
 		});
+*/	// ? open file disposable ?
 
+/*
 		fileItems.get(1).setOnAction((ActionEvent e) ->{
 
 			if (FileManager.FileManagerSettings.getAutoSave()) {
@@ -103,7 +130,9 @@ public class MainMenu extends MenuBar {
 
 			FileCache.purgeCache();
 		});
+*/	// ? autosave disposable ?
 
+/*
 		fileItems.get(3).setOnAction((ActionEvent e) -> {
 
 			FileChooser
@@ -116,11 +145,15 @@ public class MainMenu extends MenuBar {
 
 			saveFile(file);
 		});
+*/	// ? save disposable?
 
+/*
 		fileItems.get(5).setOnAction(close -> stage.close());
+*/	// ? quit disposable ?
 
-		List<MenuItem>
-			helpItems = menuHelp.getItems();
+//		List<MenuItem> helpItems = menuHelp.getItems();
+
+/*
 
 		helpItems.get(0).setOnAction((ActionEvent e) -> {
 
@@ -128,7 +161,7 @@ public class MainMenu extends MenuBar {
 
 			System.out.println("autosave enable : " + FileManager.FileManagerSettings.getAutoSave());
 		});
-
+*/	// ? autosave setting disposable ?
 
 	}
 }

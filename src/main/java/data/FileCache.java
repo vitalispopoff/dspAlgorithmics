@@ -1,9 +1,6 @@
 package data;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-
-
+import javafx.beans.property.*;
 import java.util.ArrayList;
 
 public class FileCache extends ArrayList<WaveFile> {
@@ -12,7 +9,7 @@ public class FileCache extends ArrayList<WaveFile> {
 		fileCache = new FileCache();
 
 	private static final IntegerProperty
-		currentIndexDue = new SimpleIntegerProperty(-1);
+		currentIndexDue = new SimpleIntegerProperty();
 
 //	--------------------------------------------------------------------------------------------------------------------
 
@@ -23,23 +20,21 @@ public class FileCache extends ArrayList<WaveFile> {
 	public static void addToCache(WaveFile waveFile){
 
 		fileCache.add(waveFile);
-
-		int
-			index = fileCache.size() - 1;
-
-		setCurrentIndex(index);
+		updateCurrentIndex();
 
 		System.out.println(
 			"\n\tThe file is added to the cache at index: "
-			+ (index) + '\n'
+			+ (getCurrentIndex()) + '\n'
 		);
 	}
 
 	public static WaveFile loadFromCache(int index){
 
-		setCurrentIndex(index);
+		if(index >= 0 && index < fileCache.size())
 
-		return fileCache.get(index);
+			setCurrentIndex(index);
+
+			return fileCache.get(index);
 	}
 
 	public static WaveFile loadCurrent(){
@@ -90,9 +85,9 @@ public class FileCache extends ArrayList<WaveFile> {
 	public static void purgeCache( ){
 
 		fileCache.clear();
-		setCurrentIndex(-1);
+//		setCurrentIndex(-1);
 
-		System.out.println("\n\tCache is empty.");
+		System.out.println("FileCache>\n\tCache is empty.");
 	}
 
 
@@ -117,6 +112,9 @@ public class FileCache extends ArrayList<WaveFile> {
 
 		return getCurrentIndex() >= 0;
 	}
-}
 
-//	@formatter:on
+	private static void updateCurrentIndex(){
+
+		setCurrentIndex(fileCache.size() - 1);
+	}
+}

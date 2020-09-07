@@ -1,6 +1,7 @@
 package app;
 
 import data.FileCache;
+import data.WaveFile;
 import data.structure.*;
 import gui.MainMenuController;
 import javafx.application.Application;
@@ -80,18 +81,12 @@ public class Main extends Application {
 
 			URL url = new File(location).toURI().toURL();
 
-			gT.getChildren().addAll(
-				FXMLLoader.load(
-					url
-//					getClass().getResource(location)
-//					getClass().getClassLoader().getResource(location)
-				),
-				rT
-			);
+			gT.getChildren().addAll(FXMLLoader.load(url), rT);
 		}
 		catch (IOException e){ e.printStackTrace();}
+	// * temporarily disabled
 
-	 // fxml load attempt makes no sense for now
+
 
 		gB.setPrefHeight(20);
 
@@ -104,8 +99,10 @@ public class Main extends Application {
 
 	//*	listeners	---------------------------------------------------------------------------
 
+/*
 		horizontalScroll.valueProperty()
 			.addListener((observable, oldValue, newValue) -> redraw(canvas, horizontalScroll, null));
+*/
 
 		FileCache.currentIndexDueProperty()
 			.addListener((observable, oldValue, newValue) -> {
@@ -123,6 +120,7 @@ public class Main extends Application {
 				redraw(canvas, horizontalScroll, null);
 			});
 
+/*
 		stage.widthProperty()
 			.addListener((observable, oldValue, newValue) -> {
 
@@ -136,7 +134,9 @@ public class Main extends Application {
 					redraw(canvas, horizontalScroll, null);
 				}
 			});
+*/
 
+/*
 		stage.heightProperty()
 			.addListener((observable, oldValue, newValue) -> {
 
@@ -156,6 +156,7 @@ public class Main extends Application {
 					redraw(canvas, horizontalScroll, null);
 				}
 			});
+*/
 
 	//  ---------------------------------------------------------------------------------------
 
@@ -164,6 +165,7 @@ public class Main extends Application {
 
 		//?	temporal  //---------------------------------------------------------------------------
 
+/*
 		{
 			String[] a = {
 				"src\\main\\resources\\shortie-mono-16bit.wav",
@@ -174,6 +176,8 @@ public class Main extends Application {
 
 //			WaveFile file = new WaveFile(new File(a[x]));
 		}
+*/	// ? temporarily disabled - disposable in long term
+
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------

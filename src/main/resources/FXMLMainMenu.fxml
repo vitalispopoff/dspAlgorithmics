@@ -14,7 +14,7 @@
         />
         <MenuItem id="CLOSE_FILE"
                   text="Close"
-                  onAction="#autoSave"
+                  onAction="#close"
         />
         <SeparatorMenuItem />
         <MenuItem id="SAVE"
@@ -64,7 +64,7 @@
     >
         <CheckMenuItem id="AUTO_SAVE"
                        text="Auto saving"
-                       disable="true"
+                       onAction="#enableAutoSave"
         />
     </Menu>
 

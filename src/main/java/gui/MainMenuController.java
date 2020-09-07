@@ -1,11 +1,11 @@
 package gui;
 
 import algorithms.metaProcessors.FileManager;
-import app.Main;
 import data.FileCache;
 import data.WaveFile;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckMenuItem;
 import javafx.stage.*;
 
 import java.io.File;
@@ -24,15 +24,15 @@ public class MainMenuController {
 	public static void setStage(Stage s){
 		stage = s;
 	}
+
 /*
 	Menu
 		menuFile = MENU_FILE.getMenu(OPEN_FILE, CLOSE_FILE, SEPARATOR, SAVE, SEPARATOR, QUIT),
 		menuEdit = MENU_EDIT.getMenu(),
 		menuAnalyze = MENU_ANALYZE.getMenu(),
 		menuView = MENU_VIEW.getMenu(FILE_WAVEFORM, FILE_AMPLITUDE_DISTRIBUTION, SEPARATOR,  FILE_PROPERTIES),
-		menuHelp = MENU_HELP.getMenu(AUTO_SAVE);*/
-
-//	--------------------------------------------------------------------------------------------------------------------
+		menuHelp = MENU_HELP.getMenu(AUTO_SAVE);
+*/		// disposable ?
 
 /*
 	public MainMenuController(Stage stage){
@@ -42,22 +42,42 @@ public class MainMenuController {
 //		this.getMenus().addAll(menuFile, menuEdit, menuAnalyze, menuView, menuHelp);
 //		setActionsToMenuFile();
 	}
-*/
+*/		// ? disposable ?
 
-//	---------------------------------------------------------------------------------------------------
 
 	public void openFile(ActionEvent event){
+
+		FileCache.purgeCache();
+
 		FileChooser
 			browser = new FileChooser();
 
 		browser.setTitle("Open File");
-
 		browser.setInitialDirectory(new File(System.getProperty("user.home")));
+
 		File file = browser.showOpenDialog(stage);
-		WaveFile waveFile = new WaveFile(file);
+
+		if (file != null) {
+			WaveFile waveFile = new WaveFile(file);
+		}
 	}
 
 	public void autoSave(ActionEvent event){
+
+		if (FileManager.FileManagerSettings.getAutoSave()) {
+
+			WaveFile
+				file = FileCache.loadCurrent();
+
+			file.getFileAddress().setNameToDefault();
+
+			FileManager.saveFile(file);
+		}
+
+		FileCache.purgeCache();
+	}
+
+	public void close(ActionEvent event){
 
 		if (FileManager.FileManagerSettings.getAutoSave()) {
 
@@ -82,7 +102,7 @@ public class MainMenuController {
 		File
 			file = browser.showSaveDialog(stage);
 
-		saveFile(file);
+		if (file != null) saveFile(file);
 	}
 
 	public void quit(ActionEvent event){
@@ -90,9 +110,19 @@ public class MainMenuController {
 		stage.close();
 	}
 
-	public void setAutoSaveStatus(ActionEvent event ){
+	public void setAutoSaveStatus(ActionEvent event){
 
 		FileManager.FileManagerSettings.setAutoSave(/*((CheckMenuItem)helpItems.get(0)).isSelected()*/ false);
+
+		System.out.println("autosave enable : " + FileManager.FileManagerSettings.getAutoSave());
+	}
+
+	public void enableAutoSave(ActionEvent event){
+
+		boolean
+		checkBoxIsSelected = ((CheckMenuItem)event.getSource()).isSelected();
+
+		FileManager.FileManagerSettings.setAutoSave(checkBoxIsSelected);
 
 		System.out.println("autosave enable : " + FileManager.FileManagerSettings.getAutoSave());
 	}

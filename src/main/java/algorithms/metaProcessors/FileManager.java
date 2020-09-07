@@ -70,14 +70,14 @@ public interface FileManager {
 
 	static byte[] loadFile(File file){
 
-		byte[]
-			fileContent = { };
+/*		byte[]
+			fileContent = { };*/
 
-		try { fileContent = readAllBytes(file.toPath()); }
+		try { return readAllBytes(file.toPath()); }
 
 		catch (IOException e){ e.printStackTrace(); }
 
-		return fileContent;
+		return new byte[0];
 	}
 
 	static byte[] loadFile(String fileAddress){

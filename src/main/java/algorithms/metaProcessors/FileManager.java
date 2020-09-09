@@ -1,5 +1,6 @@
 package algorithms.metaProcessors;
 
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
 import data.FileCache;
 import data.WaveFile;
 import data.structure.FileAddress;
@@ -206,6 +207,45 @@ public interface FileManager {
 //	-------------------------------------------------------------------------------------------
 
 	abstract class FileManagerSettings {
+
+	// default path ---------------------------------------------------------------------------
+
+		private static String
+//			"user.dir"
+//			"user.home"
+
+			defPath = System.getProperty("user.dir");
+
+		private static final StringProperty
+			currentDefaultPathDue = new SimpleStringProperty(defPath);
+
+
+		public static String getCurrentDefaultPath(){
+
+			return currentDefaultPathDue.get();
+		}
+
+		public static void setCurrentDefaultPath(String path){
+
+			currentDefaultPathDue.set(path);
+
+			System.out.println(
+				"FileManager> Settings> setCurrentDefaultPath : path = " + getCurrentDefaultPath()
+			);
+		}
+
+		public static StringProperty getCurrentDefaultPathDueProperty(){
+
+			return currentDefaultPathDue;
+		}
+
+		public static void resetCurrentDefaultPath(){
+
+			setCurrentDefaultPath(defPath);
+		}
+
+	//	autoSave flag  -----------------------------------------------------------------------------
+
 
 		private	static final BooleanProperty
 			autoSaveDue = new SimpleBooleanProperty(false);

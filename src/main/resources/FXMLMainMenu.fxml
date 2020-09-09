@@ -2,7 +2,7 @@
 
 <MenuBar id="MAIN_MENU"
          xmlns="http://javafx.com/javafx/8"
-         fx:controller="gui.MainMenuController"
+         fx:controller="gui.Menus.MainMenuController"
          xmlns:fx="http://javafx.com/fxml/1">
 
     <Menu id="MENU_FILE"

@@ -1,9 +1,8 @@
 package app;
 
 import data.FileCache;
-import data.WaveFile;
 import data.structure.*;
-import gui.MainMenuController;
+import gui.Menus.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;

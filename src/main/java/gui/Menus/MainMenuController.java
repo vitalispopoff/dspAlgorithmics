@@ -1,4 +1,4 @@
-package gui;
+package gui.Menus;
 
 import algorithms.metaProcessors.FileManager;
 import data.FileCache;
@@ -52,13 +52,25 @@ public class MainMenuController {
 		FileChooser
 			browser = new FileChooser();
 
+		String
+			currentDefPath = FileManager.FileManagerSettings.getCurrentDefaultPath();
+
 		browser.setTitle("Open File");
-		browser.setInitialDirectory(new File(System.getProperty("user.home")));
+		browser.setInitialDirectory(new File(currentDefPath));
 
 		File file = browser.showOpenDialog(stage);
 
 		if (file != null) {
-			WaveFile waveFile = new WaveFile(file);
+
+			WaveFile
+				waveFile = new WaveFile(file);
+
+			String
+				path = waveFile.getFileAddress().getPath();
+
+			FileManager.FileManagerSettings.setCurrentDefaultPath(path);
+
+			// FYI : FileManager.FileManagerSettings.setCurrentDefault(new WaveFile(file).getFileAddress().getPath();  // we don't do that here.
 		}
 	}
 
@@ -98,6 +110,7 @@ public class MainMenuController {
 			browser = new FileChooser();
 
 		browser.setTitle("Save As");
+		browser.setInitialDirectory(new File(FileManager.FileManagerSettings.getCurrentDefaultPath()));
 
 		File
 			file = browser.showSaveDialog(stage);

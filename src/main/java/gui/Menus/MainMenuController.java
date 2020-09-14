@@ -3,6 +3,8 @@ package gui.Menus;
 import algorithms.metaProcessors.FileManager;
 import data.FileCache;
 import data.WaveFile;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckMenuItem;
@@ -14,36 +16,42 @@ import static algorithms.metaProcessors.FileManager.saveFile;
 
 public class MainMenuController {
 
-	@FXML
+/*	@FXML
 		public static MainMenuController
 		mainMenuController;
+*/	// disposable
+
+	@FXML
+	private static final BooleanProperty
+		cacheIsEmptyDue = new SimpleBooleanProperty(data.FileCache.fileCache.size() == 0);
 
 	static Stage
 		stage;
 
+
+
+	public boolean getCacheIsEmptyDue(){
+
+		return cacheIsEmptyDue.get();
+	}
+
+	public void setCacheIsEmptyDue(){
+
+		cacheIsEmptyDue.set(FileCache.fileCache.size() == 0);
+	}
+
+	public BooleanProperty cacheIsEmptyDueProperty(){
+
+		return cacheIsEmptyDue;
+
+	}
+
+
+
+
 	public static void setStage(Stage s){
 		stage = s;
 	}
-
-/*
-	Menu
-		menuFile = MENU_FILE.getMenu(OPEN_FILE, CLOSE_FILE, SEPARATOR, SAVE, SEPARATOR, QUIT),
-		menuEdit = MENU_EDIT.getMenu(),
-		menuAnalyze = MENU_ANALYZE.getMenu(),
-		menuView = MENU_VIEW.getMenu(FILE_WAVEFORM, FILE_AMPLITUDE_DISTRIBUTION, SEPARATOR,  FILE_PROPERTIES),
-		menuHelp = MENU_HELP.getMenu(AUTO_SAVE);
-*/		// disposable ?
-
-/*
-	public MainMenuController(Stage stage){
-
-
-//		setHeight(25);
-//		this.getMenus().addAll(menuFile, menuEdit, menuAnalyze, menuView, menuHelp);
-//		setActionsToMenuFile();
-	}
-*/		// ? disposable ?
-
 
 	public void openFile(ActionEvent event){
 
@@ -208,3 +216,22 @@ public class MainMenuController {
 
 	}
 }
+
+/*
+	Menu
+		menuFile = MENU_FILE.getMenu(OPEN_FILE, CLOSE_FILE, SEPARATOR, SAVE, SEPARATOR, QUIT),
+		menuEdit = MENU_EDIT.getMenu(),
+		menuAnalyze = MENU_ANALYZE.getMenu(),
+		menuView = MENU_VIEW.getMenu(FILE_WAVEFORM, FILE_AMPLITUDE_DISTRIBUTION, SEPARATOR,  FILE_PROPERTIES),
+		menuHelp = MENU_HELP.getMenu(AUTO_SAVE);
+*/		// disposable ?
+
+/*
+	public MainMenuController(Stage stage){
+
+
+//		setHeight(25);
+//		this.getMenus().addAll(menuFile, menuEdit, menuAnalyze, menuView, menuHelp);
+//		setActionsToMenuFile();
+	}
+*/		// ? disposable ?

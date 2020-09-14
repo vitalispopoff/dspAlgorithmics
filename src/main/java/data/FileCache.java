@@ -8,6 +8,8 @@ public class FileCache extends ArrayList<WaveFile> {
 	public static FileCache
 		fileCache = new FileCache();
 
+
+
 	private static final IntegerProperty
 		currentIndexDue = new SimpleIntegerProperty(-1);
 
@@ -117,11 +119,6 @@ public class FileCache extends ArrayList<WaveFile> {
 	public static IntegerProperty currentIndexDueProperty(){
 
 		return currentIndexDue;
-	}
-
-	public static boolean fileIsLoaded(){
-
-		return getCurrentIndex() >= 0;
 	}
 
 	private static void updateCurrentIndex(){

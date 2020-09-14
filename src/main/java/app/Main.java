@@ -77,9 +77,14 @@ public class Main extends Application {
 
 		try {
 
-			URL url = new File(location).toURI().toURL();
+			URL
+				url = new File(location).toURI().toURL();
 
-			gT.getChildren().addAll(FXMLLoader.load(url), rT);
+			FXMLLoader
+				loader = new FXMLLoader(url);
+
+			gT.getChildren().addAll(loader.load(), rT);
+
 		}
 		catch (IOException e){ e.printStackTrace();}
 

@@ -6,7 +6,6 @@ import data.WaveFile;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.scene.control.CheckMenuItem;
 import javafx.stage.*;
 
@@ -16,35 +15,36 @@ import static algorithms.metaProcessors.FileManager.saveFile;
 
 public class MainMenuController {
 
-/*	@FXML
-		public static MainMenuController
-		mainMenuController;
-*/	// disposable
-
-	@FXML
-	private static final BooleanProperty
+	private final BooleanProperty
 		cacheIsEmptyDue = new SimpleBooleanProperty(data.FileCache.fileCache.size() == 0);
 
 	static Stage
 		stage;
 
+//	----------------------------------
 
-
-	public boolean getCacheIsEmptyDue(){
+	public final boolean getCacheIsEmptyDue(){
 
 		return cacheIsEmptyDue.get();
 	}
 
-	public void setCacheIsEmptyDue(){
+	public final void setCacheIsEmptyDue(){
 
 		cacheIsEmptyDue.set(FileCache.fileCache.size() == 0);
 	}
 
-	public BooleanProperty cacheIsEmptyDueProperty(){
+	public final void setCacheIsEmptyDue(boolean b){
+
+		setCacheIsEmptyDue();
+	}	// just in case: a dummy overload.
+
+	public final BooleanProperty cacheIsEmptyDueProperty(){
 
 		return cacheIsEmptyDue;
 
 	}
+
+
 
 
 
@@ -78,7 +78,7 @@ public class MainMenuController {
 
 			FileManager.FileManagerSettings.setCurrentDefaultPath(path);
 
-			// FYI : FileManager.FileManagerSettings.setCurrentDefault(new WaveFile(file).getFileAddress().getPath();  // we don't do that here.
+			setCacheIsEmptyDue();
 		}
 	}
 
@@ -110,6 +110,8 @@ public class MainMenuController {
 		}
 
 		FileCache.purgeCache();
+
+		setCacheIsEmptyDue();
 	}
 
 	public void save(ActionEvent event){
@@ -129,13 +131,6 @@ public class MainMenuController {
 	public void quit(ActionEvent event){
 
 		stage.close();
-	}
-
-	public void setAutoSaveStatus(ActionEvent event){
-
-		FileManager.FileManagerSettings.setAutoSave(/*((CheckMenuItem)helpItems.get(0)).isSelected()*/ false);
-
-		System.out.println("autosave enable : " + FileManager.FileManagerSettings.getAutoSave());
 	}
 
 	public void enableAutoSave(ActionEvent event){
@@ -217,21 +212,9 @@ public class MainMenuController {
 	}
 }
 
-/*
-	Menu
-		menuFile = MENU_FILE.getMenu(OPEN_FILE, CLOSE_FILE, SEPARATOR, SAVE, SEPARATOR, QUIT),
-		menuEdit = MENU_EDIT.getMenu(),
-		menuAnalyze = MENU_ANALYZE.getMenu(),
-		menuView = MENU_VIEW.getMenu(FILE_WAVEFORM, FILE_AMPLITUDE_DISTRIBUTION, SEPARATOR,  FILE_PROPERTIES),
-		menuHelp = MENU_HELP.getMenu(AUTO_SAVE);
-*/		// disposable ?
 
 /*
-	public MainMenuController(Stage stage){
-
-
-//		setHeight(25);
-//		this.getMenus().addAll(menuFile, menuEdit, menuAnalyze, menuView, menuHelp);
-//		setActionsToMenuFile();
-	}
-*/		// ? disposable ?
+* binding field to a fxml element property :
+* https://stackoverflow.com/questions/19822717/binding-a-labels-text-property-in-an-fxml-file-to-an-integerproperty-in-a-co
+*
+* */

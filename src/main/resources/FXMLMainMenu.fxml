@@ -15,11 +15,13 @@
         <MenuItem id="CLOSE_FILE"
                   text="Close"
                   onAction="#close"
+                  disable="${controller.cacheIsEmptyDue}"
         />
         <SeparatorMenuItem />
         <MenuItem id="SAVE"
                   text="_Save"
                   onAction="#save"
+                  disable="${controller.cacheIsEmptyDue}"
         />
         <SeparatorMenuItem />
         <MenuItem id="QUIT"

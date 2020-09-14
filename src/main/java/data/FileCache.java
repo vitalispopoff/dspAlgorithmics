@@ -8,7 +8,8 @@ public class FileCache extends ArrayList<WaveFile> {
 	public static FileCache
 		fileCache = new FileCache();
 
-
+	private static final BooleanProperty
+		cacheIsEmptyDue = new SimpleBooleanProperty(data.FileCache.fileCache.size() == 0);
 
 	private static final IntegerProperty
 		currentIndexDue = new SimpleIntegerProperty(-1);
@@ -105,6 +106,29 @@ public class FileCache extends ArrayList<WaveFile> {
 
 
 //	--------------------------------------------------------------------------------------------------------------------
+
+	public static boolean getCacheIsEmptyDue(){
+
+		return cacheIsEmptyDue.get();
+	}
+
+	public static void setCacheIsEmptyDue(){
+
+		cacheIsEmptyDue.set(FileCache.fileCache.size() == 0);
+	}
+
+	public static void setCacheIsEmptyDue(boolean b){
+
+		setCacheIsEmptyDue();
+	}	// just in case: a dummy overload.
+
+	public static BooleanProperty cacheIsEmptyDueProperty(){
+
+		return cacheIsEmptyDue;
+
+	}
+
+
 
 	public static int getCurrentIndex() {
 

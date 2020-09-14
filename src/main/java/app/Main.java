@@ -16,6 +16,7 @@ import javafx.stage.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static javafx.scene.paint.Color.*;
 
@@ -98,6 +99,108 @@ public class Main extends Application {
 
 	//*	listeners	---------------------------------------------------------------------------
 
+		AtomicReference<Double>
+			canvasWidth = new AtomicReference<>((double) 0),
+			canvasHeight = new AtomicReference<>((double) 0),
+			scrollHorizontalMax = new AtomicReference<>((double) 0),
+			scrollVerticalMax = new AtomicReference<>((double) 0);
+
+		AtomicReference<Boolean>
+			cacheIsLoaded = new AtomicReference<>(false);
+
+		AtomicReference<Integer>
+			currentIndex = new AtomicReference<>(0),
+			waveLength = new AtomicReference<>(0);
+
+// 	?	disposable	---------------------------------------------------
+
+		Runnable r = () -> {
+			System.out.println(
+				"\tMain> start> listeners : "
+					+ "\n\tatomic canvasWidth = " + canvasWidth.get()
+					+ "\n\tatomic scroll H max = " + scrollHorizontalMax.get()
+					+ "\n\tatomic waveLength = " + waveLength.get()
+			);
+		};
+		r.run();
+// 	?	disposable	---------------------------------------------------
+
+
+		stage.widthProperty()
+			.addListener((observable, oldValue, newValue) -> {
+
+				double
+					d = (double) newValue - (2 * s) - 16;
+
+				if (canvas.getWidth() != d) canvas.setWidth(d);
+
+				canvasWidth.set((Double) d);
+				scrollHorizontalMax.set(waveLength.get().doubleValue() - canvasWidth.get());
+				horizontalScroll.setMax(scrollHorizontalMax.get());
+				redraw(canvas, horizontalScroll, null);
+			});
+
+		stage.heightProperty()
+			.addListener((observable, oldValue, newValue) -> {
+
+				double
+					d = (double) newValue
+							- (2 * s)	// gap rectangles
+							- 25		// main menu
+							- 32		// window system header bar ?
+//							- 7			// not tracked yet needed, or is it?
+							- 20		// bottom border
+					;
+
+				if (b.getHeight() != d) canvas.setHeight(d);
+
+				canvasHeight.set( d);
+				scrollVerticalMax.set( d);	// TODO to be adjusted with "wave max peak"
+				redraw(canvas, horizontalScroll, null);
+			});
+
+		FileCache.currentIndexDueProperty()
+			.addListener((observable, oldValue, newValue) -> {
+
+				currentIndex.set((int) newValue);
+				waveLength.set(FileCache.loadCurrent().getSignal().getStrip(0).size());
+				scrollHorizontalMax.set(waveLength.get().doubleValue() - canvasWidth.get());
+				horizontalScroll.setMax(scrollHorizontalMax.get());
+
+				if( ! cacheIsLoaded.get()) clean(canvas);
+
+				else redraw(canvas, horizontalScroll, null);
+			});
+
+		MainMenuController.cacheIsEmptyStaticProperty()
+			.addListener((observable, oldValue, newValue) -> {
+
+				cacheIsLoaded.set(!MainMenuController.cacheIsEmpty());
+
+				if(newValue) clean(canvas);
+
+				else redraw(canvas, horizontalScroll, null);
+			});
+
+		horizontalScroll.valueProperty()
+			.addListener((observable, oldValue, newValue) -> {
+
+				redraw(canvas, horizontalScroll, null);
+			});
+
+/*		FileCache.currentIndexDueProperty()
+			.addListener((observable, oldValue, newValue) -> {
+
+				horizontalScroll.setMin(0.);
+				horizontalScroll.setMax(scrollHorizontalMax.get());
+
+				if((int) newValue == -1) clean(canvas);
+
+				redraw(canvas, horizontalScroll, null);
+			});
+*/	// ? FileCache.currentIndexDueProperty - disposable ?
+
+/*
 		stage.widthProperty()
 			.addListener((observable, oldValue, newValue) -> {
 
@@ -110,8 +213,11 @@ public class Main extends Application {
 
 					redraw(canvas, horizontalScroll, null);
 				}
-			});
 
+			});
+*/	// ? stage.widthProperty listener - disposable ?
+
+/*
 		stage.heightProperty()
 			.addListener((observable, oldValue, newValue) -> {
 
@@ -131,58 +237,12 @@ public class Main extends Application {
 					redraw(canvas, horizontalScroll, null);
 				}
 			});
-
-
-
-		horizontalScroll.valueProperty()
-			.addListener((observable, oldValue, newValue) -> redraw(canvas, horizontalScroll, null));
-
-
-		MainMenuController.cacheIsEmptyStaticProperty()
-			.addListener((observable, oldValue, newValue) -> {
-
-				if(newValue) clean(canvas);
-			});
-
-
-		FileCache.currentIndexDueProperty()
-			.addListener((observable, oldValue, newValue) -> {
-
-				int
-					waveLength = FileCache.loadCurrent().getSignal().getStrip(0).size();
-
-				horizontalScroll.setMin(0.);
-				horizontalScroll.setMax(
-					scene.getWidth() > waveLength
-						? 0.
-						: (waveLength - scene.getWidth())
-				);
-
-				if((int) newValue == -1) clean(canvas);
-
-				redraw(canvas, horizontalScroll, null);
-			});
+*/	// ? stage.heightProperty listener - disposable ?
 
 	//  ---------------------------------------------------------------------------------------
 
 		stage.setScene(scene);
 		stage.show();
-
-		//?	temporal  //---------------------------------------------------------------------------
-
-/*
-		{
-			String[] a = {
-				"src\\main\\resources\\shortie-mono-16bit.wav",
-				"src\\main\\resources\\sample-mono.wav"
-			};
-
-			int x = 0;
-
-//			WaveFile file = new WaveFile(new File(a[x]));
-		}
-*/	// ? temporarily disabled - disposable in long term
-
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------

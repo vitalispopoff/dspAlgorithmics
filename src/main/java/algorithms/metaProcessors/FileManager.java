@@ -212,9 +212,12 @@ public interface FileManager {
 
 			currentDefaultPathDue.set(path);
 
+/*
 			System.out.println(
 				"FileManager> Settings> setCurrentDefaultPath : path = " + getCurrentDefaultPath()
 			);
+*/	// ? disposable ?
+
 		}
 
 		public static StringProperty getCurrentDefaultPathDueProperty(){

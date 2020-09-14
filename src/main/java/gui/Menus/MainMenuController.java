@@ -1,12 +1,10 @@
 package gui.Menus;
 
 import algorithms.metaProcessors.FileManager;
-import data.FileCache;
-import data.WaveFile;
+import data.*;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.scene.control.CheckMenuItem;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.*;
 
@@ -18,11 +16,6 @@ public class MainMenuController {
 
 	private static final BooleanProperty
 		cacheIsEmptyDue = new SimpleBooleanProperty(data.FileCache.fileCache.size() == 0);
-
-//	public ObjectProperty<KeyCombination>
-//		open_fileKey = new SimpleObjectProperty<>(KeyCombination.keyCombination("Ctrl+O"));
-
-//	public KeyCombination open_fileKey = KeyCombination.keyCombination("Ctrl+O");
 
 	static Stage
 		stage;
@@ -59,6 +52,12 @@ public class MainMenuController {
 			FileManager.FileManagerSettings.setCurrentDefaultPath(path);
 
 			setCacheIsEmptyDue();
+
+/*disposable*/	System.out.println(
+					"MainMenuController>openFile "
+					+ FileCache.loadCurrent().getHeader().toString()
+			);
+
 		}
 	}
 
@@ -178,6 +177,10 @@ public class MainMenuController {
 
 //	-------------------------------------------------------------------------------------------
 
+	public static boolean cacheIsEmpty(){
+
+		return cacheIsEmptyDue.get();
+	}
 	public final boolean getCacheIsEmptyDue(){
 
 		return cacheIsEmptyDue.get();

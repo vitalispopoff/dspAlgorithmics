@@ -21,33 +21,7 @@ public class MainMenuController {
 	static Stage
 		stage;
 
-//	----------------------------------
-
-	public final boolean getCacheIsEmptyDue(){
-
-		return cacheIsEmptyDue.get();
-	}
-
-	public final void setCacheIsEmptyDue(){
-
-		cacheIsEmptyDue.set(FileCache.fileCache.size() == 0);
-	}
-
-	public final void setCacheIsEmptyDue(boolean b){
-
-		setCacheIsEmptyDue();
-	}	// just in case: a dummy overload.
-
-	public final BooleanProperty cacheIsEmptyDueProperty(){
-
-		return cacheIsEmptyDue;
-
-	}
-
-
-
-
-
+//	-------------------------------------------------------------------------------------------
 
 	public static void setStage(Stage s){
 		stage = s;
@@ -82,6 +56,7 @@ public class MainMenuController {
 		}
 	}
 
+/*
 	public void autoSave(ActionEvent event){
 
 		if (FileManager.FileManagerSettings.getAutoSave()) {
@@ -96,17 +71,16 @@ public class MainMenuController {
 
 		FileCache.purgeCache();
 	}
+*/	// ? disposable
 
 	public void close(ActionEvent event){
 
 		if (FileManager.FileManagerSettings.getAutoSave()) {
 
 			WaveFile
-				file = FileCache.loadCurrent();
+				waveFile = FileCache.loadCurrent();
 
-			file.getFileAddress().setNameToDefault();
-
-			FileManager.saveFile(file);
+			FileManager.autoSaveFile();
 		}
 
 		FileCache.purgeCache();
@@ -129,6 +103,8 @@ public class MainMenuController {
 	}
 
 	public void quit(ActionEvent event){
+
+		close(event); // ? is it ok ?
 
 		stage.close();
 	}
@@ -210,11 +186,27 @@ public class MainMenuController {
 */	// ? autosave setting disposable ?
 
 	}
+
+	//	-------------------------------------------------------------------------------------------
+
+	public final boolean getCacheIsEmptyDue(){
+
+		return cacheIsEmptyDue.get();
+	}
+
+	public final void setCacheIsEmptyDue(){
+
+		cacheIsEmptyDue.set(FileCache.fileCache.size() == 0);
+	}
+
+	public final void setCacheIsEmptyDue(boolean b){
+
+		setCacheIsEmptyDue();
+	}	// just in case: a dummy overload.
+
+	public final BooleanProperty cacheIsEmptyDueProperty(){
+
+		return cacheIsEmptyDue;
+
+	}
 }
-
-
-/*
-* binding field to a fxml element property :
-* https://stackoverflow.com/questions/19822717/binding-a-labels-text-property-in-an-fxml-file-to-an-integerproperty-in-a-co
-*
-* */

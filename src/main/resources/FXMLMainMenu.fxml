@@ -19,7 +19,7 @@
         />
         <SeparatorMenuItem />
         <MenuItem id="SAVE"
-                  text="_Save"
+                  text="_Save As"
                   onAction="#save"
                   disable="${controller.cacheIsEmptyDue}"
         />

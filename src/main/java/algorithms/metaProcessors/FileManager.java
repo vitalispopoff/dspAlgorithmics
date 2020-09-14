@@ -1,6 +1,5 @@
 package algorithms.metaProcessors;
 
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
 import data.FileCache;
 import data.WaveFile;
 import data.structure.FileAddress;
@@ -34,39 +33,23 @@ public interface FileManager {
 		}
 	}
 
-	static void saveFile(WaveFile waveFile){
+	static void autoSaveFile(){
 
-	FileAddress
-		address = new FileAddress(waveFile.getFileAddress().getPath(), "", "wav");
+		WaveFile
+			waveFile = FileCache.loadCurrent();
 
-	address.setNameToDefault();
+		FileAddress
+			address = new FileAddress(waveFile.getFileAddress().getPath(), "", "wav");
 
+		address.setNameToDefault();
 
-	byte[]
-		source = waveFile.getSource();
+		Path
+			path = get(address.toString());
 
-	Path
-		path = get(address.toString());
+		File
+			file = new File(address.toString());
 
-		try {
-
-			createFile(path);
-
-			write(path, source);
-
-			System.out.println(
-				"\n\tFile saved to "
-				+ address
-				+'\n'
-			);
-		}
-
-		catch (IOException e) {
-
-			e.printStackTrace();
-
-			System.out.println("\n\tI'm sorry. Something went wrong.");
-		}
+		saveFile(file);
 	}
 
 

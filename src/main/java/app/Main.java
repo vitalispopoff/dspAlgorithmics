@@ -84,7 +84,6 @@ public class Main extends Application {
 				loader = new FXMLLoader(url);
 
 			gT.getChildren().addAll(loader.load(), rT);
-
 		}
 		catch (IOException e){ e.printStackTrace();}
 
@@ -98,27 +97,6 @@ public class Main extends Application {
 		b.setCenter(canvas);
 
 	//*	listeners	---------------------------------------------------------------------------
-
-		horizontalScroll.valueProperty()
-			.addListener((observable, oldValue, newValue) -> redraw(canvas, horizontalScroll, null));
-
-		FileCache.currentIndexDueProperty()
-			.addListener((observable, oldValue, newValue) -> {
-
-				int
-				waveLength = FileCache.loadCurrent().getSignal().getStrip(0).size();
-
-				horizontalScroll.setMin(0.);
-				horizontalScroll.setMax(
-					scene.getWidth() > waveLength
-					? 0.
-					: (waveLength - scene.getWidth())
-				);
-
-				if((int) newValue == -1) clean(canvas);
-
-				redraw(canvas, horizontalScroll, null);
-			});
 
 		stage.widthProperty()
 			.addListener((observable, oldValue, newValue) -> {
@@ -152,6 +130,37 @@ public class Main extends Application {
 
 					redraw(canvas, horizontalScroll, null);
 				}
+			});
+
+
+
+		horizontalScroll.valueProperty()
+			.addListener((observable, oldValue, newValue) -> redraw(canvas, horizontalScroll, null));
+
+
+		MainMenuController.cacheIsEmptyStaticProperty()
+			.addListener((observable, oldValue, newValue) -> {
+
+				if(newValue) clean(canvas);
+			});
+
+
+		FileCache.currentIndexDueProperty()
+			.addListener((observable, oldValue, newValue) -> {
+
+				int
+					waveLength = FileCache.loadCurrent().getSignal().getStrip(0).size();
+
+				horizontalScroll.setMin(0.);
+				horizontalScroll.setMax(
+					scene.getWidth() > waveLength
+						? 0.
+						: (waveLength - scene.getWidth())
+				);
+
+				if((int) newValue == -1) clean(canvas);
+
+				redraw(canvas, horizontalScroll, null);
 			});
 
 	//  ---------------------------------------------------------------------------------------

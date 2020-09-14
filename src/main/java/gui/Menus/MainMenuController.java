@@ -15,7 +15,7 @@ import static algorithms.metaProcessors.FileManager.saveFile;
 
 public class MainMenuController {
 
-	private final BooleanProperty
+	private static final BooleanProperty
 		cacheIsEmptyDue = new SimpleBooleanProperty(data.FileCache.fileCache.size() == 0);
 
 	static Stage
@@ -208,5 +208,10 @@ public class MainMenuController {
 
 		return cacheIsEmptyDue;
 
+	}
+
+	public static BooleanProperty cacheIsEmptyStaticProperty(){
+
+		return cacheIsEmptyDue;
 	}
 }

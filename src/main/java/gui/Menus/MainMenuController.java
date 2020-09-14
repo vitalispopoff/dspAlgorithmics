@@ -3,10 +3,11 @@ package gui.Menus;
 import algorithms.metaProcessors.FileManager;
 import data.FileCache;
 import data.WaveFile;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.*;
 
 import java.io.File;
@@ -17,6 +18,11 @@ public class MainMenuController {
 
 	private static final BooleanProperty
 		cacheIsEmptyDue = new SimpleBooleanProperty(data.FileCache.fileCache.size() == 0);
+
+//	public ObjectProperty<KeyCombination>
+//		open_fileKey = new SimpleObjectProperty<>(KeyCombination.keyCombination("Ctrl+O"));
+
+//	public KeyCombination open_fileKey = KeyCombination.keyCombination("Ctrl+O");
 
 	static Stage
 		stage;
@@ -55,23 +61,6 @@ public class MainMenuController {
 			setCacheIsEmptyDue();
 		}
 	}
-
-/*
-	public void autoSave(ActionEvent event){
-
-		if (FileManager.FileManagerSettings.getAutoSave()) {
-
-			WaveFile
-				file = FileCache.loadCurrent();
-
-			file.getFileAddress().setNameToDefault();
-
-			FileManager.saveFile(file);
-		}
-
-		FileCache.purgeCache();
-	}
-*/	// ? disposable
 
 	public void close(ActionEvent event){
 
@@ -187,7 +176,7 @@ public class MainMenuController {
 
 	}
 
-	//	-------------------------------------------------------------------------------------------
+//	-------------------------------------------------------------------------------------------
 
 	public final boolean getCacheIsEmptyDue(){
 
@@ -213,5 +202,32 @@ public class MainMenuController {
 	public static BooleanProperty cacheIsEmptyStaticProperty(){
 
 		return cacheIsEmptyDue;
+	}
+
+//	--------------------
+
+	public final KeyCombination getFileKey(){
+
+		return KeyCombination.keyCombination("Alt+F");
+	}
+
+	public final KeyCombination getOpen_fileKey(){
+
+		return KeyCombination.keyCombination("Ctrl+O");
+	}
+
+	public final KeyCombination getClose_fileKey(){
+
+		return KeyCombination.keyCombination("Ctrl+W");
+	}
+
+	public final KeyCombination getSave_fileKey(){
+
+		return KeyCombination.keyCombination("Ctrl+Shift+S");
+	}
+
+	public final KeyCombination getQuitKey(){
+
+		return KeyCombination.keyCombination("Ctrl+Q");
 	}
 }

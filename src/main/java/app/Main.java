@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.scene.*;
 import javafx.scene.canvas.*;
+import javafx.scene.control.Control;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
@@ -33,14 +34,35 @@ public class Main extends Application {
 		stage.setMinWidth(320);
 		stage.setMinHeight(240);
 
+		// * old
 		BorderPane
 			b = new BorderPane();
+
+		// * new
+		GridPane
+			p = new GridPane();
+		p.setGridLinesVisible(true);
+
+		ColumnConstraints
+			cC = new ColumnConstraints( 320);
+
+		RowConstraints
+			rC = new RowConstraints(240);
+
+		p.getColumnConstraints().add(new ColumnConstraints(20));
+		p.getColumnConstraints().add(cC);
+		p.getColumnConstraints().add(new ColumnConstraints(20));
+
+		p.getRowConstraints().add(new RowConstraints(25));
+		p.getRowConstraints().add(rC);
+		p.getRowConstraints().add(new RowConstraints(20));
 
 		Canvas
 			canvas = new Canvas();
 
 		Scene
-			scene = new Scene(b, 320, 240);
+			/*scene = new Scene(b, 320, 240);	*/	// * old
+			scene = new Scene(p, 320, 240);	// * new
 
 		double
 			s = 5;
@@ -52,29 +74,20 @@ public class Main extends Application {
 			verticalScroll = new ScrollBar();
 
 		horizontalScroll.setOrientation(Orientation.HORIZONTAL);
+		verticalScroll.setOrientation(Orientation.VERTICAL);
 
-		Rectangle
-			rT = new Rectangle(0, 0, s, s),
-			rL = new Rectangle(0, 0, s, s),
-			rR = new Rectangle(0, 0, s, s),
-			rB = new Rectangle(0, 0, s, s);
+		StackPane
+			horizontalScrolls = new StackPane(horizontalScroll);
 
-		rT.setOpacity(1);
-		rL.setOpacity(0);
-		rR.setOpacity(0);
-		rB.setOpacity(1);
-/*
-        rT.setFill(BLACK);
-        rL.setFill(BLACK);
-        rR.setFill(BLACK);
-        rB.setFill(BLACK);
-*/	// disposable
+//		Rectangle
+//			rect = new Rectangle(0, 0, s, s);
+//		rect.setOpacity(1);
+//		rect.setFill(BLACK);
 
-		VBox
-			gT = new VBox(),
-			gL = new VBox(rL),
-			gR = new VBox(rR),
-			gB = new VBox(rB, horizontalScroll);
+		p.add(horizontalScrolls, 2, 1);
+		p.add(verticalScroll, 1, 2);
+
+
 
 		String
 			location = "E:\\_LAB\\pl\\popoff\\dspAlgorithmics\\src\\main\\resources\\FXMLMainMenu.fxml";
@@ -87,18 +100,48 @@ public class Main extends Application {
 			FXMLLoader
 				loader = new FXMLLoader(url);
 
-			gT.getChildren().addAll(loader.load(), rT);
+			/*gT.getChildren().addAll(loader.load(), rT);*/	// * old
+			p.add(loader.load(), 0, 0, 3, 1);	// * new
 		}
 		catch (IOException e){ e.printStackTrace();}
 
-		gB.setPrefHeight(20);
 
-		b.setTop(gT);
-		b.setLeft(gL);
-		b.setRight(gR);
-		b.setBottom(gB);
+		{
 
-		b.setCenter(canvas);
+			Rectangle
+				rT = new Rectangle(0, 0, s, s),
+				rL = new Rectangle(0, 0, s, s),
+				rR = new Rectangle(0, 0, s, s),
+				rB = new Rectangle(0, 0, s, s);
+
+			rT.setOpacity(0);
+			rL.setOpacity(0);
+			rR.setOpacity(0);
+			rB.setOpacity(0);
+/*
+        rT.setFill(BLACK);
+        rL.setFill(BLACK);
+        rR.setFill(BLACK);
+        rB.setFill(BLACK);
+*/	// disposable
+
+			VBox
+				gT = new VBox(),
+				gL = new VBox(rL),
+				gR = new VBox(rR, verticalScroll),
+				gB = new VBox(rB, horizontalScroll);
+			gB.setPrefHeight(20);
+
+			b.setTop(gT);
+			b.setLeft(gL);
+			b.setRight(gR);
+			b.setBottom(gB);
+
+			b.setCenter(canvas);
+		}	// * old
+
+		p.add(canvas, 0, 1);	// * new
+
 
 	//*	listeners	---------------------------------------------------------------------------
 
@@ -121,14 +164,22 @@ public class Main extends Application {
 			.addListener((observable, oldValue, newValue) -> {
 
 				double
-					d = (double) newValue - (2 * s) - 16;
+					d = (double) newValue
+							/*- (2 * s)*/ 	// * old - gap rectangles
+							- 16		// ?
+							- 2 * 20	// 0th and 2nd column
+					;
 
 				if (canvas.getWidth() != d) canvas.setWidth(d);
 
 				canvasWidth.set(d);
 				scrollHorizontalMax.set(waveLength.get().doubleValue() - canvasWidth.get());
 				horizontalScroll.setMax(scrollHorizontalMax.get());
+				horizontalScroll.setMinWidth(canvasWidth.get() + 16);
+				horizontalScroll.setMaxWidth(canvasWidth.get() + 16);
 				redraw(canvas, horizontalScroll/*, null*/);
+
+				cC.setPrefWidth(d);
 			});
 
 		stage.heightProperty()
@@ -136,18 +187,22 @@ public class Main extends Application {
 
 				double
 					d = (double) newValue
-							- (2 * s)	// gap rectangles
+							/*- (2 * s)*/	// * old -  gap rectangles
 							- 25		// main menu
 							- 32		// window system header bar ?
-//							- 7			// not tracked yet needed, or is it?
-							- 20		// bottom border
+							- 7			// ?
+							- 20		// horizontal Scroll row
 					;
 
 				if (b.getHeight() != d) canvas.setHeight(d);
 
 				canvasHeight.set( d);
 				scrollVerticalMax.set( d);	// TODO to be adjusted with "wave max peak"
+				verticalScroll.setMinHeight(canvasHeight.get() - 12);
+				verticalScroll.setMaxHeight(canvasHeight.get() - 12);
 				redraw(canvas, horizontalScroll/*, null*/);
+
+				rC.setPrefHeight(d);
 			});
 
 		FileCache.currentIndexDueProperty()

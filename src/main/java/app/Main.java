@@ -12,11 +12,9 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -214,7 +212,6 @@ public class Main extends Application {
 			int
 				numberOfLines = (32 - Integer.numberOfLeadingZeros((int) accountForMinResolution));
 
-//			context.setStroke(DODGERBLUE);
 			context.setFont(new Font("Arial", 10));
 
 			for (int i = 1; i <= numberOfLines; i++) {
@@ -225,27 +222,37 @@ public class Main extends Application {
 					y1 = (height / 2) - scaledHeight / (1 << i),
 					y2 = (height / 2) + scaledHeight / (1 << i);
 
+				int
+					txt = (-(i - 1) * 6);
+
 				if (y1 >= 0) {
-
-
-					context.strokeLine(0, y1, width, y1);
 
 					if (i > 1 && i < numberOfLines) {
 
 						context.setStroke(BLUE);
-						context.strokeText(-(i - 1) * 6 + " dB", 1, y1  + 4);
+						context.strokeText(Integer.toString(txt), 1, y1  + 4);
+
+						context.setStroke(DODGERBLUE);
+						context.strokeLine(17, y1, width, y1);
 					}
+
+					else context.strokeLine(20, y1, width, y1);
 				}
 
 				if (y2 <= height && y1 != y2) {
 
-					context.setStroke(DODGERBLUE);
-					context.strokeLine(0, y2, width, y2);
-
 					if (i > 1 && i < numberOfLines) {
 
 						context.setStroke(BLUE);
-						context.strokeText(-(i - 1) * 6 + " dB", 1, y2 + 4);
+						context.strokeText(Integer.toString(txt), 1, y2 + 4);
+
+						context.setStroke(DODGERBLUE);
+						context.strokeLine(17, y2, width, y2);
+					}
+
+					else {
+						context.setStroke(DODGERBLUE);
+						context.strokeLine(20, y2, width, y2);
 					}
 				}
 			}
@@ -262,7 +269,7 @@ public class Main extends Application {
 
 			context.setStroke(DODGERBLUE);
 
-			context.strokeLine(0, 0, 0, height);
+			context.strokeLine(20, 0, 20, height);
 			context.strokeLine(width, 0, width, height);
 
 
@@ -272,7 +279,7 @@ public class Main extends Application {
 
 			int movement = (int) horizontal.getValue();
 
-			for (int i = 1; i < Math.min(width, strip.size() - width) - 2; i++) {
+			for (int i = 1; i < Math.min(width, strip.size() - width) - 2 - 20; i++) {
 
 				double
 					prevSample = (double) strip.get(i + movement - 1),
@@ -286,7 +293,7 @@ public class Main extends Application {
 					sampleAmplitude = sample / (double) (1 << bitsPerSample),
 					dcOffset = verticalCenter * (1 - sampleAmplitude);
 
-				context.strokeLine(i, prevDcOffset, i + 1, dcOffset);
+				context.strokeLine(i + 20, prevDcOffset, i + 20 + 1, dcOffset);
 			}
 			if (!canvasArePainted) canvasArePainted = true;
 		}
@@ -298,15 +305,6 @@ public class Main extends Application {
 
 		GraphicsContext
 			context = canvas.getGraphicsContext2D();
-
-/*
-		if(canvasArePainted = true) {
-
-			context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-			canvasArePainted = false;
-		}
-*/	// ? disposable
 
 		if (FileCache.fileCache.size() > 0) drawEverything(canvas, horizontal/*, vertical*/);
 	}

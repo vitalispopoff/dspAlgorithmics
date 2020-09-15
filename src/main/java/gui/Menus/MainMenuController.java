@@ -52,12 +52,6 @@ public class MainMenuController {
 			FileManager.FileManagerSettings.setCurrentDefaultPath(path);
 
 			setCacheIsEmptyDue();
-
-/*disposable*/	System.out.println(
-					"MainMenuController>openFile "
-					+ FileCache.loadCurrent().getHeader().toString()
-			);
-
 		}
 	}
 
@@ -80,12 +74,15 @@ public class MainMenuController {
 
 		FileChooser
 			browser = new FileChooser();
+		browser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3"));
 
 		browser.setTitle("Save As");
 		browser.setInitialDirectory(new File(FileManager.FileManagerSettings.getCurrentDefaultPath()));
 
 		File
 			file = browser.showSaveDialog(stage);
+
+		System.out.println(file.toString());
 
 		if (file != null) saveFile(file);
 	}

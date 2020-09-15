@@ -62,10 +62,12 @@ public class Main extends Application {
 		rL.setOpacity(0);
 		rR.setOpacity(0);
 		rB.setOpacity(1);
-//        rT.setFill(BLACK);
-//        rL.setFill(BLACK);
-//        rR.setFill(BLACK);
-//        rB.setFill(BLACK);
+/*
+        rT.setFill(BLACK);
+        rL.setFill(BLACK);
+        rR.setFill(BLACK);
+        rB.setFill(BLACK);
+*/	// disposable
 
 		VBox
 			gT = new VBox(),
@@ -112,18 +114,6 @@ public class Main extends Application {
 			currentIndex = new AtomicReference<>(0),
 			waveLength = new AtomicReference<>(0);
 
-// 	?	disposable	---------------------------------------------------
-
-		Runnable r = () -> {
-			System.out.println(
-				"\tMain> start> listeners : "
-					+ "\n\tatomic canvasWidth = " + canvasWidth.get()
-					+ "\n\tatomic scroll H max = " + scrollHorizontalMax.get()
-					+ "\n\tatomic waveLength = " + waveLength.get()
-			);
-		};
-		r.run();
-// 	?	disposable	---------------------------------------------------
 
 
 		stage.widthProperty()
@@ -134,10 +124,10 @@ public class Main extends Application {
 
 				if (canvas.getWidth() != d) canvas.setWidth(d);
 
-				canvasWidth.set((Double) d);
+				canvasWidth.set(d);
 				scrollHorizontalMax.set(waveLength.get().doubleValue() - canvasWidth.get());
 				horizontalScroll.setMax(scrollHorizontalMax.get());
-				redraw(canvas, horizontalScroll, null);
+				redraw(canvas, horizontalScroll/*, null*/);
 			});
 
 		stage.heightProperty()
@@ -156,7 +146,7 @@ public class Main extends Application {
 
 				canvasHeight.set( d);
 				scrollVerticalMax.set( d);	// TODO to be adjusted with "wave max peak"
-				redraw(canvas, horizontalScroll, null);
+				redraw(canvas, horizontalScroll/*, null*/);
 			});
 
 		FileCache.currentIndexDueProperty()
@@ -169,7 +159,7 @@ public class Main extends Application {
 
 				if( ! cacheIsLoaded.get()) clean(canvas);
 
-				else redraw(canvas, horizontalScroll, null);
+				else redraw(canvas, horizontalScroll/*, null*/);
 			});
 
 		MainMenuController.cacheIsEmptyStaticProperty()
@@ -179,65 +169,11 @@ public class Main extends Application {
 
 				if(newValue) clean(canvas);
 
-				else redraw(canvas, horizontalScroll, null);
+				else redraw(canvas, horizontalScroll/*, null*/);
 			});
 
 		horizontalScroll.valueProperty()
-			.addListener((observable, oldValue, newValue) -> {
-
-				redraw(canvas, horizontalScroll, null);
-			});
-
-/*		FileCache.currentIndexDueProperty()
-			.addListener((observable, oldValue, newValue) -> {
-
-				horizontalScroll.setMin(0.);
-				horizontalScroll.setMax(scrollHorizontalMax.get());
-
-				if((int) newValue == -1) clean(canvas);
-
-				redraw(canvas, horizontalScroll, null);
-			});
-*/	// ? FileCache.currentIndexDueProperty - disposable ?
-
-/*
-		stage.widthProperty()
-			.addListener((observable, oldValue, newValue) -> {
-
-				double
-					d = (double) newValue - (2 * s) - 16;
-
-				if (canvas.getWidth() != d) {
-
-					canvas.setWidth(d);
-
-					redraw(canvas, horizontalScroll, null);
-				}
-
-			});
-*/	// ? stage.widthProperty listener - disposable ?
-
-/*
-		stage.heightProperty()
-			.addListener((observable, oldValue, newValue) -> {
-
-				double
-					d = (double) newValue
-							- (2 * s)	// gap rectangles
-							- 25		// main menu
-							- 32		// window system header bar ?
-//							- 7			// not tracked yet needed, or is it?
-							- 20		// bottom border
-					;
-
-				if (b.getHeight() != d) {
-
-					canvas.setHeight(d);
-
-					redraw(canvas, horizontalScroll, null);
-				}
-			});
-*/	// ? stage.heightProperty listener - disposable ?
+			.addListener((observable, oldValue, newValue) -> redraw(canvas, horizontalScroll/*, null*/));
 
 	//  ---------------------------------------------------------------------------------------
 
@@ -247,7 +183,7 @@ public class Main extends Application {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	void drawEverything(Canvas canvas, ScrollBar horizontal, ScrollBar vertical) {
+	void drawEverything(Canvas canvas, ScrollBar horizontal/*, ScrollBar vertical*/) {
 
 		if (!canvasArePainted) {
 
@@ -331,7 +267,7 @@ public class Main extends Application {
 		}
 	}
 
-	void redraw(Canvas canvas, ScrollBar horizontal, ScrollBar vertical) {
+	void redraw(Canvas canvas, ScrollBar horizontal/*, ScrollBar vertical*/) {
 
 		clean(canvas);
 
@@ -347,7 +283,7 @@ public class Main extends Application {
 		}
 */	// * disposable
 
-		if (FileCache.fileCache.size() > 0) drawEverything(canvas, horizontal, vertical);
+		if (FileCache.fileCache.size() > 0) drawEverything(canvas, horizontal/*, vertical*/);
 	}
 
 	void clean(Canvas canvas) {
@@ -362,6 +298,8 @@ public class Main extends Application {
 			canvasArePainted = false;
 		}
 	}
+
+//	--------------------------------------------------------------------------------------------------------------------
 
 	public static void main(String[] args) {
 

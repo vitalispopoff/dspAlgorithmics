@@ -5,7 +5,9 @@ import data.structure.*;
 import gui.Menus.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
+import javafx.geometry.VPos;
 import javafx.scene.*;
 import javafx.scene.canvas.*;
 import javafx.scene.control.Control;
@@ -31,12 +33,10 @@ public class Main extends Application {
 
 		MainMenuController.setStage(stage);
 
-		stage.setMinWidth(320);
-		stage.setMinHeight(240);
+		stage.setMinWidth(640);
+		stage.setMinHeight(480);
 
-		// * old
-		BorderPane
-			b = new BorderPane();
+		/*BorderPane b = new BorderPane();*/	// * old
 
 		// * new
 		GridPane
@@ -44,16 +44,16 @@ public class Main extends Application {
 		p.setGridLinesVisible(true);
 
 		ColumnConstraints
-			cC = new ColumnConstraints( 320);
+			cC = new ColumnConstraints();
 
 		RowConstraints
-			rC = new RowConstraints(240);
+			rC = new RowConstraints();
 
 		p.getColumnConstraints().add(new ColumnConstraints(20));
 		p.getColumnConstraints().add(cC);
 		p.getColumnConstraints().add(new ColumnConstraints(20));
 
-		p.getRowConstraints().add(new RowConstraints(25));
+		p.getRowConstraints().add(new RowConstraints(20));
 		p.getRowConstraints().add(rC);
 		p.getRowConstraints().add(new RowConstraints(20));
 
@@ -76,18 +76,23 @@ public class Main extends Application {
 		horizontalScroll.setOrientation(Orientation.HORIZONTAL);
 		verticalScroll.setOrientation(Orientation.VERTICAL);
 
-		StackPane
-			horizontalScrolls = new StackPane(horizontalScroll);
+//		StackPane horizontalScrolls = new StackPane(horizontalScroll);
 
-//		Rectangle
-//			rect = new Rectangle(0, 0, s, s);
-//		rect.setOpacity(1);
-//		rect.setFill(BLACK);
+		p.add(verticalScroll, 2, 1);
+		p.add(horizontalScroll, 1, 2);
 
-		p.add(horizontalScrolls, 2, 1);
-		p.add(verticalScroll, 1, 2);
+		GridPane.setValignment(horizontalScroll, VPos.CENTER);
+		GridPane.setHalignment(horizontalScroll, HPos.CENTER);
+		GridPane.setValignment(verticalScroll, VPos.CENTER);
+		GridPane.setHalignment(verticalScroll, HPos.CENTER);
 
-
+/*		{
+			Rectangle
+				rect = new Rectangle(0, 0, s, s);
+			rect.setOpacity(1);
+			rect.setFill(BLACK);
+		p.add(rect, 2, 2);
+		}*/	// * disposable
 
 		String
 			location = "E:\\_LAB\\pl\\popoff\\dspAlgorithmics\\src\\main\\resources\\FXMLMainMenu.fxml";
@@ -106,8 +111,8 @@ public class Main extends Application {
 		catch (IOException e){ e.printStackTrace();}
 
 
+/*
 		{
-
 			Rectangle
 				rT = new Rectangle(0, 0, s, s),
 				rL = new Rectangle(0, 0, s, s),
@@ -118,12 +123,11 @@ public class Main extends Application {
 			rL.setOpacity(0);
 			rR.setOpacity(0);
 			rB.setOpacity(0);
-/*
+
         rT.setFill(BLACK);
         rL.setFill(BLACK);
         rR.setFill(BLACK);
         rB.setFill(BLACK);
-*/	// disposable
 
 			VBox
 				gT = new VBox(),
@@ -138,7 +142,8 @@ public class Main extends Application {
 			b.setBottom(gB);
 
 			b.setCenter(canvas);
-		}	// * old
+		}
+*/	// * old - disposable ?
 
 		p.add(canvas, 0, 1);	// * new
 
@@ -180,6 +185,8 @@ public class Main extends Application {
 				redraw(canvas, horizontalScroll/*, null*/);
 
 				cC.setPrefWidth(d);
+				horizontalScroll.setMaxWidth(d - 2);
+				horizontalScroll.setMinWidth(d - 2);
 			});
 
 		stage.heightProperty()
@@ -190,11 +197,14 @@ public class Main extends Application {
 							/*- (2 * s)*/	// * old -  gap rectangles
 							- 25		// main menu
 							- 32		// window system header bar ?
-							- 7			// ?
+//							- 7			// ?
+//							- 2			// ?
 							- 20		// horizontal Scroll row
+
 					;
 
-				if (b.getHeight() != d) canvas.setHeight(d);
+//				if (b.getHeight() != d) canvas.setHeight(d);
+				if (rC.getPrefHeight() != d) canvas.setHeight(d);
 
 				canvasHeight.set( d);
 				scrollVerticalMax.set( d);	// TODO to be adjusted with "wave max peak"
@@ -203,6 +213,8 @@ public class Main extends Application {
 				redraw(canvas, horizontalScroll/*, null*/);
 
 				rC.setPrefHeight(d);
+				verticalScroll.setMaxHeight(d );
+				verticalScroll.setMinHeight(d );
 			});
 
 		FileCache.currentIndexDueProperty()

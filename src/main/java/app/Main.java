@@ -33,53 +33,57 @@ public class Main extends Application {
 
 		MainMenuController.setStage(stage);
 
-		double
-			stageW = 640,
-			stageH = 480;
+		AtomicReference<Double>
+			stageW = new AtomicReference<>(640.),
+			stageH = new AtomicReference<>(480.),
 
-		stage.setMinWidth(stageW);
-		stage.setMinHeight(stageH);
+			col0W = new AtomicReference<>(5.),
+			col2W = new AtomicReference<>(25.),
+			col1W = new AtomicReference<>(stageW.get() - col0W.get() - col2W.get()),
 
-		/*BorderPane b = new BorderPane();*/	// * old
+			row0H = new AtomicReference<>(30.),
+			row2H = new AtomicReference<>(25.),
+			row1H = new AtomicReference<>(stageH.get() - row0H.get() - row2H.get());
+
+		stage.setMinWidth(stageW.get());
+		stage.setMinHeight(stageH.get());
 
 	//	* GridPane ----------------------------------------------------------------------------
 
-		// * new
 		GridPane
 			p = new GridPane();
 
 		p.setGridLinesVisible(true);
 
+/*		double
+			col0W = 5.,
+			col2W = 25.,
+			col1W = stageW.get() - col0W - col2W,
 
-		double
-			col0W = 5,
-			col2W = 25,
-			col1W = stageW - col0W - col2W,
-
-			row0H = 30,
-			row2H = 25,
-			row1H = stageH - row0H - row2H,
+			row0H = 30.,
+			row2H = 25.,
+			row1H = stageH.get() - row0H - row2H,
 
 			mainMenuHeight = 30.,
-			gridSize = 25.;
+			gridSize = 25.;*/
 
 		ColumnConstraints
-			col0 = new ColumnConstraints(5, 5, 5),
-			col1 = new ColumnConstraints(gridSize, gridSize, gridSize),
-			col2 = new ColumnConstraints(gridSize, gridSize, gridSize);
+			col0 = new ColumnConstraints(col0W.get(), col0W.get(), col0W.get()),
+			col1 = new ColumnConstraints(col1W.get(), col1W.get(), col1W.get()),
+			col2 = new ColumnConstraints(col2W.get(), col2W.get(), col2W.get());
 
 		RowConstraints
-			row0 = new RowConstraints(mainMenuHeight, mainMenuHeight, mainMenuHeight),
-			row1 = new RowConstraints(0,0,0),
-			row2 = new RowConstraints();
+			row0 = new RowConstraints(row0H.get(), row0H.get(), row0H.get()),
+			row1 = new RowConstraints(row1H.get(),row1H.get(),row1H.get()),
+			row2 = new RowConstraints(row2H.get(), row2H.get(), row2H.get());
 
 		p.getColumnConstraints().add(col0);
 		p.getColumnConstraints().add(col1);
 		p.getColumnConstraints().add(col2);
 
 		p.getRowConstraints().add(row0);
-		p.getRowConstraints().add(row2);
 		p.getRowConstraints().add(row1);
+		p.getRowConstraints().add(row2);
 
 		ScrollBar
 			hScroll = new ScrollBar(),
@@ -90,8 +94,6 @@ public class Main extends Application {
 
 		hScroll.setOrientation(Orientation.HORIZONTAL);
 		vScroll.setOrientation(Orientation.VERTICAL);
-
-//		StackPane horizontalScrolls = new StackPane(horizontalScroll);
 
 		p.add(vScroll, 2, 1);
 		p.add(hScroll, 1, 2);
@@ -116,19 +118,15 @@ public class Main extends Application {
 		Canvas
 			canvas = new Canvas();
 
-		canvas.setHeight(0);
-		canvas.setWidth(0);
+		/*p.add(canvas, 1, 1, 2, 1);*/	// * new
+
+//		canvas.setHeight(row1H.get());
+//		canvas.setWidth(col1W.get());
 
 		Scene
-			/*scene = new Scene(b, 320, 240);	*/	// * old
-			scene = new Scene(p, 320, 240);	// * new
-
-		double
-			s = 5;
+			scene = new Scene(p, stageW.get(), stageH.get());
 
 	//	* borderPane --------------------------------------------------------------------------
-
-		// * temporal
 
 		String
 			location = "E:\\_LAB\\pl\\popoff\\dspAlgorithmics\\src\\main\\resources\\FXMLMainMenu.fxml";
@@ -143,53 +141,9 @@ public class Main extends Application {
 
 			Node
 				bar = loader.load();
-
-			/*gT.getChildren().addAll(loader.load(), rT);*/	// * old
-//			p.add(bar, 0, 0, 3, 1);	// * new
-//			GridPane.setHalignment(bar, HPos.LEFT);
-//			GridPane.setValignment(bar, VPos.TOP);
-
-
 		}
+
 		catch (IOException e){ e.printStackTrace();}
-
-
-/*
-		{
-			Rectangle
-				rT = new Rectangle(0, 0, s, s),
-				rL = new Rectangle(0, 0, s, s),
-				rR = new Rectangle(0, 0, s, s),
-				rB = new Rectangle(0, 0, s, s);
-
-			rT.setOpacity(0);
-			rL.setOpacity(0);
-			rR.setOpacity(0);
-			rB.setOpacity(0);
-
-        rT.setFill(BLACK);
-        rL.setFill(BLACK);
-        rR.setFill(BLACK);
-        rB.setFill(BLACK);
-
-			VBox
-				gT = new VBox(),
-				gL = new VBox(rL),
-				gR = new VBox(rR, verticalScroll),
-				gB = new VBox(rB, horizontalScroll);
-			gB.setPrefHeight(20);
-
-			b.setTop(gT);
-			b.setLeft(gL);
-			b.setRight(gR);
-			b.setBottom(gB);
-
-			b.setCenter(canvas);
-		}
-*/	// * old - disposable ?
-
-		/*p.add(canvas, 0, 1, 2, 1);*/	// * new
-
 
 	//*	listeners	---------------------------------------------------------------------------
 
@@ -211,43 +165,38 @@ public class Main extends Application {
 		stage.widthProperty()
 			.addListener((observable, oldValue, newValue) -> {
 
-				double
-					temp = (double) newValue
+				stageW.set((double) newValue);
 
-					;
+//				double
+//					temp = (double) newValue - col0W - col2W;
 
-				col1.setMinWidth(temp);
-				col1.setMaxWidth(temp);
+//				col1.setMinWidth(temp);
+//				col1.setMaxWidth(temp);
 
-				rect.setWidth(temp);
+//				rect.setWidth(temp);
 
 			});
 
 		stage.heightProperty()
 			.addListener((observable, oldValue, newValue) -> {
 
-				double
-					temp = (double) newValue
-							   - 30	// row 0 height
-							   - 25	// row 2 height
-				;
+				stageW.set((double) newValue);
 
-				row1.setMinHeight(temp);
-				row1.setMaxHeight(temp);
+//				row1.setMinHeight(temp);
+//				row1.setMaxHeight(temp);
 
-				rect.setHeight(temp);
+//				rect.setHeight(temp);
 
 
 			});
 
 
-
+/*
 		stage.widthProperty()
 			.addListener((observable, oldValue, newValue) -> {
 
 				double
 					d = (double) newValue
-							/*- (2 * s)*/ 	// * old - gap rectangles
 							- 16		// ?
 							- 2 * 20	// 0th and 2nd column
 					;
@@ -259,23 +208,22 @@ public class Main extends Application {
 				hScroll.setMax(scrollHorizontalMax.get());
 				hScroll.setMinWidth(canvasWidth.get() + 16);
 				hScroll.setMaxWidth(canvasWidth.get() + 16);
-				redraw(canvas, hScroll/*, null*/);
+				redraw(canvas, hScroll);
 
 				col1.setPrefWidth(d);
 				hScroll.setMaxWidth(d - 2);
 				hScroll.setMinWidth(d - 2);
 			});
+*/
 
+/*
 		stage.heightProperty()
 			.addListener((observable, oldValue, newValue) -> {
 
 				double
 					d = (double) newValue
-							/*- (2 * s)*/	// * old -  gap rectangles
 							- 25		// main menu
 							- 32		// window system header bar ?
-//							- 7			// ?
-//							- 2			// ?
 							- 20		// horizontal Scroll row
 
 					;
@@ -287,13 +235,15 @@ public class Main extends Application {
 				scrollVerticalMax.set( d);	// TODO to be adjusted with "wave max peak"
 				vScroll.setMinHeight(canvasHeight.get() - 12);
 				vScroll.setMaxHeight(canvasHeight.get() - 12);
-				redraw(canvas, hScroll/*, null*/);
+				redraw(canvas, hScroll);
 
 				row2.setPrefHeight(d);
 				vScroll.setMaxHeight(d );
 				vScroll.setMinHeight(d );
 			});
+*/
 
+/*
 		FileCache.currentIndexDueProperty()
 			.addListener((observable, oldValue, newValue) -> {
 
@@ -304,9 +254,11 @@ public class Main extends Application {
 
 				if( ! cacheIsLoaded.get()) clean(canvas);
 
-				else redraw(canvas, hScroll/*, null*/);
+				else redraw(canvas, hScroll);
 			});
+*/
 
+/*
 		MainMenuController.cacheIsEmptyStaticProperty()
 			.addListener((observable, oldValue, newValue) -> {
 
@@ -317,11 +269,13 @@ public class Main extends Application {
 
 				if(newValue) clean(canvas);
 
-				else redraw(canvas, hScroll/*, null*/);
+				else redraw(canvas, hScroll);
 			});
+*/
 
-		hScroll.valueProperty()
-			.addListener((observable, oldValue, newValue) -> redraw(canvas, hScroll/*, null*/));
+/*
+		hScroll.valueProperty().addListener((observable, oldValue, newValue) -> redraw(canvas, hScroll));
+*/
 
 	//  ---------------------------------------------------------------------------------------
 
@@ -331,7 +285,8 @@ public class Main extends Application {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	void drawEverything(Canvas canvas, ScrollBar horizontal/*, ScrollBar vertical*/) {
+/*
+	void drawEverything(Canvas canvas, ScrollBar horizontal) {
 
 		if ( ! canvasArePainted) {
 
@@ -433,7 +388,7 @@ public class Main extends Application {
 			for (int i = 0 ; i < width - leftMargin - 2; i++) {
 
 				int
-					x = (i * verticalGridResolution) /*+ leftMargin*/ - verticalGridMovement;
+					x = (i * verticalGridResolution) - verticalGridMovement;
 
 				context.strokeLine(x, 0, x, height);
 			}
@@ -461,17 +416,21 @@ public class Main extends Application {
 			if (!canvasArePainted) canvasArePainted = true;
 		}
 	}
+*/
 
-	void redraw(Canvas canvas, ScrollBar horizontal/*, ScrollBar vertical*/) {
+/*
+	void redraw(Canvas canvas, ScrollBar horizontal) {
 
 		clean(canvas);
 
 		GraphicsContext
 			context = canvas.getGraphicsContext2D();
 
-		if (FileCache.fileCache.size() > 0) drawEverything(canvas, horizontal/*, vertical*/);
+		if (FileCache.fileCache.size() > 0) drawEverything(canvas, horizontal);
 	}
+*/
 
+/*
 	void clean(Canvas canvas) {
 
 		if (canvasArePainted) {
@@ -484,6 +443,7 @@ public class Main extends Application {
 			canvasArePainted = false;
 		}
 	}
+*/
 
 //	--------------------------------------------------------------------------------------------------------------------
 

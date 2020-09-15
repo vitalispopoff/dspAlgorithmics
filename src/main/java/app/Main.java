@@ -22,7 +22,8 @@ import static javafx.scene.paint.Color.*;
 
 public class Main extends Application {
 
-	static boolean canvasArePainted = false;
+	static boolean
+		canvasArePainted = false;
 
 	@Override
 	public void start(Stage stage) {
@@ -210,7 +211,8 @@ public class Main extends Application {
 			context.strokeLine(0, height / 2, width, height / 2);
 
 			int
-				numberOfLines = (32 - Integer.numberOfLeadingZeros((int) accountForMinResolution));
+				numberOfLines = (32 - Integer.numberOfLeadingZeros((int) accountForMinResolution)),
+				leftMargin = 20;
 
 			context.setFont(new Font("Arial", 10));
 
@@ -233,10 +235,10 @@ public class Main extends Application {
 						context.strokeText(Integer.toString(txt), 1, y1  + 4);
 
 						context.setStroke(DODGERBLUE);
-						context.strokeLine(17, y1, width, y1);
+						context.strokeLine(leftMargin * 0.85, y1, width, y1);
 					}
 
-					else context.strokeLine(20, y1, width, y1);
+					else context.strokeLine(leftMargin, y1, width, y1);
 				}
 
 				if (y2 <= height && y1 != y2) {
@@ -247,12 +249,12 @@ public class Main extends Application {
 						context.strokeText(Integer.toString(txt), 1, y2 + 4);
 
 						context.setStroke(DODGERBLUE);
-						context.strokeLine(17, y2, width, y2);
+						context.strokeLine(leftMargin * 0.85, y2, width, y2);
 					}
 
 					else {
 						context.setStroke(DODGERBLUE);
-						context.strokeLine(20, y2, width, y2);
+						context.strokeLine(leftMargin, y2, width, y2);
 					}
 				}
 			}
@@ -262,22 +264,36 @@ public class Main extends Application {
 			Strip
 				strip = FileCache.loadCurrent().getSignal().getStrip(0);
 
+			WaveHeader
+				currentHeader = FileCache.loadCurrent().getHeader();
+
 			int
-				bitsPerSample = FileCache.loadCurrent().getHeader().getField(FileContentStructure.BITS_PER_SAMPLE) - 1;
+				bitsPerSample = currentHeader.getField(FileContentStructure.BITS_PER_SAMPLE) - 1,
+				samplingRate = currentHeader.getField(FileContentStructure.SAMPLE_PER_SEC),
+				verticalGridResolution = samplingRate / 1000,
+				movement = (int) horizontal.getValue(),
+				verticalGridMovement = movement % verticalGridResolution;
 
 			//*	verticals  ----------------------------------------------------------------------------
 
 			context.setStroke(DODGERBLUE);
 
-			context.strokeLine(20, 0, 20, height);
+			context.strokeLine(leftMargin, 0, leftMargin, height);
 			context.strokeLine(width, 0, width, height);
 
+			context.setStroke(LIGHTGREY);
+
+			for (int i = 0 ; i < width - leftMargin - 2; i++) {
+
+				int
+					x = (i * verticalGridResolution) + leftMargin - verticalGridMovement;
+
+				context.strokeLine(x, 0, x, height);
+			}
 
 			//*	waveForm  -----------------------------------------------------------------------------
 
 			context.setStroke(RED);
-
-			int movement = (int) horizontal.getValue();
 
 			for (int i = 1; i < Math.min(width, strip.size() - width) - 2 - 20; i++) {
 

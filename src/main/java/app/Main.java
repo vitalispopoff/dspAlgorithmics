@@ -11,6 +11,8 @@ import javafx.scene.canvas.*;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.*;
 
 import java.io.File;
@@ -212,17 +214,40 @@ public class Main extends Application {
 			int
 				numberOfLines = (32 - Integer.numberOfLeadingZeros((int) accountForMinResolution));
 
-			context.setStroke(DODGERBLUE);
+//			context.setStroke(DODGERBLUE);
+			context.setFont(new Font("Arial", 10));
 
 			for (int i = 1; i <= numberOfLines; i++) {
+
+				context.setStroke(DODGERBLUE);
 
 				double
 					y1 = (height / 2) - scaledHeight / (1 << i),
 					y2 = (height / 2) + scaledHeight / (1 << i);
 
-				if (y1 >= 0) context.strokeLine(0, y1, width, y1);
+				if (y1 >= 0) {
 
-				if (y2 <= height && y1 != y2) context.strokeLine(0, y2, width, y2);
+
+					context.strokeLine(0, y1, width, y1);
+
+					if (i > 1 && i < numberOfLines) {
+
+						context.setStroke(BLUE);
+						context.strokeText(-(i - 1) * 6 + " dB", 1, y1  + 4);
+					}
+				}
+
+				if (y2 <= height && y1 != y2) {
+
+					context.setStroke(DODGERBLUE);
+					context.strokeLine(0, y2, width, y2);
+
+					if (i > 1 && i < numberOfLines) {
+
+						context.setStroke(BLUE);
+						context.strokeText(-(i - 1) * 6 + " dB", 1, y2 + 4);
+					}
+				}
 			}
 
 			//	---------------------------------------------------------------------------------------
@@ -281,7 +306,7 @@ public class Main extends Application {
 
 			canvasArePainted = false;
 		}
-*/	// * disposable
+*/	// ? disposable
 
 		if (FileCache.fileCache.size() > 0) drawEverything(canvas, horizontal/*, vertical*/);
 	}

@@ -4,6 +4,7 @@ import data.FileCache;
 import data.structure.*;
 import gui.Menus.MainMenuController;
 import javafx.application.Application;
+import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
@@ -31,105 +32,73 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) {
 
-		MainMenuController.setStage(stage);
-
-		AtomicReference<Double>
+/*		AtomicReference<Double>
 			stageW = new AtomicReference<>(640.),
 			stageH = new AtomicReference<>(480.),
 
 			col0W = new AtomicReference<>(5.),
 			col2W = new AtomicReference<>(25.),
-			col1W = new AtomicReference<>(stageW.get() - col0W.get() - col2W.get()),
 
 			row0H = new AtomicReference<>(30.),
-			row2H = new AtomicReference<>(25.),
-			row1H = new AtomicReference<>(stageH.get() - row0H.get() - row2H.get());
+			row2H = new AtomicReference<>(25.);
+			
+					DoubleBinding
+			temp1 = stage.widthProperty().subtract(col0W.get()).subtract(col2W.get()),
+			temp2 = stage.heightProperty().subtract(row0H.get()).subtract(row2H.get());
+			*/
 
-		stage.setMinWidth(stageW.get());
-		stage.setMinHeight(stageH.get());
+		double
+			stageW = 640.,
+			stageH = 480.,
 
-	//	* GridPane ----------------------------------------------------------------------------
+			col0W = 5.,
+			col2W = 25.,
+
+			row0H = 30.,
+			row2H = 25.;
+
+//		DoubleBinding
+//			temp1 = stage.widthProperty().subtract(col0W).subtract(col2W),
+//			temp2 = stage.heightProperty().subtract(row0H).subtract(row2H);
+
+
+		stage.setMinWidth(stageW/*.get()*/);
+		stage.setMinHeight(stageH/*.get()*/);
+
+//		MainMenuController.setStage(stage);
+
+	//	* Scene -------------------------------------------------------------------------------
 
 		GridPane
 			p = new GridPane();
 
 		p.setGridLinesVisible(true);
 
-/*		double
-			col0W = 5.,
-			col2W = 25.,
-			col1W = stageW.get() - col0W - col2W,
+//		Scene scene = new Scene(p, stage.widthProperty().getValue(), stage.heightProperty().getValue());
 
-			row0H = 30.,
-			row2H = 25.,
-			row1H = stageH.get() - row0H - row2H,
+		Scene scene = new Scene(p, 640, 480);
 
-			mainMenuHeight = 30.,
-			gridSize = 25.;*/
+	//	* GridPane ----------------------------------------------------------------------------
+
+		p.setGridLinesVisible(true);
 
 		ColumnConstraints
-			col0 = new ColumnConstraints(col0W.get(), col0W.get(), col0W.get()),
-			col1 = new ColumnConstraints(col1W.get(), col1W.get(), col1W.get()),
-			col2 = new ColumnConstraints(col2W.get(), col2W.get(), col2W.get());
+			col0 = new ColumnConstraints(col0W/*.get()*/, col0W/*.get()*/, col0W/*.get()*/),
+			col1 = new ColumnConstraints(600/*temp1.getValue()*/,600/* temp1.getValue()*/,600/* temp1.getValue()*/),
+			col2 = new ColumnConstraints(col2W/*.get()*/, col2W/*.get()*/, col2W/*.get()*/);
 
 		RowConstraints
-			row0 = new RowConstraints(row0H.get(), row0H.get(), row0H.get()),
-			row1 = new RowConstraints(row1H.get(),row1H.get(),row1H.get()),
-			row2 = new RowConstraints(row2H.get(), row2H.get(), row2H.get());
-
-		p.getColumnConstraints().add(col0);
-		p.getColumnConstraints().add(col1);
-		p.getColumnConstraints().add(col2);
-
-		p.getRowConstraints().add(row0);
-		p.getRowConstraints().add(row1);
-		p.getRowConstraints().add(row2);
-
-		ScrollBar
-			hScroll = new ScrollBar(),
-			vScroll = new ScrollBar();
-
-		hScroll.setVisible(false);
-		vScroll.setVisible(false);
-
-		hScroll.setOrientation(Orientation.HORIZONTAL);
-		vScroll.setOrientation(Orientation.VERTICAL);
-
-		p.add(vScroll, 2, 1);
-		p.add(hScroll, 1, 2);
-
-		GridPane.setValignment(hScroll, VPos.CENTER);
-		GridPane.setHalignment(hScroll, HPos.CENTER);
-		GridPane.setValignment(vScroll, VPos.CENTER);
-		GridPane.setHalignment(vScroll, HPos.CENTER);
+			row0 = new RowConstraints(row0H/*.get()*/, row0H/*.get()*/, row0H/*.get()*/),
+			row1 = new RowConstraints(400/*temp2.getValue()*/,400/*temp2.getValue()*/,400/*temp2.getValue()*/),
+			row2 = new RowConstraints(row2H/*.get()*/, row2H/*.get()*/, row2H/*.get()*/);
 
 
-		Rectangle
-			rect = new Rectangle(0, 0, 0, 0);
-		rect.setOpacity(0.7);
-		rect.setFill(GREEN);
-		p.add(rect, 1, 1);
+		//	? MainMenu ----------------------------------------
 
-		GridPane.setHalignment(rect, HPos.LEFT);
-		GridPane.setValignment(rect, VPos.TOP);
-
-	//	* Canvas & Scene ----------------------------------------------------------------------
-
-		Canvas
-			canvas = new Canvas();
-
-		/*p.add(canvas, 1, 1, 2, 1);*/	// * new
-
-//		canvas.setHeight(row1H.get());
-//		canvas.setWidth(col1W.get());
-
-		Scene
-			scene = new Scene(p, stageW.get(), stageH.get());
-
-	//	* borderPane --------------------------------------------------------------------------
-
-		String
+/*		String
 			location = "E:\\_LAB\\pl\\popoff\\dspAlgorithmics\\src\\main\\resources\\FXMLMainMenu.fxml";
+
+		Node bar = null;
 
 		try {
 
@@ -139,15 +108,74 @@ public class Main extends Application {
 			FXMLLoader
 				loader = new FXMLLoader(url);
 
-			Node
 				bar = loader.load();
 		}
 
-		catch (IOException e){ e.printStackTrace();}
+		catch (IOException e){ e.printStackTrace();}*/
+
+		//	? Canvas ------------------------------------------
+
+//		Canvas
+//			canvas = new Canvas();
+
+		//	? ScrollBars --------------------------------------
+
+//		ScrollBar
+//			hScroll = new ScrollBar(),
+//			vScroll = new ScrollBar();
+
+		{
+			p.getColumnConstraints().add(col0);
+			p.getColumnConstraints().add(col1);
+			p.getColumnConstraints().add(col2);
+
+			p.getRowConstraints().add(row0);
+			p.getRowConstraints().add(row1);
+			p.getRowConstraints().add(row2);
+//
+//			hScroll.setVisible(false);
+//			vScroll.setVisible(false);
+//
+//			hScroll.setOrientation(Orientation.HORIZONTAL);
+//			vScroll.setOrientation(Orientation.VERTICAL);
+
+//			if (bar != null) p.add(bar, 0, 0, 3, 1);
+//			p.add(canvas, 1, 1);
+
+//			p.add(hScroll, 1, 2);
+//			GridPane.setValignment(hScroll, VPos.CENTER);
+//			GridPane.setHalignment(hScroll, HPos.CENTER);
+//
+//			p.add(vScroll, 2, 1);
+//			GridPane.setValignment(vScroll, VPos.CENTER);
+//			GridPane.setHalignment(vScroll, HPos.CENTER);
+
+		}	// ? GridPane settings
+
+//		Rectangle
+//			rect = new Rectangle(0, 0, 0, 0);
+//		rect.setOpacity(0.7);
+//		rect.setFill(GREEN);
+//		p.add(rect, 1, 1);
+
+//		GridPane.setHalignment(rect, HPos.LEFT);
+//		GridPane.setValignment(rect, VPos.TOP);
+
+	//	* Canvas & Scene ----------------------------------------------------------------------
+
+
+
+		/*p.add(canvas, 1, 1, 2, 1);*/	// * new
+
+
+
+	//	* borderPane --------------------------------------------------------------------------
+
+
 
 	//*	listeners	---------------------------------------------------------------------------
 
-		AtomicReference<Double>
+/*		AtomicReference<Double>
 			canvasWidth = new AtomicReference<>(0.),
 			canvasHeight = new AtomicReference<>(0.),
 			scrollHorizontalMax = new AtomicReference<>(0.),
@@ -158,11 +186,11 @@ public class Main extends Application {
 
 		AtomicReference<Integer>
 			currentIndex = new AtomicReference<>(0),
-			waveLength = new AtomicReference<>(0);
+			waveLength = new AtomicReference<>(0);*/
 
 
 
-		stage.widthProperty()
+/*		stage.widthProperty()
 			.addListener((observable, oldValue, newValue) -> {
 
 				stageW.set((double) newValue);
@@ -175,9 +203,9 @@ public class Main extends Application {
 
 //				rect.setWidth(temp);
 
-			});
+			});*/
 
-		stage.heightProperty()
+/*		stage.heightProperty()
 			.addListener((observable, oldValue, newValue) -> {
 
 				stageW.set((double) newValue);
@@ -188,7 +216,7 @@ public class Main extends Application {
 //				rect.setHeight(temp);
 
 
-			});
+			});*/
 
 
 /*

@@ -33,32 +33,91 @@ public class Main extends Application {
 
 		MainMenuController.setStage(stage);
 
-		stage.setMinWidth(640);
-		stage.setMinHeight(480);
+		double
+			stageW = 640,
+			stageH = 480;
+
+		stage.setMinWidth(stageW);
+		stage.setMinHeight(stageH);
 
 		/*BorderPane b = new BorderPane();*/	// * old
+
+	//	* GridPane ----------------------------------------------------------------------------
 
 		// * new
 		GridPane
 			p = new GridPane();
+
 		p.setGridLinesVisible(true);
 
+
+		double
+			col0W = 5,
+			col2W = 25,
+			col1W = stageW - col0W - col2W,
+
+			row0H = 30,
+			row2H = 25,
+			row1H = stageH - row0H - row2H,
+
+			mainMenuHeight = 30.,
+			gridSize = 25.;
+
 		ColumnConstraints
-			cC = new ColumnConstraints();
+			col0 = new ColumnConstraints(5, 5, 5),
+			col1 = new ColumnConstraints(gridSize, gridSize, gridSize),
+			col2 = new ColumnConstraints(gridSize, gridSize, gridSize);
 
 		RowConstraints
-			rC = new RowConstraints();
+			row0 = new RowConstraints(mainMenuHeight, mainMenuHeight, mainMenuHeight),
+			row1 = new RowConstraints(0,0,0),
+			row2 = new RowConstraints();
 
-		p.getColumnConstraints().add(new ColumnConstraints(20));
-		p.getColumnConstraints().add(cC);
-		p.getColumnConstraints().add(new ColumnConstraints(20));
+		p.getColumnConstraints().add(col0);
+		p.getColumnConstraints().add(col1);
+		p.getColumnConstraints().add(col2);
 
-		p.getRowConstraints().add(new RowConstraints(20));
-		p.getRowConstraints().add(rC);
-		p.getRowConstraints().add(new RowConstraints(20));
+		p.getRowConstraints().add(row0);
+		p.getRowConstraints().add(row2);
+		p.getRowConstraints().add(row1);
+
+		ScrollBar
+			hScroll = new ScrollBar(),
+			vScroll = new ScrollBar();
+
+		hScroll.setVisible(false);
+		vScroll.setVisible(false);
+
+		hScroll.setOrientation(Orientation.HORIZONTAL);
+		vScroll.setOrientation(Orientation.VERTICAL);
+
+//		StackPane horizontalScrolls = new StackPane(horizontalScroll);
+
+		p.add(vScroll, 2, 1);
+		p.add(hScroll, 1, 2);
+
+		GridPane.setValignment(hScroll, VPos.CENTER);
+		GridPane.setHalignment(hScroll, HPos.CENTER);
+		GridPane.setValignment(vScroll, VPos.CENTER);
+		GridPane.setHalignment(vScroll, HPos.CENTER);
+
+
+		Rectangle
+			rect = new Rectangle(0, 0, 0, 0);
+		rect.setOpacity(0.7);
+		rect.setFill(GREEN);
+		p.add(rect, 1, 1);
+
+		GridPane.setHalignment(rect, HPos.LEFT);
+		GridPane.setValignment(rect, VPos.TOP);
+
+	//	* Canvas & Scene ----------------------------------------------------------------------
 
 		Canvas
 			canvas = new Canvas();
+
+		canvas.setHeight(0);
+		canvas.setWidth(0);
 
 		Scene
 			/*scene = new Scene(b, 320, 240);	*/	// * old
@@ -67,32 +126,9 @@ public class Main extends Application {
 		double
 			s = 5;
 
-	//*	borderPane ----------------------------------------------------------------------------
+	//	* borderPane --------------------------------------------------------------------------
 
-		ScrollBar
-			horizontalScroll = new ScrollBar(),
-			verticalScroll = new ScrollBar();
-
-		horizontalScroll.setOrientation(Orientation.HORIZONTAL);
-		verticalScroll.setOrientation(Orientation.VERTICAL);
-
-//		StackPane horizontalScrolls = new StackPane(horizontalScroll);
-
-		p.add(verticalScroll, 2, 1);
-		p.add(horizontalScroll, 1, 2);
-
-		GridPane.setValignment(horizontalScroll, VPos.CENTER);
-		GridPane.setHalignment(horizontalScroll, HPos.CENTER);
-		GridPane.setValignment(verticalScroll, VPos.CENTER);
-		GridPane.setHalignment(verticalScroll, HPos.CENTER);
-
-/*		{
-			Rectangle
-				rect = new Rectangle(0, 0, s, s);
-			rect.setOpacity(1);
-			rect.setFill(BLACK);
-		p.add(rect, 2, 2);
-		}*/	// * disposable
+		// * temporal
 
 		String
 			location = "E:\\_LAB\\pl\\popoff\\dspAlgorithmics\\src\\main\\resources\\FXMLMainMenu.fxml";
@@ -105,8 +141,15 @@ public class Main extends Application {
 			FXMLLoader
 				loader = new FXMLLoader(url);
 
+			Node
+				bar = loader.load();
+
 			/*gT.getChildren().addAll(loader.load(), rT);*/	// * old
-			p.add(loader.load(), 0, 0, 3, 1);	// * new
+//			p.add(bar, 0, 0, 3, 1);	// * new
+//			GridPane.setHalignment(bar, HPos.LEFT);
+//			GridPane.setValignment(bar, VPos.TOP);
+
+
 		}
 		catch (IOException e){ e.printStackTrace();}
 
@@ -145,16 +188,16 @@ public class Main extends Application {
 		}
 */	// * old - disposable ?
 
-		p.add(canvas, 0, 1);	// * new
+		/*p.add(canvas, 0, 1, 2, 1);*/	// * new
 
 
 	//*	listeners	---------------------------------------------------------------------------
 
 		AtomicReference<Double>
-			canvasWidth = new AtomicReference<>((double) 0),
-			canvasHeight = new AtomicReference<>((double) 0),
-			scrollHorizontalMax = new AtomicReference<>((double) 0),
-			scrollVerticalMax = new AtomicReference<>((double) 0);
+			canvasWidth = new AtomicReference<>(0.),
+			canvasHeight = new AtomicReference<>(0.),
+			scrollHorizontalMax = new AtomicReference<>(0.),
+			scrollVerticalMax = new AtomicReference<>(0.);
 
 		AtomicReference<Boolean>
 			cacheIsLoaded = new AtomicReference<>(false);
@@ -162,6 +205,40 @@ public class Main extends Application {
 		AtomicReference<Integer>
 			currentIndex = new AtomicReference<>(0),
 			waveLength = new AtomicReference<>(0);
+
+
+
+		stage.widthProperty()
+			.addListener((observable, oldValue, newValue) -> {
+
+				double
+					temp = (double) newValue
+
+					;
+
+				col1.setMinWidth(temp);
+				col1.setMaxWidth(temp);
+
+				rect.setWidth(temp);
+
+			});
+
+		stage.heightProperty()
+			.addListener((observable, oldValue, newValue) -> {
+
+				double
+					temp = (double) newValue
+							   - 30	// row 0 height
+							   - 25	// row 2 height
+				;
+
+				row1.setMinHeight(temp);
+				row1.setMaxHeight(temp);
+
+				rect.setHeight(temp);
+
+
+			});
 
 
 
@@ -177,16 +254,16 @@ public class Main extends Application {
 
 				if (canvas.getWidth() != d) canvas.setWidth(d);
 
-				canvasWidth.set(d);
+				canvasWidth.set(d + 20);
 				scrollHorizontalMax.set(waveLength.get().doubleValue() - canvasWidth.get());
-				horizontalScroll.setMax(scrollHorizontalMax.get());
-				horizontalScroll.setMinWidth(canvasWidth.get() + 16);
-				horizontalScroll.setMaxWidth(canvasWidth.get() + 16);
-				redraw(canvas, horizontalScroll/*, null*/);
+				hScroll.setMax(scrollHorizontalMax.get());
+				hScroll.setMinWidth(canvasWidth.get() + 16);
+				hScroll.setMaxWidth(canvasWidth.get() + 16);
+				redraw(canvas, hScroll/*, null*/);
 
-				cC.setPrefWidth(d);
-				horizontalScroll.setMaxWidth(d - 2);
-				horizontalScroll.setMinWidth(d - 2);
+				col1.setPrefWidth(d);
+				hScroll.setMaxWidth(d - 2);
+				hScroll.setMinWidth(d - 2);
 			});
 
 		stage.heightProperty()
@@ -204,17 +281,17 @@ public class Main extends Application {
 					;
 
 //				if (b.getHeight() != d) canvas.setHeight(d);
-				if (rC.getPrefHeight() != d) canvas.setHeight(d);
+				if (row2.getPrefHeight() != d) canvas.setHeight(d);
 
 				canvasHeight.set( d);
 				scrollVerticalMax.set( d);	// TODO to be adjusted with "wave max peak"
-				verticalScroll.setMinHeight(canvasHeight.get() - 12);
-				verticalScroll.setMaxHeight(canvasHeight.get() - 12);
-				redraw(canvas, horizontalScroll/*, null*/);
+				vScroll.setMinHeight(canvasHeight.get() - 12);
+				vScroll.setMaxHeight(canvasHeight.get() - 12);
+				redraw(canvas, hScroll/*, null*/);
 
-				rC.setPrefHeight(d);
-				verticalScroll.setMaxHeight(d );
-				verticalScroll.setMinHeight(d );
+				row2.setPrefHeight(d);
+				vScroll.setMaxHeight(d );
+				vScroll.setMinHeight(d );
 			});
 
 		FileCache.currentIndexDueProperty()
@@ -223,25 +300,28 @@ public class Main extends Application {
 				currentIndex.set((int) newValue);
 				waveLength.set(FileCache.loadCurrent().getSignal().getStrip(0).size());
 				scrollHorizontalMax.set(waveLength.get().doubleValue() - canvasWidth.get());
-				horizontalScroll.setMax(scrollHorizontalMax.get());
+				hScroll.setMax(scrollHorizontalMax.get());
 
 				if( ! cacheIsLoaded.get()) clean(canvas);
 
-				else redraw(canvas, horizontalScroll/*, null*/);
+				else redraw(canvas, hScroll/*, null*/);
 			});
 
 		MainMenuController.cacheIsEmptyStaticProperty()
 			.addListener((observable, oldValue, newValue) -> {
 
+				hScroll.setVisible( ! newValue);
+				vScroll.setVisible( ! newValue);
+
 				cacheIsLoaded.set(!MainMenuController.cacheIsEmpty());
 
 				if(newValue) clean(canvas);
 
-				else redraw(canvas, horizontalScroll/*, null*/);
+				else redraw(canvas, hScroll/*, null*/);
 			});
 
-		horizontalScroll.valueProperty()
-			.addListener((observable, oldValue, newValue) -> redraw(canvas, horizontalScroll/*, null*/));
+		hScroll.valueProperty()
+			.addListener((observable, oldValue, newValue) -> redraw(canvas, hScroll/*, null*/));
 
 	//  ---------------------------------------------------------------------------------------
 
@@ -253,7 +333,7 @@ public class Main extends Application {
 
 	void drawEverything(Canvas canvas, ScrollBar horizontal/*, ScrollBar vertical*/) {
 
-		if (!canvasArePainted) {
+		if ( ! canvasArePainted) {
 
 			GraphicsContext
 				context = canvas.getGraphicsContext2D();
@@ -346,14 +426,14 @@ public class Main extends Application {
 			context.setStroke(DODGERBLUE);
 
 			context.strokeLine(leftMargin, 0, leftMargin, height);
-			context.strokeLine(width, 0, width, height);
+			context.strokeLine(width, 0, width + leftMargin, height);
 
 			context.setStroke(LIGHTGREY);
 
 			for (int i = 0 ; i < width - leftMargin - 2; i++) {
 
 				int
-					x = (i * verticalGridResolution) + leftMargin - verticalGridMovement;
+					x = (i * verticalGridResolution) /*+ leftMargin*/ - verticalGridMovement;
 
 				context.strokeLine(x, 0, x, height);
 			}

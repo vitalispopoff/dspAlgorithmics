@@ -11,27 +11,28 @@
     >
         <MenuItem id="OPEN_FILE"
                 text="_Open"
-                  onAction="#openFile"
-                  accelerator="${controller.open_fileKey}"
+                onAction="#openFile"
+                accelerator="${controller.open_fileKey}"
         />
         <MenuItem id="CLOSE_FILE"
-                  text="Close"
-                  onAction="#close"
-                  disable="${controller.cacheIsEmptyDue}"
-                  accelerator="${controller.close_fileKey}"
+                text="Close"
+                onAction="#close"
+                disable="${controller.cacheIsEmpty}"
+                accelerator="${controller.close_fileKey}"
         />
+
         <SeparatorMenuItem />
         <MenuItem id="SAVE"
-                  text="_Save As"
-                  onAction="#save"
-                  disable="${controller.cacheIsEmptyDue}"
-                  accelerator="${controller.save_fileKey}"
+                text="_Save As"
+                onAction="#save"
+                disable="${controller.cacheIsEmpty}"
+                accelerator="${controller.save_fileKey}"
         />
         <SeparatorMenuItem />
         <MenuItem id="QUIT"
-                  text="_Quit"
-                  onAction="#quit"
-                  accelerator="${controller.quitKey}"
+                text="_Quit"
+                onAction="#quit"
+                accelerator="${controller.quitKey}"
         />
     </Menu>
 

@@ -5,6 +5,9 @@ import data.structure.*;
 import gui.Menus.MainMenuController;
 import javafx.application.Application;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
@@ -13,6 +16,8 @@ import javafx.scene.*;
 import javafx.scene.canvas.*;
 import javafx.scene.control.Control;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -28,6 +33,8 @@ public class Main extends Application {
 
 	static boolean
 		canvasArePainted = false;
+
+
 
 	@Override
 	public void start(Stage stage) {
@@ -150,32 +157,68 @@ public class Main extends Application {
 
 		ScrollBar
 			hScroll = new ScrollBar(),
-			vScroll = new ScrollBar();
+			vScroll = new ScrollBar(),
+			hScale = new ScrollBar(),
+			vScale = new ScrollBar();
+
+		StackPane
+			hScrollPane = new StackPane(hScale, hScroll),
+			vScrollPane = new StackPane(vScale, vScroll);
+
+
+		scene.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+
+			hScroll.setVisible(false);
+			vScroll.setVisible(false);
+		});
+
+		scene.addEventFilter(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
+
+			hScroll.setVisible(true);
+			vScroll.setVisible(true);
+		});
 
 		{
-//			hScroll.setVisible(false);
-//			vScroll.setVisible(false);
 
 			hScroll.setOrientation(Orientation.HORIZONTAL);
 			hScroll.setMinWidth(col1W.get() - scrollBarAdjust);
 			hScroll.setMaxWidth(col1W.get() - scrollBarAdjust);
 			hScroll.setMin(0.);
-			hScroll.setMax(col1W.get() - scrollBarAdjust);
+			hScroll.setMax(1.);
+			hScroll.setValue(0.);
 
 			vScroll.setOrientation(Orientation.VERTICAL);
 			vScroll.setMinHeight(row1H.get() - scrollBarAdjust);
 			vScroll.setMaxHeight(row1H.get() - scrollBarAdjust);
 			vScroll.setMin(0.);
-			hScroll.setMax(row1H.get() - scrollBarAdjust);
+			vScroll.setMax(1.);
+			vScroll.setValue((row1H.get() - scrollBarAdjust) / 2.);
 
-			p.add(hScroll, 1, 2);
+			hScale.setOrientation(Orientation.HORIZONTAL);
+			hScale.setMinWidth(col1W.get() - scrollBarAdjust);
+			hScale.setMaxWidth(col1W.get() - scrollBarAdjust);
+			hScale.setMin(32.);
+			hScale.setValue(col1W.get() - scrollBarAdjust);
+			hScale.setMax(col1W.get() - scrollBarAdjust);
+
+			vScale.setOrientation(Orientation.VERTICAL);
+			vScale.setMinHeight(row1H.get() - scrollBarAdjust);
+			vScale.setMaxHeight(row1H.get() - scrollBarAdjust);
+			vScale.setMin(33.);
+			vScale.setValue((row1H.get() - scrollBarAdjust) / 2.);
+			vScale.setMax(row1H.get() - scrollBarAdjust);
+
+		}	// * scrollBars setup
+
+		{
+			p.add(hScrollPane, 1, 2);
 			GridPane.setValignment(hScroll, VPos.CENTER);
 			GridPane.setHalignment(hScroll, HPos.CENTER);
 
-			p.add(vScroll, 2, 1);
+			p.add(vScrollPane, 2, 1);
 			GridPane.setValignment(vScroll, VPos.CENTER);
 			GridPane.setHalignment(vScroll, HPos.CENTER);
-		}	// * scrollBars setup
+		}	// * adding scrollbarPanes to the grid
 
 		//*	listeners	---------------------------------------------------------------------------
 
@@ -197,9 +240,9 @@ public class Main extends Application {
 			{
 				hScroll.setMinWidth(v - scrollBarAdjust);
 				hScroll.setMaxWidth(v - scrollBarAdjust);
-				hScroll.setMax(v - scrollBarAdjust);
+				hScale.setMinWidth(v - scrollBarAdjust);
+				hScale.setMaxWidth(v - scrollBarAdjust);
 			}	// * hScroll scale
-
 
 		});
 
@@ -221,14 +264,40 @@ public class Main extends Application {
 			{
 				vScroll.setMinHeight(v - scrollBarAdjust);
 				vScroll.setMaxHeight(v - scrollBarAdjust);
-				hScroll.setMax(v - scrollBarAdjust);
+				vScale.setMinHeight(v - scrollBarAdjust);
+				vScale.setMaxHeight(v - scrollBarAdjust);
 			}	// * vScroll scale
+
+		});
+
+		hScroll.valueProperty().addListener((observable, oldValue, newValue) -> {
+
+
+		});
+
+		vScroll.valueProperty().addListener((observable, oldValue, newValue) -> {
+
+
+		});
+
+		hScale.valueProperty().addListener((observable, oldValue, newValue) -> {
+
+
+		});
+
+		vScale.valueProperty().addListener((observable, oldValue, newValue) -> {
+
+
+		});
+
+		MainMenuController.cacheIsEmptyStaticProperty().addListener((observable, oldValue, newValue) -> {
+
+
 		});
 
 
-
-
-
+		{
+			int dummy;
 /*		AtomicReference<Double>
 			canvasWidth = new AtomicReference<>(0.),
 			canvasHeight = new AtomicReference<>(0.),
@@ -328,6 +397,8 @@ public class Main extends Application {
 /*
 		hScroll.valueProperty().addListener((observable, oldValue, newValue) -> redraw(canvas, hScroll));
 */
+			dummy = 0;
+		}	// * old listeners
 
 		//  ---------------------------------------------------------------------------------------
 
@@ -337,7 +408,6 @@ public class Main extends Application {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-/*
 	void drawEverything(Canvas canvas, ScrollBar horizontal) {
 
 		if ( ! canvasArePainted) {
@@ -468,7 +538,6 @@ public class Main extends Application {
 			if (!canvasArePainted) canvasArePainted = true;
 		}
 	}
-*/
 
 /*
 	void redraw(Canvas canvas, ScrollBar horizontal) {
@@ -482,7 +551,6 @@ public class Main extends Application {
 	}
 */
 
-/*
 	void clean(Canvas canvas) {
 
 		if (canvasArePainted) {
@@ -495,7 +563,6 @@ public class Main extends Application {
 			canvasArePainted = false;
 		}
 	}
-*/
 
 //	--------------------------------------------------------------------------------------------------------------------
 

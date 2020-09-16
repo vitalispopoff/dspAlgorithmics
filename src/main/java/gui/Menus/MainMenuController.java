@@ -15,7 +15,7 @@ import static algorithms.metaProcessors.FileManager.saveFile;
 public class MainMenuController {
 
 	private static final BooleanProperty
-		cacheIsEmptyDue = new SimpleBooleanProperty(data.FileCache.fileCache.size() == 0);
+		cacheIsEmpty = new SimpleBooleanProperty(data.FileCache.fileCache.size() == 0);
 
 	static Stage
 		stage;
@@ -51,7 +51,7 @@ public class MainMenuController {
 
 			FileManager.FileManagerSettings.setCurrentDefaultPath(path);
 
-			setCacheIsEmptyDue();
+			setCacheIsEmpty();
 		}
 	}
 
@@ -67,7 +67,7 @@ public class MainMenuController {
 
 		FileCache.purgeCache();
 
-		setCacheIsEmptyDue();
+		setCacheIsEmpty();
 	}
 
 	public void save(ActionEvent event){
@@ -176,32 +176,33 @@ public class MainMenuController {
 
 	public static boolean cacheIsEmpty(){
 
-		return cacheIsEmptyDue.get();
-	}
-	public final boolean getCacheIsEmptyDue(){
-
-		return cacheIsEmptyDue.get();
+		return cacheIsEmpty.get();
 	}
 
-	public final void setCacheIsEmptyDue(){
+	public final boolean getCacheIsEmpty(){
 
-		cacheIsEmptyDue.set(FileCache.fileCache.size() == 0);
+		return cacheIsEmpty.get();
 	}
 
-	public final void setCacheIsEmptyDue(boolean b){
+	public final void setCacheIsEmpty(){
 
-		setCacheIsEmptyDue();
+		cacheIsEmpty.set(FileCache.fileCache.size() == 0);
+	}
+
+	public final void setCacheIsEmpty(boolean b){
+
+		setCacheIsEmpty();
 	}	// just in case: a dummy overload.
 
-	public final BooleanProperty cacheIsEmptyDueProperty(){
+	public final BooleanProperty cacheIsEmptyProperty(){
 
-		return cacheIsEmptyDue;
+		return cacheIsEmpty;
 
 	}
 
 	public static BooleanProperty cacheIsEmptyStaticProperty(){
 
-		return cacheIsEmptyDue;
+		return cacheIsEmpty;
 	}
 
 //	--------------------

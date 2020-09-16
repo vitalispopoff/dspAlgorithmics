@@ -35,7 +35,6 @@ public class Main extends Application {
 		canvasArePainted = false;
 
 
-
 	@Override
 	public void start(Stage stage) {
 
@@ -61,21 +60,19 @@ public class Main extends Application {
 			stage.setHeight(stageH + stageHAdjust);
 
 			stage.setResizable(true);
-		}	// * stage setup
+		}    // * stage setup
 
 		//	* Scene -------------------------------------------------------------------------------
 
 		GridPane
 			p = new GridPane();
 
-		p.setGridLinesVisible(true);
+		p.setGridLinesVisible(false);
 
 		Scene
 			scene = new Scene(p, stageW, stageH);
 
 		//	* GridPane ----------------------------------------------------------------------------
-
-		p.setGridLinesVisible(true);
 
 		ColumnConstraints
 			col0 = new ColumnConstraints(col0W, col0W, col0W),
@@ -95,7 +92,12 @@ public class Main extends Application {
 			p.getRowConstraints().add(row0);
 			p.getRowConstraints().add(row1);
 			p.getRowConstraints().add(row2);
-		}	// * gridPane setup
+
+			p.setGridLinesVisible(false);
+
+		}    // * gridPane setup
+
+
 
 		//	? MainMenu ----------------------------------------
 
@@ -147,11 +149,11 @@ public class Main extends Application {
 
 			g.clearRect(0, 0, col1.getMinWidth(), row1.getMinHeight());
 			g.strokeLine(0, 0, col1.getMinWidth(), row1.getMinHeight());
-		};	// ! temporal
-		r.run();
+		};    // ! temporal
+//		r.run();
 
 		//	? ScrollBars --------------------------------------
-		
+
 		double
 			scrollBarAdjust = 2.;
 
@@ -168,21 +170,7 @@ public class Main extends Application {
 		hScrollPane.setVisible(false);
 		vScrollPane.setVisible(false);
 
-
-		scene.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-
-			hScroll.setVisible(false);
-			vScroll.setVisible(false);
-		});
-
-		scene.addEventFilter(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
-
-			hScroll.setVisible(true);
-			vScroll.setVisible(true);
-		});
-
 		{
-
 			hScroll.setOrientation(Orientation.HORIZONTAL);
 			hScroll.setMinWidth(col1W.get() - scrollBarAdjust);
 			hScroll.setMaxWidth(col1W.get() - scrollBarAdjust);
@@ -195,7 +183,7 @@ public class Main extends Application {
 			vScroll.setMaxHeight(row1H.get() - scrollBarAdjust);
 			vScroll.setMin(0.);
 			vScroll.setMax(1.);
-			vScroll.setValue((row1H.get() - scrollBarAdjust) / 2.);
+			vScroll.setValue(0.5);
 
 			hScale.setOrientation(Orientation.HORIZONTAL);
 			hScale.setMinWidth(col1W.get() - scrollBarAdjust);
@@ -211,7 +199,7 @@ public class Main extends Application {
 			vScale.setValue((row1H.get() - scrollBarAdjust) / 2.);
 			vScale.setMax(row1H.get() - scrollBarAdjust);
 
-		}	// * scrollBars setup
+		}    // * scrollBars setup
 
 		{
 			p.add(hScrollPane, 1, 2);
@@ -221,7 +209,8 @@ public class Main extends Application {
 			p.add(vScrollPane, 2, 1);
 			GridPane.setValignment(vScroll, VPos.CENTER);
 			GridPane.setHalignment(vScroll, HPos.CENTER);
-		}	// * adding scrollbarPanes to the grid
+
+		}    // * adding scrollbarPanes to the grid
 
 		//*	listeners	---------------------------------------------------------------------------
 
@@ -237,16 +226,19 @@ public class Main extends Application {
 
 				canvas.setWidth(v);
 
-				r.run();    //	! temporal
-			}	// * scene scale horizontal
+//				r.run();    //	! temporal
+			}    // * scene scale horizontal
 
 			{
 				hScroll.setMinWidth(v - scrollBarAdjust);
 				hScroll.setMaxWidth(v - scrollBarAdjust);
+
 				hScale.setMinWidth(v - scrollBarAdjust);
 				hScale.setMaxWidth(v - scrollBarAdjust);
-			}	// * hScroll scale
+			}    // * hScroll scale
 
+			clean(canvas);
+			redraw(canvas, hScroll, hScale);
 		});
 
 		stage.heightProperty().addListener((observable, oldValue, newValue) -> {
@@ -261,21 +253,24 @@ public class Main extends Application {
 
 				canvas.setHeight(v);
 
-				r.run();	//	! temporal
-			}	// * scene scale vertical
+			}    // * scene scale vertical
 
 			{
 				vScroll.setMinHeight(v - scrollBarAdjust);
 				vScroll.setMaxHeight(v - scrollBarAdjust);
+
 				vScale.setMinHeight(v - scrollBarAdjust);
 				vScale.setMaxHeight(v - scrollBarAdjust);
-			}	// * vScroll scale
+			}    // * vScroll and vScale
 
+			clean(canvas);
+			redraw(canvas, hScroll, hScale);
 		});
+
 
 		hScroll.valueProperty().addListener((observable, oldValue, newValue) -> {
 
-
+			redraw(canvas, hScroll, hScale);
 		});
 
 		vScroll.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -283,9 +278,10 @@ public class Main extends Application {
 
 		});
 
+
 		hScale.valueProperty().addListener((observable, oldValue, newValue) -> {
 
-
+			redraw(canvas, hScroll, hScale);
 		});
 
 		vScale.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -293,15 +289,50 @@ public class Main extends Application {
 
 		});
 
+
 		MainMenuController.cacheIsEmptyStaticProperty().addListener((observable, oldValue, newValue) -> {
 
+			{
+				hScrollPane.setVisible(!newValue);
+				vScrollPane.setVisible(!newValue);
+			}    // * scrollPanes toggle
 
+			if (newValue)
+				clean(canvas);
 
-			hScrollPane.setVisible(! newValue);
-			vScrollPane.setVisible(! newValue);
+			else {
+
+				{
+					scene.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+
+						if (event.getCode() == KeyCode.CONTROL) {
+
+							hScroll.setVisible(!event.isControlDown());
+							vScroll.setVisible(!event.isControlDown());
+						}
+					});
+
+					scene.addEventFilter(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
+
+						if (event.getCode() == KeyCode.CONTROL) {
+
+							hScroll.setVisible(!event.isControlDown());
+							vScroll.setVisible(!event.isControlDown());
+						}
+					});
+				}    // * movement scrollBars toggle
+
+				double
+					increment = FileCache.loadCurrent().getSignal().getStrip(0).size();
+
+				hScroll.setMax(increment - col1W.get() - scrollBarAdjust);
+
+				clean(canvas);
+				redraw(canvas, hScroll, hScale);
+
+			}
 
 		});
-
 
 		{
 			int dummy;
@@ -405,7 +436,7 @@ public class Main extends Application {
 		hScroll.valueProperty().addListener((observable, oldValue, newValue) -> redraw(canvas, hScroll));
 */
 			dummy = 0;
-		}	// * old listeners
+		}    // * old listeners
 
 		//  ---------------------------------------------------------------------------------------
 
@@ -415,29 +446,102 @@ public class Main extends Application {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	void drawEverything(Canvas canvas, ScrollBar horizontal) {
+	void drawHorizontals(Canvas canvas, ScrollBar horizontal, ScrollBar hScale) {
 
-		if ( ! canvasArePainted) {
+		GraphicsContext
+			context = canvas.getGraphicsContext2D();
 
-			GraphicsContext
-				context = canvas.getGraphicsContext2D();
+		double
+			verticalScale = 1.,
+			horizontalScale = 1.,
 
-			clean(canvas);
-			context.setLineWidth(1);
+			height = canvas.getHeight(),
+			width = canvas.getWidth(),
+
+			scaledHeight = height * verticalScale,
+			adjustToVerticalCenter = (scaledHeight / 2.),
+			accountForMinResolution = adjustToVerticalCenter / 4;
+
+		context.setLineWidth(1);
+		context.setStroke(BLUE);
+		context.strokeLine(0, height / 2, width, height / 2);
+
+		int
+			numberOfLines = (32 - Integer.numberOfLeadingZeros((int) accountForMinResolution)),
+			leftMargin = 20;
+
+		context.setFont(new Font("Arial", 10));
+
+		for (int i = 1; i <= numberOfLines; i++) {
+
+			context.setStroke(DODGERBLUE);
 
 			double
-				verticalScale = 1., // TODO to be taken from mouseScroll
-				horizontalScale = 1.,    // TODO as above
+				y1 = (height / 2) - scaledHeight / (1 << i),
+				y2 = (height / 2) + scaledHeight / (1 << i);
 
-				height = canvas.getHeight(),
-				width = canvas.getWidth(),
+			int
+				txt = (-(i - 1) * 6);
 
-				scaledHeight = height * verticalScale,
-				adjustToVerticalCenter = (scaledHeight / 2.),
-				accountForMinResolution = adjustToVerticalCenter / 4;
+			if (y1 >= 0) {
 
-			//*	horizontals  --------------------------------------------------------------------------
+				if (i > 1 && i < numberOfLines) {
 
+					context.setStroke(BLUE);
+					context.strokeText(Integer.toString(txt), 1, y1 + 4);
+
+					context.setStroke(DODGERBLUE);
+					context.strokeLine(leftMargin * 0.85, y1, width, y1);
+				}
+
+				else {
+					context.strokeLine(leftMargin, y1, width, y1);
+				}
+			}
+
+			if (y2 <= height && y1 != y2) {
+
+				if (i > 1 && i < numberOfLines) {
+
+					context.setStroke(BLUE);
+					context.strokeText(Integer.toString(txt), 1, y2 + 4);
+
+					context.setStroke(DODGERBLUE);
+					context.strokeLine(leftMargin * 0.85, y2, width, y2);
+				}
+
+				else {
+					context.setStroke(DODGERBLUE);
+					context.strokeLine(leftMargin, y2, width, y2);
+				}
+			}
+		}
+
+
+	}
+
+
+	void drawEverything(Canvas canvas, ScrollBar hScroll, ScrollBar hScale) {
+
+		GraphicsContext
+			context = canvas.getGraphicsContext2D();
+
+		clean(canvas);
+		context.setLineWidth(1);
+
+		double
+			verticalScale = 1.,
+			horizontalScale = 1.,
+
+			height = canvas.getHeight(),
+			width = canvas.getWidth(),
+
+			scaledHeight = height * verticalScale,
+			adjustToVerticalCenter = (scaledHeight / 2.),
+			accountForMinResolution = adjustToVerticalCenter / 4;
+
+
+		/*{
 			context.setStroke(BLUE);
 			context.strokeLine(0, height / 2, width, height / 2);
 
@@ -463,13 +567,15 @@ public class Main extends Application {
 					if (i > 1 && i < numberOfLines) {
 
 						context.setStroke(BLUE);
-						context.strokeText(Integer.toString(txt), 1, y1  + 4);
+						context.strokeText(Integer.toString(txt), 1, y1 + 4);
 
 						context.setStroke(DODGERBLUE);
 						context.strokeLine(leftMargin * 0.85, y1, width, y1);
 					}
 
-					else context.strokeLine(leftMargin, y1, width, y1);
+					else {
+						context.strokeLine(leftMargin, y1, width, y1);
+					}
 				}
 
 				if (y2 <= height && y1 != y2) {
@@ -489,74 +595,80 @@ public class Main extends Application {
 					}
 				}
 			}
+		}
+		*/    // * horizontals
 
-			//	---------------------------------------------------------------------------------------
+		drawHorizontals(canvas, hScroll, hScale);
 
-			Strip
-				strip = FileCache.loadCurrent().getSignal().getStrip(0);
 
-			WaveHeader
-				currentHeader = FileCache.loadCurrent().getHeader();
+		//	-------------------------------------------------------------------------------
+
+		Strip
+			strip = FileCache.loadCurrent().getSignal().getStrip(0);
+
+		WaveHeader
+			currentHeader = FileCache.loadCurrent().getHeader();
+
+		int
+			leftMargin = 20;
+
+		int
+			waveLength = strip.size(),
+			bitsPerSample = currentHeader.getField(FileContentStructure.BITS_PER_SAMPLE) - 1,
+			samplingRate = currentHeader.getField(FileContentStructure.SAMPLE_PER_SEC),
+			verticalGridResolution = samplingRate / 1000,
+			movement = (int) hScroll.getValue(),
+			verticalGridMovement = movement % verticalGridResolution;
+
+		// * verticals  -------------------------------------------------------------------
+
+		context.setStroke(DODGERBLUE);
+
+		context.strokeLine(leftMargin, 0, leftMargin, height);
+		context.strokeLine(width, 0, width + leftMargin, height);
+
+		context.setStroke(LIGHTGREY);
+
+		for (int i = 0; i < width - leftMargin - 2; i++) {
 
 			int
-				bitsPerSample = currentHeader.getField(FileContentStructure.BITS_PER_SAMPLE) - 1,
-				samplingRate = currentHeader.getField(FileContentStructure.SAMPLE_PER_SEC),
-				verticalGridResolution = samplingRate / 1000,
-				movement = (int) horizontal.getValue(),
-				verticalGridMovement = movement % verticalGridResolution;
+				x = (i * verticalGridResolution) - verticalGridMovement;
 
-			//*	verticals  ----------------------------------------------------------------------------
-
-			context.setStroke(DODGERBLUE);
-
-			context.strokeLine(leftMargin, 0, leftMargin, height);
-			context.strokeLine(width, 0, width + leftMargin, height);
-
-			context.setStroke(LIGHTGREY);
-
-			for (int i = 0 ; i < width - leftMargin - 2; i++) {
-
-				int
-					x = (i * verticalGridResolution) - verticalGridMovement;
-
-				context.strokeLine(x, 0, x, height);
-			}
-
-			//*	waveForm  -----------------------------------------------------------------------------
-
-			context.setStroke(RED);
-
-			for (int i = 1; i < Math.min(width, strip.size() - width) - 2 - 20; i++) {
-
-				double
-					prevSample = (double) strip.get(i + movement - 1),
-					sample = (double) strip.get(i + movement),
-
-					verticalCenter = height / 2,
-
-					prevSampleAmplitude = prevSample / (double) (1 << bitsPerSample),
-					prevDcOffset = verticalCenter * (1 - prevSampleAmplitude),
-
-					sampleAmplitude = sample / (double) (1 << bitsPerSample),
-					dcOffset = verticalCenter * (1 - sampleAmplitude);
-
-				context.strokeLine(i + 20, prevDcOffset, i + 20 + 1, dcOffset);
-			}
-			if (!canvasArePainted) canvasArePainted = true;
+			context.strokeLine(x, 0, x, height);
 		}
+
+		// * waveForm  --------------------------------------------------------------------
+
+		context.setStroke(RED);
+
+		for (int i = 1; i < Math.min(width, strip.size() - width) - 2 - 20; i++) {
+
+			double
+				prevSample = (double) strip.get(i + movement - 1),
+				sample = (double) strip.get(i + movement),
+
+				verticalCenter = height / 2,
+
+				prevSampleAmplitude = prevSample / (double) (1 << bitsPerSample),
+				prevDcOffset = verticalCenter * (1 - prevSampleAmplitude),
+
+				sampleAmplitude = sample / (double) (1 << bitsPerSample),
+				dcOffset = verticalCenter * (1 - sampleAmplitude);
+
+			context.strokeLine(i + 20, prevDcOffset, i + 20 + 1, dcOffset);
+		}
+		if (!canvasArePainted) canvasArePainted = true;
 	}
 
-/*
-	void redraw(Canvas canvas, ScrollBar horizontal) {
+	void redraw(Canvas canvas, ScrollBar hScroll, ScrollBar hScale) {
 
 		clean(canvas);
 
 		GraphicsContext
 			context = canvas.getGraphicsContext2D();
 
-		if (FileCache.fileCache.size() > 0) drawEverything(canvas, horizontal);
+		drawEverything(canvas, hScroll, hScale);
 	}
-*/
 
 	void clean(Canvas canvas) {
 

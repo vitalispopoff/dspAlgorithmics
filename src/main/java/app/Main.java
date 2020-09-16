@@ -4,22 +4,16 @@ import data.FileCache;
 import data.structure.*;
 import gui.Menus.MainMenuController;
 import javafx.application.Application;
-import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.VPos;
 import javafx.scene.*;
 import javafx.scene.canvas.*;
-import javafx.scene.control.Control;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.*;
 
@@ -34,74 +28,109 @@ public class Main extends Application {
 	static boolean
 		canvasArePainted = false;
 
+	static double
+		stageW = 640.,
+		stageH = 480.,
+		stageWAdjust = 16,
+		stageHAdjust = 39,
+		col0W = 5.,
+		col2W = 25.,
+		row0H = 30.,
+		row2H = 25.,
+		scrollBarAdjust = 2.;
 
-	@Override
-	public void start(Stage stage) {
+	static AtomicReference<Double>
+		col1W = new AtomicReference<>(stageW - col0W - col2W),
+		row1H = new AtomicReference<>(stageH - row0H - row2H);
 
-		double
-			stageW = 640.,
-			stageH = 480.,
+	static ColumnConstraints
+		col0 = new ColumnConstraints(col0W, col0W, col0W),
+		col1 = new ColumnConstraints(col1W.get(), col1W.get(), col1W.get()),
+		col2 = new ColumnConstraints(col2W, col2W, col2W);
 
-			stageWAdjust = 16,
-			stageHAdjust = 39,
+	static RowConstraints
+		row0 = new RowConstraints(row0H, row0H, row0H),
+		row1 = new RowConstraints(row1H.get(), row1H.get(), row1H.get()),
+		row2 = new RowConstraints(row2H, row2H, row2H);
 
-			col0W = 5.,
-			col2W = 25.,
+	static Stage
+		theStage;
 
-			row0H = 30.,
-			row2H = 25.;
+	static GridPane
+		p = new GridPane();
 
-		AtomicReference<Double>
-			col1W = new AtomicReference<>(stageW - col0W - col2W),
-			row1H = new AtomicReference<>(stageH - row0H - row2H);
+	static Scene
+		scene = new Scene(p, stageW, stageH);
 
-		{
-			stage.setWidth(stageW + stageWAdjust);
-			stage.setHeight(stageH + stageHAdjust);
+	static Canvas
+		canvas = new Canvas();
 
-			stage.setResizable(true);
-		}    // * stage setup
+	static ScrollBar
+		hScroll = new ScrollBar(),
+		vScroll = new ScrollBar(),
+		hScale = new ScrollBar(),
+		vScale = new ScrollBar();
 
-		//	* Scene -------------------------------------------------------------------------------
+	static StackPane
+		hScrollPane = new StackPane(hScale, hScroll),
+		vScrollPane = new StackPane(vScale, vScroll);
 
-		GridPane
-			p = new GridPane();
+//	-------------------------------------------------------------------------------------------
 
-		p.setGridLinesVisible(false);
+	private static void setupTheStage(Stage stage) {
 
-		Scene
-			scene = new Scene(p, stageW, stageH);
+		theStage = stage;
 
-		//	* GridPane ----------------------------------------------------------------------------
+		theStage.setWidth(stageW + stageWAdjust);
+		theStage.setHeight(stageH + stageHAdjust);
 
-		ColumnConstraints
-			col0 = new ColumnConstraints(col0W, col0W, col0W),
-			col1 = new ColumnConstraints(col1W.get(), col1W.get(), col1W.get()),
-			col2 = new ColumnConstraints(col2W, col2W, col2W);
+		theStage.setResizable(true);
+	}
 
-		RowConstraints
-			row0 = new RowConstraints(row0H, row0H, row0H),
-			row1 = new RowConstraints(row1H.get(), row1H.get(), row1H.get()),
-			row2 = new RowConstraints(row2H, row2H, row2H);
+	private static void setupGridPaneP() {
 
-		{
-			p.getColumnConstraints().add(col0);
-			p.getColumnConstraints().add(col1);
-			p.getColumnConstraints().add(col2);
+		p.getColumnConstraints().add(col0);
+		p.getColumnConstraints().add(col1);
+		p.getColumnConstraints().add(col2);
 
-			p.getRowConstraints().add(row0);
-			p.getRowConstraints().add(row1);
-			p.getRowConstraints().add(row2);
+		p.getRowConstraints().add(row0);
+		p.getRowConstraints().add(row1);
+		p.getRowConstraints().add(row2);
 
-			p.setGridLinesVisible(false);
+		p.setGridLinesVisible(true);
 
-		}    // * gridPane setup
+		col1.minWidthProperty().bind(
+			theStage.widthProperty()
+				.subtract(stageWAdjust)
+				.subtract(col0W)
+				.subtract(col2W)
+		);
 
+		col1.maxWidthProperty().bind(
+			theStage.widthProperty()
+				.subtract(stageWAdjust)
+				.subtract(col0W)
+				.subtract(col2W)
+		);
 
+		row1.minHeightProperty().bind(
+			theStage.heightProperty()
+				.subtract(stageHAdjust)
+				.subtract(row0H)
+				.subtract(row2H)
+		);
 
-		//	? MainMenu ----------------------------------------
+		row1.maxHeightProperty().bind(
+			theStage.heightProperty()
+				.subtract(stageHAdjust)
+				.subtract(row0H)
+				.subtract(row2H)
+		);
+	}
 
-		MainMenuController.setStage(stage);
+	private static void setupMainMenu() {
+
+		MainMenuController.setStage(theStage);
 
 		String
 			location = "E:\\_LAB\\pl\\popoff\\dspAlgorithmics\\src\\main\\resources\\FXMLMainMenu.fxml";
@@ -131,70 +160,60 @@ public class Main extends Application {
 
 			e.printStackTrace();
 		}
+	}
 
-		//	? Canvas ------------------------------------------
-
-		Canvas
-			canvas = new Canvas();
+	private static void setupCanvas() {
 
 		canvas.setWidth(col1W.get());
 		canvas.setHeight(row1H.get());
 
 		p.add(canvas, 1, 1);
 
-		Runnable r = () -> {
+		canvas.widthProperty().bind(
+			theStage.widthProperty()
+				.subtract(stageWAdjust)
+				.subtract(col0W)
+				.subtract(col2W)
+		);
 
-			GraphicsContext
-				g = canvas.getGraphicsContext2D();
+		canvas.heightProperty().bind(
+			theStage.heightProperty()
+				.subtract(stageHAdjust)
+				.subtract(row0H)
+				.subtract(row2H)
+		);
+	}
 
-			g.clearRect(0, 0, col1.getMinWidth(), row1.getMinHeight());
-			g.strokeLine(0, 0, col1.getMinWidth(), row1.getMinHeight());
-		};    // ! temporal
-//		r.run();
+	private static void setupScrollBars() {
 
-		//	? ScrollBars --------------------------------------
-
-		double
-			scrollBarAdjust = 2.;
-
-		ScrollBar
-			hScroll = new ScrollBar(),
-			vScroll = new ScrollBar(),
-			hScale = new ScrollBar(),
-			vScale = new ScrollBar();
-
-		StackPane
-			hScrollPane = new StackPane(hScale, hScroll),
-			vScrollPane = new StackPane(vScale, vScroll);
-
-		hScrollPane.setVisible(false);
-		vScrollPane.setVisible(false);
+//		hScrollPane.setVisible(false);
+//		vScrollPane.setVisible(false);
 
 		{
 			hScroll.setOrientation(Orientation.HORIZONTAL);
-			hScroll.setMinWidth(col1W.get() - scrollBarAdjust);
-			hScroll.setMaxWidth(col1W.get() - scrollBarAdjust);
+//			hScroll.setMinWidth(col1W.get() - scrollBarAdjust);
+//			hScroll.setMaxWidth(col1W.get() - scrollBarAdjust);
 			hScroll.setMin(0.);
 			hScroll.setMax(1.);
 			hScroll.setValue(0.);
 
 			vScroll.setOrientation(Orientation.VERTICAL);
-			vScroll.setMinHeight(row1H.get() - scrollBarAdjust);
-			vScroll.setMaxHeight(row1H.get() - scrollBarAdjust);
+//			vScroll.setMinHeight(row1H.get() - scrollBarAdjust);
+//			vScroll.setMaxHeight(row1H.get() - scrollBarAdjust);
 			vScroll.setMin(0.);
 			vScroll.setMax(1.);
 			vScroll.setValue(0.5);
 
 			hScale.setOrientation(Orientation.HORIZONTAL);
-			hScale.setMinWidth(col1W.get() - scrollBarAdjust);
-			hScale.setMaxWidth(col1W.get() - scrollBarAdjust);
+//			hScale.setMinWidth(col1W.get() - scrollBarAdjust);
+//			hScale.setMaxWidth(col1W.get() - scrollBarAdjust);
 			hScale.setMin(32.);
 			hScale.setValue(col1W.get() - scrollBarAdjust);
 			hScale.setMax(col1W.get() - scrollBarAdjust);
 
 			vScale.setOrientation(Orientation.VERTICAL);
-			vScale.setMinHeight(row1H.get() - scrollBarAdjust);
-			vScale.setMaxHeight(row1H.get() - scrollBarAdjust);
+//			vScale.setMinHeight(row1H.get() - scrollBarAdjust);
+//			vScale.setMaxHeight(row1H.get() - scrollBarAdjust);
 			vScale.setMin(33.);
 			vScale.setValue((row1H.get() - scrollBarAdjust) / 2.);
 			vScale.setMax(row1H.get() - scrollBarAdjust);
@@ -212,8 +231,88 @@ public class Main extends Application {
 
 		}    // * adding scrollbarPanes to the grid
 
+		hScroll.minWidthProperty().bind(
+			theStage.widthProperty()
+				.subtract(stageWAdjust)
+				.subtract(col0W)
+				.subtract(col2W)
+				.subtract(scrollBarAdjust)
+		);
+
+		hScroll.maxWidthProperty().bind(
+			theStage.widthProperty()
+				.subtract(stageWAdjust)
+				.subtract(col0W)
+				.subtract(col2W)
+				.subtract(scrollBarAdjust)
+		);
+
+		hScale.minWidthProperty().bind(
+			theStage.widthProperty()
+				.subtract(stageWAdjust)
+				.subtract(col0W)
+				.subtract(col2W)
+				.subtract(scrollBarAdjust)
+		);
+
+		hScale.maxWidthProperty().bind(
+			theStage.widthProperty()
+				.subtract(stageWAdjust)
+				.subtract(col0W)
+				.subtract(col2W)
+				.subtract(scrollBarAdjust)
+		);
+
+		vScroll.minHeightProperty().bind(
+			theStage.heightProperty()
+				.subtract(stageHAdjust)
+				.subtract(row0H)
+				.subtract(row2H)
+				.subtract(scrollBarAdjust)
+		);
+
+		vScroll.maxHeightProperty().bind(
+			theStage.heightProperty()
+				.subtract(stageHAdjust)
+				.subtract(row0H)
+				.subtract(row2H)
+				.subtract(scrollBarAdjust)
+		);
+
+		vScale.minHeightProperty().bind(
+			theStage.heightProperty()
+				.subtract(stageHAdjust)
+				.subtract(row0H)
+				.subtract(row2H)
+				.subtract(scrollBarAdjust)
+		);
+
+		vScale.maxHeightProperty().bind(
+			theStage.heightProperty()
+				.subtract(stageHAdjust)
+				.subtract(row0H)
+				.subtract(row2H)
+				.subtract(scrollBarAdjust)
+		);
+
+	}
+
+//	-------------------------------------------------------------------------------------------
+
+
+	@Override
+	public void start(Stage stage) {
+
+		setupTheStage(stage);
+		setupGridPaneP();
+		setupMainMenu();
+		setupCanvas();
+		setupScrollBars();
+
+
 		//*	listeners	---------------------------------------------------------------------------
 
+/*
 		stage.widthProperty().addListener((observable, oldValue, newValue) -> {
 
 			double
@@ -221,8 +320,8 @@ public class Main extends Application {
 				v = value - col0W - col2W;
 
 			{
-				col1.setMinWidth(v);
-				col1.setMaxWidth(v);
+//				col1.setMinWidth(v);
+//				col1.setMaxWidth(v);
 
 				canvas.setWidth(v);
 
@@ -273,15 +372,15 @@ public class Main extends Application {
 			redraw(canvas, hScroll, hScale);
 		});
 
-		vScroll.valueProperty().addListener((observable, oldValue, newValue) -> {
-
-
-		});
-
-
 		hScale.valueProperty().addListener((observable, oldValue, newValue) -> {
 
 			redraw(canvas, hScroll, hScale);
+		});
+
+
+		vScroll.valueProperty().addListener((observable, oldValue, newValue) -> {
+
+
 		});
 
 		vScale.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -297,8 +396,9 @@ public class Main extends Application {
 				vScrollPane.setVisible(!newValue);
 			}    // * scrollPanes toggle
 
-			if (newValue)
+			if (newValue) {
 				clean(canvas);
+			}
 
 			else {
 
@@ -332,7 +432,7 @@ public class Main extends Application {
 
 			}
 
-		});
+		});*/
 
 		{
 			int dummy;

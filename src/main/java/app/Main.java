@@ -15,7 +15,6 @@ import javafx.geometry.VPos;
 import javafx.scene.*;
 import javafx.scene.canvas.*;
 import javafx.scene.control.ScrollBar;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -77,8 +76,8 @@ public class Main extends Application {
 		vScale = new ScrollBar();
 
 	static StackPane
-		hScrollPane = new StackPane(/*hScale,*/ hScroll),
-		vScrollPane = new StackPane(vScale, vScroll);
+		hScrollPane = new StackPane(),
+		vScrollPane = new StackPane();
 
 //	* local properties ------------------------------------------------------------------------
 
@@ -87,39 +86,39 @@ public class Main extends Application {
 		vScrollHeight = new SimpleDoubleProperty();
 
 	private static final BooleanProperty
-		ctrlKeyIsDown = new SimpleBooleanProperty();
+		ctrlKeyIsDown = new SimpleBooleanProperty(false);
 
-	public static double getHScrollWidth(){
+	public static double getHScrollWidth() {
 
 		return hScrollWidth.get();
 	}
 
-	public static DoubleProperty hScrollWidthProperty(){
+	public static DoubleProperty hScrollWidthProperty() {
 
 		return hScrollWidth;
 	}
 
-	public static double getVScrollHeight(){
+	public static double getVScrollHeight() {
 
 		return vScrollHeight.get();
 	}
 
-	public static DoubleProperty vScrollHeightProperty(){
+	public static DoubleProperty vScrollHeightProperty() {
 
 		return vScrollHeight;
 	}
 
-	public static boolean getCtrlKeyIsDown(){
+	public static boolean getCtrlKeyIsDown() {
 
 		return ctrlKeyIsDown.get();
 	}
 
-	public static void setCtrlKeyIsDown(boolean b){
+	public static void setCtrlKeyIsDown(boolean b) {
 
 		ctrlKeyIsDown.set(b);
 	}
 
-	public static BooleanProperty ctrlKeyIsDownProperty(){
+	public static BooleanProperty ctrlKeyIsDownProperty() {
 
 		return ctrlKeyIsDown;
 	}
@@ -208,15 +207,11 @@ public class Main extends Application {
 
 	private static void setupScrollBars() {
 
-		hScrollPane.setVisible(false);
-		vScrollPane.setVisible(false);
-
 		{
 			hScroll.setOrientation(Orientation.HORIZONTAL);
 			hScroll.setMin(0.);
 			hScroll.setMax(1.);
 			hScroll.setValue(0.);
-			hScroll.setVisible(true);
 
 			vScroll.setOrientation(Orientation.VERTICAL);
 			vScroll.setMin(0.);
@@ -236,22 +231,12 @@ public class Main extends Application {
 		}    // * scrollBars setup
 
 		{
-			p.add(hScrollPane, 1, 2);
-			GridPane.setValignment(hScroll, VPos.CENTER);
-			GridPane.setHalignment(hScroll, HPos.CENTER);
-
-			p.add(vScrollPane, 2, 1);
-			GridPane.setValignment(vScroll, VPos.CENTER);
-			GridPane.setHalignment(vScroll, HPos.CENTER);
-
-		}    // * adding scrollbarPanes to the grid
-
-		{
-			hScrollPane.visibleProperty().bind(MainMenuController.cacheIsEmptyStaticProperty().not());
-			vScrollPane.visibleProperty().bind(MainMenuController.cacheIsEmptyStaticProperty().not());
 
 			hScroll.visibleProperty().bind(ctrlKeyIsDownProperty().not());
 			vScroll.visibleProperty().bind(ctrlKeyIsDownProperty().not());
+
+			hScrollPane.visibleProperty().bind(MainMenuController.cacheIsEmptyStaticProperty().not());
+			vScrollPane.visibleProperty().bind(MainMenuController.cacheIsEmptyStaticProperty().not());
 
 			hScroll.minWidthProperty().bind(hScrollWidthProperty().subtract(scrollBarAdjust));
 			hScroll.maxWidthProperty().bind(hScrollWidthProperty().subtract(scrollBarAdjust));
@@ -263,7 +248,18 @@ public class Main extends Application {
 			vScale.minHeightProperty().bind(vScrollHeightProperty().subtract(scrollBarAdjust));
 			vScale.maxHeightProperty().bind(vScrollHeightProperty().subtract(scrollBarAdjust));
 
-		}	// * bindings
+		}    // * bindings
+
+		{
+
+			hScrollPane.getChildren().addAll(hScale, hScroll);
+			vScrollPane.getChildren().addAll(vScale, vScroll);
+
+			p.add(hScrollPane, 1, 2);
+			p.add(vScrollPane, 2, 1);
+
+		}    // * adding scrollbarPanes to the grid
+
 	}
 
 //	-------------------------------------------------------------------------------------------
@@ -289,19 +285,17 @@ public class Main extends Application {
 		setupGridPaneP();
 		setupMainMenu();
 		setupCanvas();
-
-
-		scene.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) ->{
-
-			setCtrlKeyIsDown(event.isControlDown());
-		});
-
-		scene.addEventFilter(KeyEvent.KEY_RELEASED, (KeyEvent event) ->{
-
-			setCtrlKeyIsDown(event.isControlDown());
-		});
-
 		setupScrollBars();
+
+		scene.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+
+			setCtrlKeyIsDown(event.isControlDown());
+		});
+
+		scene.addEventFilter(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
+
+			setCtrlKeyIsDown(event.isControlDown());
+		});
 
 		stage.setScene(scene);
 		stage.show();
@@ -383,7 +377,7 @@ public class Main extends Application {
 
 	}
 
-	static void drawVerticals(){
+	static void drawVerticals() {
 
 		GraphicsContext
 			context = canvas.getGraphicsContext2D();

@@ -165,6 +165,9 @@ public class Main extends Application {
 			hScrollPane = new StackPane(hScale, hScroll),
 			vScrollPane = new StackPane(vScale, vScroll);
 
+		hScrollPane.setVisible(false);
+		vScrollPane.setVisible(false);
+
 
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
 
@@ -292,6 +295,10 @@ public class Main extends Application {
 
 		MainMenuController.cacheIsEmptyStaticProperty().addListener((observable, oldValue, newValue) -> {
 
+
+
+			hScrollPane.setVisible(! newValue);
+			vScrollPane.setVisible(! newValue);
 
 		});
 

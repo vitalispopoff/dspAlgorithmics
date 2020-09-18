@@ -2,10 +2,10 @@ package gui;
 
 //import data.FileCache;
 //import data.structure.*;
-//import gui.Menus.MainMenuController;
+import gui.Menus.MainMenuController;
 //import javafx.beans.property.*;
-//import javafx.fxml.FXMLLoader;
-//import javafx.geometry.*;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.canvas.*;
 import javafx.scene.control.ScrollBar;
@@ -14,8 +14,8 @@ import javafx.scene.layout.*;
 //import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-//import java.io.*;
-//import java.net.URL;
+import java.io.*;
+import java.net.URL;
 //import java.util.concurrent.atomic.AtomicReference;
 //
 //import static gui.StageParams.*;
@@ -56,15 +56,15 @@ public class MainScene extends Scene {
 //		row1 = new RowConstraints(row1H.get(), row1H.get(), row1H.get()),
 //		row2 = new RowConstraints(row2H, row2H, row2H);
 
-	static ScrollBar
-		hScroll = new ScrollBar(),
-		vScroll = new ScrollBar(),
-		hScale = new ScrollBar(),
-		vScale = new ScrollBar();
-
-	static StackPane
-		hScrollPane = new StackPane(),
-		vScrollPane = new StackPane();
+//	static ScrollBar
+//		hScroll = new ScrollBar(),
+//		vScroll = new ScrollBar(),
+//		hScale = new ScrollBar(),
+//		vScale = new ScrollBar();
+//
+//	static StackPane
+//		hScrollPane = new StackPane(),
+//		vScrollPane = new StackPane();
 
 	static Canvas
 		canvas = new Canvas();
@@ -118,8 +118,8 @@ public class MainScene extends Scene {
 //		row1.maxHeightProperty().bind(vScrollHeightProperty());
 	}
 
-	private static void setupMainMenu() {
-
+//	private static void setupMainMenu() {
+//
 //		MainMenuController.setStage(stage);
 //
 //		String
@@ -146,7 +146,7 @@ public class MainScene extends Scene {
 //
 //			e.printStackTrace();
 //		}
-	}
+//	}
 
 	private static void setupCanvas() {
 

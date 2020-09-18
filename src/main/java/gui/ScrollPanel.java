@@ -1,5 +1,6 @@
 package gui;
 
+import gui.Menus.MainMenuController;
 import javafx.beans.property.*;
 import javafx.geometry.Orientation;
 import javafx.scene.control.ScrollBar;
@@ -35,16 +36,15 @@ public class ScrollPanel extends StackPane {
 		scroll = new ScrollBar();
 		scale = new ScrollBar();
 
-		scrollValueProperty().bind(
-			scroll.valueProperty());
+		scrollValueProperty().bind(scroll.valueProperty());
 
-		scaleValueProperty().bind(
-			scale.valueProperty()
-		);
+		scaleValueProperty().bind(scale.valueProperty());
 
 		bindScrollBarProperties();
 		setupScrollBars();
 		getChildren().addAll(scale, scroll);
+
+		visibleProperty().bind(MainMenuController.cacheIsEmptyStaticProperty().not());
 	}
 
 

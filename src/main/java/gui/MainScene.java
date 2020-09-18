@@ -1,38 +1,38 @@
-package app;
+package gui;
 
-import gui.MainScene;
-import gui.MainStage;
-import javafx.application.Application;
-import javafx.stage.*;
+import data.FileCache;
+import data.structure.*;
+import gui.Menus.MainMenuController;
+import javafx.beans.property.*;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.*;
+import javafx.scene.*;
+import javafx.scene.canvas.*;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
+import java.io.*;
+import java.net.URL;
+import java.util.concurrent.atomic.AtomicReference;
 
-public class Main extends Application {
+import static javafx.scene.paint.Color.*;
 
-	@Override
-	public void start(Stage stage) {
+public class MainScene extends Scene {
 
-		stage = new MainStage();
-
-		MainScene
-			scene = new MainScene( (MainStage) stage);
-
-		stage.setScene(scene);
-		stage.show();
-	}
-
-	public static void main(String[] args) {
-
-		launch(args);
-	}
-
-/*
+	static MainStage
+		stage;
 
 	static boolean
 		canvasArePainted = false;
 
 	static double
-		stageWAdjust = 16,
-		stageHAdjust = 39,
+		stageW = MainStage.getInitialStageWidth(),
+		stageH = MainStage.getInitialStageHeight(),
+		stageWAdjust = MainStage.stageWAdjust,
+		stageHAdjust = MainStage.stageHAdjust,
 		col0W = 5.,
 		col2W = 25.,
 		row0H = 30.,
@@ -58,9 +58,6 @@ public class Main extends Application {
 	static GridPane
 		p = new GridPane();
 
-	static Scene
-		scene = new Scene(p);
-
 	static Canvas
 		canvas = new Canvas();
 
@@ -74,14 +71,24 @@ public class Main extends Application {
 		hScrollPane = new StackPane(),
 		vScrollPane = new StackPane();
 
-//	* local properties ------------------------------------------------------------------------
+
+
+	public MainScene(MainStage s){
+
+		this(p);
+
+		stage = s;
+	}
+
+	public MainScene(Parent root) {
+
+		super(root);
+	}
+
+//	--------------------------------------------------------------------------------------------------------------------
 
 	private static final DoubleProperty
-		hScrollWidth = new SimpleDoubleProperty(),
-		vScrollHeight = new SimpleDoubleProperty();
-
-	private static final BooleanProperty
-		ctrlKeyIsDown = new SimpleBooleanProperty(false);
+		hScrollWidth = new SimpleDoubleProperty();
 
 	public static double getHScrollWidth() {
 
@@ -93,6 +100,11 @@ public class Main extends Application {
 		return hScrollWidth;
 	}
 
+
+
+	private static final DoubleProperty
+		vScrollHeight = new SimpleDoubleProperty();
+
 	public static double getVScrollHeight() {
 
 		return vScrollHeight.get();
@@ -102,6 +114,11 @@ public class Main extends Application {
 
 		return vScrollHeight;
 	}
+
+
+
+	private static final BooleanProperty
+		ctrlKeyIsDown = new SimpleBooleanProperty(false);
 
 	public static boolean getCtrlKeyIsDown() {
 
@@ -140,7 +157,7 @@ public class Main extends Application {
 
 	private static void setupMainMenu() {
 
-		MainMenuController.setStage(theStage);
+		MainMenuController.setStage(stage);
 
 		String
 			location = "E:\\_LAB\\pl\\popoff\\dspAlgorithmics\\src\\main\\resources\\FXMLMainMenu.fxml";
@@ -176,18 +193,19 @@ public class Main extends Application {
 		p.add(canvas, 1, 1);
 
 		canvas.widthProperty().bind(
-			theStage.widthProperty()
+			stage.widthProperty()
 				.subtract(stageWAdjust)
 				.subtract(col0W)
 				.subtract(col2W)
 		);
 
 		canvas.heightProperty().bind(
-			theStage.heightProperty()
+			stage.heightProperty()
 				.subtract(stageHAdjust)
 				.subtract(row0H)
 				.subtract(row2H)
 		);
+
 	}
 
 	private static void setupScrollBars() {
@@ -216,7 +234,6 @@ public class Main extends Application {
 		}    // * scrollBars setup
 
 		{
-
 			hScroll.visibleProperty().bind(ctrlKeyIsDownProperty().not());
 			vScroll.visibleProperty().bind(ctrlKeyIsDownProperty().not());
 
@@ -236,7 +253,6 @@ public class Main extends Application {
 		}    // * bindings
 
 		{
-
 			hScrollPane.getChildren().addAll(hScale, hScroll);
 			vScrollPane.getChildren().addAll(vScale, vScroll);
 
@@ -249,7 +265,7 @@ public class Main extends Application {
 
 //	-------------------------------------------------------------------------------------------
 
-	private static void bindings(Stage stage){
+	void bindings(Stage stage){
 
 		hScrollWidthProperty().bind(
 			stage.widthProperty()
@@ -265,14 +281,13 @@ public class Main extends Application {
 				.subtract(row2H)
 		);
 
-		setupTheStage(stage);
 		setupGridPaneP();
 		setupMainMenu();
 		setupCanvas();
 		setupScrollBars();
 
-		scene.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> setCtrlKeyIsDown(event.isControlDown()));
-		scene.addEventFilter(KeyEvent.KEY_RELEASED, (KeyEvent event) -> setCtrlKeyIsDown(event.isControlDown()));
+		addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> setCtrlKeyIsDown(event.isControlDown()));
+		addEventFilter(KeyEvent.KEY_RELEASED, (KeyEvent event) -> setCtrlKeyIsDown(event.isControlDown()));
 	}
 
 //	drawings ----------------------------------------------------------------------------------
@@ -408,8 +423,7 @@ public class Main extends Application {
 			accountForMinResolution = adjustToVerticalCenter / 4;
 
 
-		*/
-/*{
+		/*{
 			context.setStroke(BLUE);
 			context.strokeLine(0, height / 2, width, height / 2);
 
@@ -464,8 +478,7 @@ public class Main extends Application {
 				}
 			}
 		}
-		*//*
-    // * horizontals
+		*/    // * horizontals
 
 		drawHorizontals();
 		drawVerticals();
@@ -492,7 +505,6 @@ public class Main extends Application {
 
 		// * verticals  -------------------------------------------------------------------
 
-*/
 /*		context.setStroke(DODGERBLUE);
 
 		context.strokeLine(leftMargin, 0, leftMargin, height);
@@ -506,8 +518,7 @@ public class Main extends Application {
 				x = (i * verticalGridResolution) - verticalGridMovement;
 
 			context.strokeLine(x, 0, x, height);
-		}*//*
-
+		}*/
 
 		// * waveForm  --------------------------------------------------------------------
 
@@ -554,9 +565,5 @@ public class Main extends Application {
 			canvasArePainted = false;
 		}
 	}
-
-//	--------------------------------------------------------------------------------------------------------------------
-*/
-
 
 }

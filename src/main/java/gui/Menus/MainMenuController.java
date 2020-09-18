@@ -2,10 +2,14 @@ package gui.Menus;
 
 import algorithms.metaProcessors.FileManager;
 import data.*;
+import gui.MainScene;
+import gui.Root;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.*;
 
 import java.io.File;
@@ -17,7 +21,7 @@ public class MainMenuController {
 	private static final BooleanProperty
 		cacheIsEmpty = new SimpleBooleanProperty(data.FileCache.fileCache.size() == 0);
 
-	static Stage
+	private static Stage
 		stage;
 
 //	-------------------------------------------------------------------------------------------
@@ -52,6 +56,14 @@ public class MainMenuController {
 			FileManager.FileManagerSettings.setCurrentDefaultPath(path);
 
 			setCacheIsEmpty();
+
+		// ! temporal ----------------------------
+
+			MainScene s = (MainScene) stage.getScene();
+		Root r = (Root) s.getRoot();
+
+			System.out.println("MainMenuController: r " + r.horizontalScrollPanel.scale.isVisible());
+			System.out.println("MainMenuController: s " + s.ctrlKeyIsDownProperty().get());
 		}
 	}
 
@@ -231,4 +243,5 @@ public class MainMenuController {
 
 		return KeyCombination.keyCombination("Ctrl+Q");
 	}
+
 }

@@ -3,6 +3,7 @@ package gui;
 import gui.Menus.MainMenuController;
 import javafx.beans.property.*;
 import javafx.geometry.Orientation;
+import javafx.scene.Scene;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.StackPane;
 
@@ -16,7 +17,7 @@ public class ScrollPanel extends StackPane {
 	Orientation
 		orientation;
 
-	private final ScrollBar
+	public final ScrollBar
 		scroll,
 		scale;
 
@@ -40,7 +41,7 @@ public class ScrollPanel extends StackPane {
 
 		scaleValueProperty().bind(scale.valueProperty());
 
-		bindScrollBarProperties();
+		bindScrollBarSizeProperties();
 		setupScrollBars();
 		getChildren().addAll(scale, scroll);
 
@@ -69,7 +70,7 @@ public class ScrollPanel extends StackPane {
 			.bind(scrollPanelSizeProperty());
 	}
 
-	private void bindScrollBarProperties(){
+	private void bindScrollBarSizeProperties(){
 
 		scrollPanelSizeProperty().bind(
 			(orientation == Orientation.HORIZONTAL
@@ -79,7 +80,10 @@ public class ScrollPanel extends StackPane {
 		);
 	}
 
+	public void bindScrollBarVisibilityProperties(MainScene scene){
 
+		scale.visibleProperty().bind(scene.ctrlKeyIsDownProperty());
+	}
 
 	public DoubleProperty scrollPanelSizeProperty(){
 

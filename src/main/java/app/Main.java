@@ -12,8 +12,10 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) {
 
+		Root root = new Root(stage);
+
 		Scene
-			scene = MainScene.getInstance(stage);
+			scene = new MainScene(root);
 
 		stage.setWidth(getInitialStageWidth() + stageWAdjust);
 		stage.setHeight(getInitialStageHeight() + stageHAdjust);

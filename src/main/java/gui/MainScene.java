@@ -2,20 +2,12 @@ package gui;
 
 //import data.FileCache;
 //import data.structure.*;
-import gui.Menus.MainMenuController;
-//import javafx.beans.property.*;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.*;
+//import gui.Menus.MainMenuController;
+import javafx.beans.property.*;
 import javafx.scene.*;
 import javafx.scene.canvas.*;
-import javafx.scene.control.ScrollBar;
-//import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.input.KeyEvent;
 //import javafx.scene.text.Font;
-import javafx.stage.Stage;
-
-import java.io.*;
-import java.net.URL;
 //import java.util.concurrent.atomic.AtomicReference;
 //
 //import static gui.StageParams.*;
@@ -25,10 +17,10 @@ public class MainScene extends Scene {
 
 //	static Stage
 //		stage;
-
+//
 //	static boolean
 //		canvasArePainted = false;
-
+//
 //	static double
 //		stageW = getInitialStageWidth(),
 //		stageH = StageParams.getInitialStageHeight(),
@@ -41,30 +33,10 @@ public class MainScene extends Scene {
 //		scrollBarAdjust = 2.,
 //		leftMargin = 20.,
 //		bottomMargin = 20.;
-
+//
 //	static AtomicReference<Double>
 //		col1W = new AtomicReference<>(stageW - col0W - col2W),
 //		row1H = new AtomicReference<>(stageH - row0H - row2H);
-//
-//	static ColumnConstraints
-//		col0 = new ColumnConstraints(col0W, col0W, col0W),
-//		col1 = new ColumnConstraints(col1W.get(), col1W.get(), col1W.get()),
-//		col2 = new ColumnConstraints(col2W, col2W, col2W);
-//
-//	static RowConstraints
-//		row0 = new RowConstraints(row0H, row0H, row0H),
-//		row1 = new RowConstraints(row1H.get(), row1H.get(), row1H.get()),
-//		row2 = new RowConstraints(row2H, row2H, row2H);
-
-//	static ScrollBar
-//		hScroll = new ScrollBar(),
-//		vScroll = new ScrollBar(),
-//		hScale = new ScrollBar(),
-//		vScale = new ScrollBar();
-//
-//	static StackPane
-//		hScrollPane = new StackPane(),
-//		vScrollPane = new StackPane();
 
 	static Canvas
 		canvas = new Canvas();
@@ -72,23 +44,27 @@ public class MainScene extends Scene {
 
 // ? Constructor	-------------------------------------------
 
-	public static MainScene getInstance(Stage s){
-
-		Root root = new Root(s);
-
-		return new MainScene(root);
-	}
+//	public static MainScene getInstance(Stage stage){
+//
+//		Root root = new Root(stage);
+//
+//		return new MainScene(root);
+//	}
 
 	public MainScene(Parent root){
 
 		super(root);
 
-//		addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> setCtrlKeyIsDown(event.isControlDown()));
-//		addEventFilter(KeyEvent.KEY_RELEASED, (KeyEvent event) -> setCtrlKeyIsDown(event.isControlDown()));
+		addEventFilter(KeyEvent.KEY_PRESSED, this::setCtrlKeyIsDown);
+		addEventFilter(KeyEvent.KEY_RELEASED, this::setCtrlKeyIsDown);
+		addEventFilter(KeyEvent.KEY_TYPED, (KeyEvent event) -> ctrlKeyIsDown.set(false));
 
-//		setupMainMenu();
+		// ! this needs to be set with the MainMenuController - ActionEvent variables
+
+		((Root)root).bindScrollBarsVisibleProperties(this);
+
 //		setupCanvas();
-//		setupScrollBars();
+
 	}
 
 //	? element setups ------------------------------------------
@@ -117,36 +93,6 @@ public class MainScene extends Scene {
 //		row1.minHeightProperty().bind(vScrollHeightProperty());
 //		row1.maxHeightProperty().bind(vScrollHeightProperty());
 	}
-
-//	private static void setupMainMenu() {
-//
-//		MainMenuController.setStage(stage);
-//
-//		String
-//			location = "E:\\_LAB\\pl\\popoff\\dspAlgorithmics\\src\\main\\resources\\FXMLMainMenu.fxml";
-//
-//		try {
-//
-//			URL
-//				url = new File(location).toURI().toURL();
-//
-//			FXMLLoader
-//				loader = new FXMLLoader(url);
-//
-//			Node
-//				bar = loader.load();
-//
-//			pane.add(bar, 0, 0, 3, 1);
-//			GridPane.setValignment(bar, VPos.TOP);
-//			GridPane.setHalignment(bar, HPos.LEFT);
-//
-//		}    //	* adding bar to the gridPane
-//
-//		catch (IOException e) {
-//
-//			e.printStackTrace();
-//		}
-//	}
 
 	private static void setupCanvas() {
 
@@ -224,53 +170,35 @@ public class MainScene extends Scene {
 
 // ? Properties	-----------------------------------------------
 
-//	private static final DoubleProperty
-//		hScrollWidth = new SimpleDoubleProperty();
-//
-//	public static double getHScrollWidth() {
-//
-//		return hScrollWidth.get();
-//	}
-//
-//	public static DoubleProperty hScrollWidthProperty() {
-//
-//		return hScrollWidth;
-//	}
-//
-//
-//
-//	private static final DoubleProperty
-//		vScrollHeight = new SimpleDoubleProperty();
-//
-//	public static double getVScrollHeight() {
-//
-//		return vScrollHeight.get();
-//	}
-//
-//	public static DoubleProperty vScrollHeightProperty() {
-//
-//		return vScrollHeight;
-//	}
-//
-//
-//
-//	private static final BooleanProperty
-//		ctrlKeyIsDown = new SimpleBooleanProperty(false);
-//
-//	public static boolean getCtrlKeyIsDown() {
-//
-//		return ctrlKeyIsDown.get();
-//	}
-//
-//	public static void setCtrlKeyIsDown(boolean b) {
-//
-//		ctrlKeyIsDown.set(b);
-//	}
-//
-//	public static BooleanProperty ctrlKeyIsDownProperty() {
-//
-//		return ctrlKeyIsDown;
-//	}
+	private final BooleanProperty
+		keyIsPressed = new SimpleBooleanProperty();
+
+	public BooleanProperty getKeyIsPressed(){
+
+		return keyIsPressed;
+	}
+
+	private final BooleanProperty
+		ctrlKeyIsDown = new SimpleBooleanProperty(true);
+
+	public boolean getCtrlKeyIsDown() {
+
+		return ctrlKeyIsDown.get();
+	}
+
+	private void setCtrlKeyIsDown(KeyEvent event) {
+
+		System.out.println("set ctrl in : " + getCtrlKeyIsDown());
+
+		ctrlKeyIsDown.set(event.isControlDown());
+
+		System.out.println("set ctrl out: " + getCtrlKeyIsDown());
+	}
+
+	public BooleanProperty ctrlKeyIsDownProperty() {
+
+		return ctrlKeyIsDown;
+	}
 
 //	drawings ----------------------------------------------------------------------------------
 

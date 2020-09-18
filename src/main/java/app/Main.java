@@ -4,14 +4,9 @@ import data.FileCache;
 import data.structure.*;
 import gui.Menus.MainMenuController;
 import javafx.application.Application;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.HPos;
-import javafx.geometry.Orientation;
-import javafx.geometry.VPos;
+import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.canvas.*;
 import javafx.scene.control.ScrollBar;
@@ -28,12 +23,45 @@ import static javafx.scene.paint.Color.*;
 
 public class Main extends Application {
 
+	static Stage
+		theStage;
+
+	static double
+		stageW = 640.,
+		stageH = 480.;
+
+	private static void setupTheStage(Stage stage) {
+
+		theStage = stage;
+
+		theStage.setWidth(stageW + stageWAdjust);
+		theStage.setHeight(stageH + stageHAdjust);
+
+		theStage.setResizable(true);
+	}
+
+	@Override
+	public void start(Stage stage) {
+
+		setupTheStage(stage);
+
+		bindings(stage);
+
+		stage.setScene(scene);
+		stage.show();
+	}
+
+	public static void main(String[] args) {
+
+		launch(args);
+	}
+
+
+
 	static boolean
 		canvasArePainted = false;
 
 	static double
-		stageW = 640.,
-		stageH = 480.,
 		stageWAdjust = 16,
 		stageHAdjust = 39,
 		col0W = 5.,
@@ -41,7 +69,8 @@ public class Main extends Application {
 		row0H = 30.,
 		row2H = 25.,
 		scrollBarAdjust = 2.,
-		leftMargin = 20.;
+		leftMargin = 20.,
+		bottomMargin = 20.;
 
 	static AtomicReference<Double>
 		col1W = new AtomicReference<>(stageW - col0W - col2W),
@@ -56,9 +85,6 @@ public class Main extends Application {
 		row0 = new RowConstraints(row0H, row0H, row0H),
 		row1 = new RowConstraints(row1H.get(), row1H.get(), row1H.get()),
 		row2 = new RowConstraints(row2H, row2H, row2H);
-
-	static Stage
-		theStage;
 
 	static GridPane
 		p = new GridPane();
@@ -124,16 +150,6 @@ public class Main extends Application {
 	}
 
 //	-------------------------------------------------------------------------------------------
-
-	private static void setupTheStage(Stage stage) {
-
-		theStage = stage;
-
-		theStage.setWidth(stageW + stageWAdjust);
-		theStage.setHeight(stageH + stageHAdjust);
-
-		theStage.setResizable(true);
-	}
 
 	private static void setupGridPaneP() {
 
@@ -264,8 +280,7 @@ public class Main extends Application {
 
 //	-------------------------------------------------------------------------------------------
 
-	@Override
-	public void start(Stage stage) {
+	private static void bindings(Stage stage){
 
 		hScrollWidthProperty().bind(
 			stage.widthProperty()
@@ -287,21 +302,11 @@ public class Main extends Application {
 		setupCanvas();
 		setupScrollBars();
 
-		scene.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-
-			setCtrlKeyIsDown(event.isControlDown());
-		});
-
-		scene.addEventFilter(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
-
-			setCtrlKeyIsDown(event.isControlDown());
-		});
-
-		stage.setScene(scene);
-		stage.show();
+		scene.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> setCtrlKeyIsDown(event.isControlDown()));
+		scene.addEventFilter(KeyEvent.KEY_RELEASED, (KeyEvent event) -> setCtrlKeyIsDown(event.isControlDown()));
 	}
 
-//	--------------------------------------------------------------------------------------------------------------------
+//	drawings ----------------------------------------------------------------------------------
 
 	static void drawHorizontals() {
 
@@ -373,8 +378,6 @@ public class Main extends Application {
 				}
 			}
 		}
-
-
 	}
 
 	static void drawVerticals() {
@@ -581,8 +584,5 @@ public class Main extends Application {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	public static void main(String[] args) {
 
-		launch(args);
-	}
 }

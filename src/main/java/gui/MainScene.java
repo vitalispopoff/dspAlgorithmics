@@ -18,21 +18,22 @@ import java.io.*;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static gui.StageParams.*;
 import static javafx.scene.paint.Color.*;
 
 public class MainScene extends Scene {
 
-	static MainStage
+	static Stage
 		stage;
 
 	static boolean
 		canvasArePainted = false;
 
 	static double
-		stageW = MainStage.getInitialStageWidth(),
-		stageH = MainStage.getInitialStageHeight(),
-		stageWAdjust = MainStage.stageWAdjust,
-		stageHAdjust = MainStage.stageHAdjust,
+		stageW = getInitialStageWidth(),
+		stageH = StageParams.getInitialStageHeight(),
+		stageWAdjust = StageParams.stageWAdjust,
+		stageHAdjust = StageParams.stageHAdjust,
 		col0W = 5.,
 		col2W = 25.,
 		row0H = 30.,
@@ -55,12 +56,6 @@ public class MainScene extends Scene {
 		row1 = new RowConstraints(row1H.get(), row1H.get(), row1H.get()),
 		row2 = new RowConstraints(row2H, row2H, row2H);
 
-	static GridPane
-		p = new GridPane();
-
-	static Canvas
-		canvas = new Canvas();
-
 	static ScrollBar
 		hScroll = new ScrollBar(),
 		vScroll = new ScrollBar(),
@@ -71,21 +66,53 @@ public class MainScene extends Scene {
 		hScrollPane = new StackPane(),
 		vScrollPane = new StackPane();
 
+	static Canvas
+		canvas = new Canvas();
 
+// ? GridPane	-----------------------------------------------
 
-	public MainScene(MainStage s){
+	static GridPane
+		pane = getGridPane();
 
-		this(p);
+	private static GridPane getGridPane() {
+
+		GridPane
+			pane = new GridPane();
+
+		setupGridPane(pane);
+
+		return pane;
+	}
+
+	private static void setupGridPane(GridPane pane) {
+
+		pane.getColumnConstraints().add(col0);
+		pane.getColumnConstraints().add(col1);
+		pane.getColumnConstraints().add(col2);
+
+		pane.getRowConstraints().add(row0);
+		pane.getRowConstraints().add(row1);
+		pane.getRowConstraints().add(row2);
+
+		pane.setGridLinesVisible(true);
+	}
+
+// ? Constructor	-------------------------------------------
+
+	public MainScene(Stage s){
+
+		super(pane);
+
+		bindings(s);
 
 		stage = s;
+
+//		setupMainMenu();
+//		setupCanvas();
+//		setupScrollBars();
 	}
 
-	public MainScene(Parent root) {
-
-		super(root);
-	}
-
-//	--------------------------------------------------------------------------------------------------------------------
+// ? Properties	-----------------------------------------------
 
 	private static final DoubleProperty
 		hScrollWidth = new SimpleDoubleProperty();
@@ -137,23 +164,7 @@ public class MainScene extends Scene {
 
 //	-------------------------------------------------------------------------------------------
 
-	private static void setupGridPaneP() {
 
-		p.getColumnConstraints().add(col0);
-		p.getColumnConstraints().add(col1);
-		p.getColumnConstraints().add(col2);
-
-		p.getRowConstraints().add(row0);
-		p.getRowConstraints().add(row1);
-		p.getRowConstraints().add(row2);
-
-		p.setGridLinesVisible(true);
-
-		col1.minWidthProperty().bind(hScrollWidthProperty());
-		col1.maxWidthProperty().bind(hScrollWidthProperty());
-		row1.minHeightProperty().bind(vScrollHeightProperty());
-		row1.maxHeightProperty().bind(vScrollHeightProperty());
-	}
 
 	private static void setupMainMenu() {
 
@@ -173,7 +184,7 @@ public class MainScene extends Scene {
 			Node
 				bar = loader.load();
 
-			p.add(bar, 0, 0, 3, 1);
+			pane.add(bar, 0, 0, 3, 1);
 			GridPane.setValignment(bar, VPos.TOP);
 			GridPane.setHalignment(bar, HPos.LEFT);
 
@@ -190,7 +201,7 @@ public class MainScene extends Scene {
 		canvas.setWidth(col1W.get());
 		canvas.setHeight(row1H.get());
 
-		p.add(canvas, 1, 1);
+		pane.add(canvas, 1, 1);
 
 		canvas.widthProperty().bind(
 			stage.widthProperty()
@@ -256,8 +267,8 @@ public class MainScene extends Scene {
 			hScrollPane.getChildren().addAll(hScale, hScroll);
 			vScrollPane.getChildren().addAll(vScale, vScroll);
 
-			p.add(hScrollPane, 1, 2);
-			p.add(vScrollPane, 2, 1);
+			pane.add(hScrollPane, 1, 2);
+			pane.add(vScrollPane, 2, 1);
 
 		}    // * adding scrollbarPanes to the grid
 
@@ -281,10 +292,15 @@ public class MainScene extends Scene {
 				.subtract(row2H)
 		);
 
-		setupGridPaneP();
-		setupMainMenu();
-		setupCanvas();
-		setupScrollBars();
+//		setupGridPane();
+//		setupMainMenu();
+//		setupCanvas();
+//		setupScrollBars();
+
+		col1.minWidthProperty().bind(hScrollWidthProperty());
+		col1.maxWidthProperty().bind(hScrollWidthProperty());
+		row1.minHeightProperty().bind(vScrollHeightProperty());
+		row1.maxHeightProperty().bind(vScrollHeightProperty());
 
 		addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> setCtrlKeyIsDown(event.isControlDown()));
 		addEventFilter(KeyEvent.KEY_RELEASED, (KeyEvent event) -> setCtrlKeyIsDown(event.isControlDown()));

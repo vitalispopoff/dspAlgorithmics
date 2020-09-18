@@ -3,22 +3,20 @@ package gui;
 import javafx.beans.property.*;
 import javafx.stage.Stage;
 
-public class MainStage extends Stage {
+public abstract class StageParams{
 
 	public static double
 		stageWAdjust = 16,
 		stageHAdjust = 39;
 
-
-
-	public MainStage() {
+/*	public MainStage() {
 
 		super();
 
 		setWidth(getInitialStageWidth() + stageWAdjust);
 		setHeight(getInitialStageHeight() + stageHAdjust);
 		setResizable(true);
-	}
+	}*/	// ? disposable
 
 //	-------------------------------------------------------------------------------------------
 

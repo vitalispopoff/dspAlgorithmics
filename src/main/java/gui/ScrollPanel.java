@@ -1,10 +1,7 @@
 package gui;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Orientation;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.StackPane;
 
@@ -12,18 +9,22 @@ public class ScrollPanel extends StackPane {
 
 	static double
 			scrollBarAdjust = 2.;
-	Root
+	private final Root
 		parent;
 
 	Orientation
 		orientation;
 
-	ScrollBar
+	private final ScrollBar
 		scroll,
 		scale;
 
 	private final DoubleProperty
-		scrollPanelSize = new SimpleDoubleProperty();
+		scrollPanelSize = new SimpleDoubleProperty(),
+		scrollValue = new SimpleDoubleProperty(),
+		scaleValue = new SimpleDoubleProperty();
+
+
 
 	public ScrollPanel(Root r, Orientation o){
 
@@ -34,10 +35,19 @@ public class ScrollPanel extends StackPane {
 		scroll = new ScrollBar();
 		scale = new ScrollBar();
 
+		scrollValueProperty().bind(
+			scroll.valueProperty());
+
+		scaleValueProperty().bind(
+			scale.valueProperty()
+		);
+
 		bindScrollBarProperties();
 		setupScrollBars();
 		getChildren().addAll(scale, scroll);
 	}
+
+
 
 	private void setupScrollBars(){
 
@@ -46,22 +56,6 @@ public class ScrollPanel extends StackPane {
 
 		bindPropertyPairs(scroll, orientation);
 		bindPropertyPairs(scale, orientation);
-
-/*		if (orientation == Orientation.HORIZONTAL){
-
-			scroll.minWidthProperty().bind(scrollPanelSizeProperty());
-			scroll.maxWidthProperty().bind(scrollPanelSizeProperty());
-			scale.minWidthProperty().bind(scrollPanelSizeProperty());
-			scale.maxWidthProperty().bind(scrollPanelSizeProperty());
-		}
-
-		else {
-
-			scroll.minHeightProperty().bind(scrollPanelSizeProperty());
-			scroll.maxHeightProperty().bind(scrollPanelSizeProperty());
-			scale.minHeightProperty().bind(scrollPanelSizeProperty());
-			scale.maxHeightProperty().bind(scrollPanelSizeProperty());
-		}*/
 	}
 
 	private void bindPropertyPairs(ScrollBar s, Orientation o){
@@ -85,8 +79,20 @@ public class ScrollPanel extends StackPane {
 		);
 	}
 
+
+
 	public DoubleProperty scrollPanelSizeProperty(){
 
 		return scrollPanelSize;
+	}
+
+	private DoubleProperty scrollValueProperty() {
+
+		return scrollValue;
+	}
+
+	private DoubleProperty scaleValueProperty() {
+
+		return scaleValue;
 	}
 }

@@ -43,7 +43,7 @@ public class ScrollPanel extends StackPane {
 
 		bindScrollBarSizeProperties();
 		setupScrollBars();
-		getChildren().addAll(scale, scroll);
+		getChildren().addAll(scroll, scale);
 
 		visibleProperty().bind(MainMenuController.cacheIsEmptyStaticProperty().not());
 	}

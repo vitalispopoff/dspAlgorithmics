@@ -3,9 +3,11 @@ package gui;
 //import data.FileCache;
 //import data.structure.*;
 //import gui.Menus.MainMenuController;
+
 import javafx.beans.property.*;
 import javafx.scene.*;
 import javafx.scene.canvas.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 //import javafx.scene.text.Font;
 //import java.util.concurrent.atomic.AtomicReference;
@@ -38,8 +40,8 @@ public class MainScene extends Scene {
 //		col1W = new AtomicReference<>(stageW - col0W - col2W),
 //		row1H = new AtomicReference<>(stageH - row0H - row2H);
 
-	static Canvas
-		canvas = new Canvas();
+    static Canvas
+            canvas = new Canvas();
 
 
 // ? Constructor	-------------------------------------------
@@ -51,25 +53,40 @@ public class MainScene extends Scene {
 //		return new MainScene(root);
 //	}
 
-	public MainScene(Parent root){
+    public MainScene(Parent root) {
 
-		super(root);
+        super(root);
 
-		addEventFilter(KeyEvent.KEY_PRESSED, this::setCtrlKeyIsDown);
-		addEventFilter(KeyEvent.KEY_RELEASED, this::setCtrlKeyIsDown);
-		addEventFilter(KeyEvent.KEY_TYPED, (KeyEvent event) -> ctrlKeyIsDown.set(false));
+        addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
 
-		// ! this needs to be set with the MainMenuController - ActionEvent variables
+            setCtrlKeyIsDown(event);
+/*            if (event.getCode() == KeyCode.CONTROL)
+                setCtrlKeyIsDown(true);*/
+        });
 
-		((Root)root).bindScrollBarsVisibleProperties(this);
+        addEventFilter(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
+
+            setCtrlKeyIsDown(event);
+//            setCtrlKeyIsDown(event.isControlDown());
+        });
+
+        addEventFilter(KeyEvent.KEY_TYPED, (KeyEvent event) -> {
+
+            setCtrlKeyIsDown(event);
+//            setCtrlKeyIsDown(false);
+        });
+
+
+
+        ((Root) root).bindScrollBarsVisibleProperties(this);
 
 //		setupCanvas();
 
-	}
+    }
 
 //	? element setups ------------------------------------------
 
-	static void bindings(){
+    static void bindings() {
 
 //		hScrollWidthProperty().bind(
 //			stage.widthProperty()
@@ -92,9 +109,9 @@ public class MainScene extends Scene {
 //		col1.maxWidthProperty().bind(hScrollWidthProperty());
 //		row1.minHeightProperty().bind(vScrollHeightProperty());
 //		row1.maxHeightProperty().bind(vScrollHeightProperty());
-	}
+    }
 
-	private static void setupCanvas() {
+    private static void setupCanvas() {
 
 //		pane.add(canvas, 1, 1);
 //
@@ -112,9 +129,9 @@ public class MainScene extends Scene {
 //				.subtract(row2H)
 //		);
 
-	}
+    }
 
-	private static void setupScrollBars() {
+    private static void setupScrollBars() {
 
 //		{
 //			hScroll.setOrientation(Orientation.HORIZONTAL);
@@ -166,44 +183,64 @@ public class MainScene extends Scene {
 
 //		}    // adding scrollbarPanes to the grid
 
-	}
+    }
 
 // ? Properties	-----------------------------------------------
 
-	private final BooleanProperty
-		keyIsPressed = new SimpleBooleanProperty();
+    private final BooleanProperty
+            keyIsPressed = new SimpleBooleanProperty();
 
-	public BooleanProperty getKeyIsPressed(){
+    public BooleanProperty getKeyIsPressed() {
 
-		return keyIsPressed;
-	}
+        return keyIsPressed;
+    }
 
-	private final BooleanProperty
-		ctrlKeyIsDown = new SimpleBooleanProperty(true);
 
-	public boolean getCtrlKeyIsDown() {
+    private final BooleanProperty
+            ctrlKeyIsDown = new SimpleBooleanProperty(true);
 
-		return ctrlKeyIsDown.get();
-	}
+    public boolean getCtrlKeyIsDown() {
 
-	private void setCtrlKeyIsDown(KeyEvent event) {
+        return ctrlKeyIsDown.get();
+    }
 
-		System.out.println("set ctrl in : " + getCtrlKeyIsDown());
+    private void setCtrlKeyIsDown(boolean b) {
 
-		ctrlKeyIsDown.set(event.isControlDown());
+        ctrlKeyIsDown.set(b);
 
-		System.out.println("set ctrl out: " + getCtrlKeyIsDown());
-	}
+        System.out.println(getCtrlKeyIsDown());
+    }
 
-	public BooleanProperty ctrlKeyIsDownProperty() {
+    private void setCtrlKeyIsDown(KeyEvent event) {
 
-		return ctrlKeyIsDown;
-	}
+
+        if (event.getCode() == KeyCode.CONTROL) {
+
+            ctrlKeyIsDown.set(event.isControlDown());
+
+ /*           if (event.getEventType() == KeyEvent.KEY_PRESSED)
+                ctrlKeyIsDown.set(true);
+
+            if (event.getEventType() == KeyEvent.KEY_RELEASED)
+                ctrlKeyIsDown.set(false);*/
+
+        }
+
+        if (event.getEventType() == KeyEvent.KEY_TYPED)
+            ctrlKeyIsDown.set(false);
+
+//        System.out.println(getCtrlKeyIsDown());
+    }
+
+    public BooleanProperty ctrlKeyIsDownProperty() {
+
+        return ctrlKeyIsDown;
+    }
 
 //	drawings ----------------------------------------------------------------------------------
 
 
-	static void drawHorizontals() {
+    static void drawHorizontals() {
 //
 //		GraphicsContext
 //			context = canvas.getGraphicsContext2D();
@@ -273,9 +310,9 @@ public class MainScene extends Scene {
 //				}
 //			}
 //		}
-	}
+    }
 
-	static void drawVerticals() {
+    static void drawVerticals() {
 
 //		GraphicsContext
 //			context = canvas.getGraphicsContext2D();
@@ -312,9 +349,9 @@ public class MainScene extends Scene {
 //
 //			context.strokeLine(x, 0, x, height);
 //		}
-	}
+    }
 
-	void drawEverything() {
+    void drawEverything() {
 
 //		GraphicsContext
 //			context = canvas.getGraphicsContext2D();
@@ -452,9 +489,9 @@ public class MainScene extends Scene {
 //			context.strokeLine(i + 20, prevDcOffset, i + 20 + 1, dcOffset);
 //		}
 //		if (!canvasArePainted) canvasArePainted = true;
-	}
+    }
 
-	void redraw() {
+    void redraw() {
 //
 //		clean();
 //
@@ -475,6 +512,6 @@ public class MainScene extends Scene {
 //
 //			canvasArePainted = false;
 //		}
-	}
+    }
 
 }

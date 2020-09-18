@@ -19,7 +19,7 @@ import static gui.StageParams.*;
 public class Root extends GridPane {
 
 	private final static String
-		location = "E:\\_LAB\\pl\\popoff\\dspAlgorithmics\\src\\main\\resources\\FXMLMainMenu.fxml";
+		location = "src\\main\\resources\\FXMLMainMenu.fxml";
 
 	private final static double
 		col0Dimension = 5.,

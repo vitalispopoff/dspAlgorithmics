@@ -1,6 +1,7 @@
 package gui;
 
 import javafx.beans.property.*;
+import javafx.geometry.Orientation;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -21,31 +22,34 @@ public class Root extends GridPane {
 		row1 = new RowConstraints();
 
 	private final DoubleProperty
-		col1Width = new SimpleDoubleProperty(),
-		row1Height = new SimpleDoubleProperty();
+		dynamicAreaWidth = new SimpleDoubleProperty(),
+		dynamicAreaHeight = new SimpleDoubleProperty();
 	
 	public Root(Stage stage){
 		
 		super();
 
-		col1WidthProperty().bind(
+		add(new ScrollPanel(this, Orientation.HORIZONTAL), 1, 2);
+		add(new ScrollPanel(this, Orientation.VERTICAL), 2, 1);
+
+		dynamicAreaWidthProperty().bind(
 			stage.widthProperty()
 				.subtract(stageWAdjust)
 				.subtract(col0Dimension)
 				.subtract(col2Dimension));
 
-		col1.minWidthProperty().bind(col1WidthProperty());
-		col1.maxWidthProperty().bind(col1WidthProperty());
+		col1.minWidthProperty().bind(dynamicAreaWidthProperty());
+		col1.maxWidthProperty().bind(dynamicAreaWidthProperty());
 
-		getRow1HeightProperty().bind(
+		dynamicAreaHeightProperty().bind(
 			stage.heightProperty()
 				.subtract(stageHAdjust)
 				.subtract(row0Dimension)
 				.subtract(row2Dimension)
 		);
 
-		row1.minHeightProperty().bind(getRow1HeightProperty());
-		row1.maxHeightProperty().bind(getRow1HeightProperty());
+		row1.minHeightProperty().bind(dynamicAreaHeightProperty());
+		row1.maxHeightProperty().bind(dynamicAreaHeightProperty());
 
 		getColumnConstraints().add(new ColumnConstraints(col0Dimension));
 		getColumnConstraints().add(col1);
@@ -56,15 +60,17 @@ public class Root extends GridPane {
 		getRowConstraints().add(new RowConstraints(row2Dimension));
 
 		setGridLinesVisible(true);
+
+
 	}
 
-	public DoubleProperty col1WidthProperty(){
+	public DoubleProperty dynamicAreaWidthProperty(){
 
-		return col1Width;
+		return dynamicAreaWidth;
 	}
 
-	public DoubleProperty getRow1HeightProperty(){
+	public DoubleProperty dynamicAreaHeightProperty(){
 
-		return row1Height;
+		return dynamicAreaHeight;
 	}
 }

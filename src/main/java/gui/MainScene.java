@@ -2,17 +2,13 @@ package gui;
 
 //import data.FileCache;
 //import data.structure.*;
-//import gui.Menus.MainMenuController;
-
 import javafx.beans.property.*;
 import javafx.scene.*;
 import javafx.scene.canvas.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.*;
 //import javafx.scene.text.Font;
 //import java.util.concurrent.atomic.AtomicReference;
 //
-//import static gui.StageParams.*;
 //import static javafx.scene.paint.Color.*;
 
 public class MainScene extends Scene {
@@ -43,73 +39,22 @@ public class MainScene extends Scene {
     static Canvas
             canvas = new Canvas();
 
-
 // ? Constructor	-------------------------------------------
-
-//	public static MainScene getInstance(Stage stage){
-//
-//		Root root = new Root(stage);
-//
-//		return new MainScene(root);
-//	}
 
     public MainScene(Parent root) {
 
         super(root);
 
-        addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
-
-            setCtrlKeyIsDown(event);
-/*            if (event.getCode() == KeyCode.CONTROL)
-                setCtrlKeyIsDown(true);*/
-        });
-
-        addEventFilter(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
-
-            setCtrlKeyIsDown(event);
-//            setCtrlKeyIsDown(event.isControlDown());
-        });
-
-        addEventFilter(KeyEvent.KEY_TYPED, (KeyEvent event) -> {
-
-            setCtrlKeyIsDown(event);
-//            setCtrlKeyIsDown(false);
-        });
-
-
+        addEventFilter(KeyEvent.KEY_PRESSED, this::setCtrlKeyIsDown);
+        addEventFilter(KeyEvent.KEY_RELEASED, this::setCtrlKeyIsDown);
+        addEventFilter(KeyEvent.KEY_TYPED, this::setCtrlKeyIsDown);
 
         ((Root) root).bindScrollBarsVisibleProperties(this);
 
 //		setupCanvas();
-
     }
 
 //	? element setups ------------------------------------------
-
-    static void bindings() {
-
-//		hScrollWidthProperty().bind(
-//			stage.widthProperty()
-//				.subtract(stageWAdjust)
-//				.subtract(col0W)
-//				.subtract(col2W)
-//		);
-//
-//		vScrollHeightProperty().bind(
-//			stage.heightProperty()
-//				.subtract(stageHAdjust)
-//				.subtract(row0H)
-//				.subtract(row2H)
-//		);
-//
-//		hScroll.visibleProperty().bind(ctrlKeyIsDownProperty().not());
-//		vScroll.visibleProperty().bind(ctrlKeyIsDownProperty().not());
-
-//		col1.minWidthProperty().bind(hScrollWidthProperty());
-//		col1.maxWidthProperty().bind(hScrollWidthProperty());
-//		row1.minHeightProperty().bind(vScrollHeightProperty());
-//		row1.maxHeightProperty().bind(vScrollHeightProperty());
-    }
 
     private static void setupCanvas() {
 
@@ -128,60 +73,6 @@ public class MainScene extends Scene {
 //				.subtract(row0H)
 //				.subtract(row2H)
 //		);
-
-    }
-
-    private static void setupScrollBars() {
-
-//		{
-//			hScroll.setOrientation(Orientation.HORIZONTAL);
-//			hScroll.setMin(0.);
-//			hScroll.setMax(1.);
-//			hScroll.setValue(0.);
-//
-//			vScroll.setOrientation(Orientation.VERTICAL);
-//			vScroll.setMin(0.);
-//			vScroll.setMax(1.);
-//			vScroll.setValue(0.5);
-//
-//			hScale.setOrientation(Orientation.HORIZONTAL);
-//			hScale.setMin(32.);
-//			hScale.setValue(col1W.get() - scrollBarAdjust);
-//			hScale.setMax(col1W.get() - scrollBarAdjust);
-//
-//			vScale.setOrientation(Orientation.VERTICAL);
-//			vScale.setMin(33.);
-//			vScale.setValue((row1H.get() - scrollBarAdjust) / 2.);
-//			vScale.setMax(row1H.get() - scrollBarAdjust);
-//
-//		}    // * scrollBars setup
-//
-//		{
-//
-//
-////			hScrollPane.visibleProperty().bind(MainMenuController.cacheIsEmptyStaticProperty().not());
-////			vScrollPane.visibleProperty().bind(MainMenuController.cacheIsEmptyStaticProperty().not());
-//
-//			hScroll.minWidthProperty().bind(hScrollWidthProperty().subtract(scrollBarAdjust));
-//			hScroll.maxWidthProperty().bind(hScrollWidthProperty().subtract(scrollBarAdjust));
-//			hScale.minWidthProperty().bind(hScrollWidthProperty().subtract(scrollBarAdjust));
-//			hScale.maxWidthProperty().bind(hScrollWidthProperty().subtract(scrollBarAdjust));
-//
-//			vScroll.minHeightProperty().bind(vScrollHeightProperty().subtract(scrollBarAdjust));
-//			vScroll.maxHeightProperty().bind(vScrollHeightProperty().subtract(scrollBarAdjust));
-//			vScale.minHeightProperty().bind(vScrollHeightProperty().subtract(scrollBarAdjust));
-//			vScale.maxHeightProperty().bind(vScrollHeightProperty().subtract(scrollBarAdjust));
-//
-//		}    // * bindings
-//
-//		{
-//			hScrollPane.getChildren().addAll(/*hScale,*/ hScroll);
-//			vScrollPane.getChildren().addAll(/*vScale,*/ vScroll);
-
-//			pane.add(hScrollPane, 1, 2);
-//			pane.add(vScrollPane, 2, 1);
-
-//		}    // adding scrollbarPanes to the grid
 
     }
 
@@ -213,23 +104,9 @@ public class MainScene extends Scene {
 
     private void setCtrlKeyIsDown(KeyEvent event) {
 
+        if (event.getCode() == KeyCode.CONTROL) ctrlKeyIsDown.set(event.isControlDown());
 
-        if (event.getCode() == KeyCode.CONTROL) {
-
-            ctrlKeyIsDown.set(event.isControlDown());
-
- /*           if (event.getEventType() == KeyEvent.KEY_PRESSED)
-                ctrlKeyIsDown.set(true);
-
-            if (event.getEventType() == KeyEvent.KEY_RELEASED)
-                ctrlKeyIsDown.set(false);*/
-
-        }
-
-        if (event.getEventType() == KeyEvent.KEY_TYPED)
-            ctrlKeyIsDown.set(false);
-
-//        System.out.println(getCtrlKeyIsDown());
+        if (event.getEventType() == KeyEvent.KEY_TYPED) ctrlKeyIsDown.set(false);
     }
 
     public BooleanProperty ctrlKeyIsDownProperty() {

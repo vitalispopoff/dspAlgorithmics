@@ -3,15 +3,12 @@ package gui;
 import gui.Menus.MainMenuController;
 import javafx.beans.property.*;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.HPos;
-import javafx.geometry.Orientation;
-import javafx.geometry.VPos;
+import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 
 import static gui.StageParams.*;
@@ -33,7 +30,7 @@ public class Root extends GridPane {
 	private final static RowConstraints
 		row1 = new RowConstraints();
 
-	public final ScrollPanel
+	private final ScrollPanel
 		horizontalScrollPanel,
 		verticalScrollPanel;
 
@@ -56,10 +53,11 @@ public class Root extends GridPane {
 		add(verticalScrollPanel, 2, 1);
 
 		{
-			dynamicAreaWidthProperty().bind(stage.widthProperty()
-												.subtract(stageWAdjust)
-												.subtract(col0Dimension)
-												.subtract(col2Dimension));
+			dynamicAreaWidthProperty().bind(
+					stage.widthProperty()
+					.subtract(stageWAdjust)
+					.subtract(col0Dimension)
+					.subtract(col2Dimension));
 
 			col1.minWidthProperty().bind(dynamicAreaWidthProperty());
 			col1.maxWidthProperty().bind(dynamicAreaWidthProperty());
@@ -71,10 +69,11 @@ public class Root extends GridPane {
 		}	// ? width property binding, and adding columns to the root
 
 		{
-			dynamicAreaHeightProperty().bind(stage.heightProperty()
-												 .subtract(stageHAdjust)
-												 .subtract(row0Dimension)
-												 .subtract(row2Dimension));
+			dynamicAreaHeightProperty().bind(
+					stage.heightProperty()
+					.subtract(stageHAdjust)
+					.subtract(row0Dimension)
+					.subtract(row2Dimension));
 
 			row1.minHeightProperty().bind(dynamicAreaHeightProperty());
 			row1.maxHeightProperty().bind(dynamicAreaHeightProperty());

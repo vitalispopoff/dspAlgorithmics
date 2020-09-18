@@ -1,82 +1,70 @@
 package gui;
 
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.beans.property.*;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 import static gui.StageParams.*;
 
 public class Root extends GridPane {
 
 	static double
-		stageW = getInitialStageWidth(),
-		stageH = StageParams.getInitialStageHeight(),
-		stageWAdjust = StageParams.stageWAdjust,
-		stageHAdjust = StageParams.stageHAdjust,
 		col0Dimension = 5.,
 		col2Dimension = 25.,
 		row0Dimension = 30.,
 		row2Dimension = 25.;
 
-	static AtomicReference<Double>
-		col1W = new AtomicReference<>(stageW - col0Dimension - col2Dimension),
-		row1H = new AtomicReference<>(stageH - row0Dimension - row2Dimension);
-
 	static ColumnConstraints
-		col0 = new ColumnConstraints(col0Dimension/*, col0Dimension, col0Dimension*/),
-		col1 = new ColumnConstraints(col1W.get()/*, col1W.get(), col1W.get()*/),
-		col2 = new ColumnConstraints(col2Dimension/*, col2Dimension, col2Dimension*/);
+		col1 = new ColumnConstraints();
 
 	static RowConstraints
-		row0 = new RowConstraints(row0Dimension/*, row0Dimension, row0Dimension*/),
-		row1 = new RowConstraints(row1H.get()/*, row1H.get(), row1H.get()*/),
-		row2 = new RowConstraints(row2Dimension/*, row2Dimension, row2Dimension*/);
+		row1 = new RowConstraints();
+
+	private final DoubleProperty
+		col1Width = new SimpleDoubleProperty(),
+		row1Height = new SimpleDoubleProperty();
 	
 	public Root(Stage stage){
 		
 		super();
 
-		col1.minWidthProperty().bind(
+		col1WidthProperty().bind(
 			stage.widthProperty()
 				.subtract(stageWAdjust)
 				.subtract(col0Dimension)
 				.subtract(col2Dimension));
 
-		col1.maxWidthProperty().bind(
-			stage.widthProperty()
-				.subtract(stageWAdjust)
-				.subtract(col0Dimension)
-				.subtract(col2Dimension));
+		col1.minWidthProperty().bind(col1WidthProperty());
+		col1.maxWidthProperty().bind(col1WidthProperty());
 
-		row1.minHeightProperty().bind(
-			stage.heightProperty()
-				.subtract(stageHAdjust)
-				.subtract(row0Dimension)
-				.subtract(row2Dimension)
-		);
-		row1.maxHeightProperty().bind(
+		getRow1HeightProperty().bind(
 			stage.heightProperty()
 				.subtract(stageHAdjust)
 				.subtract(row0Dimension)
 				.subtract(row2Dimension)
 		);
 
-		getColumnConstraints().add(col0);
+		row1.minHeightProperty().bind(getRow1HeightProperty());
+		row1.maxHeightProperty().bind(getRow1HeightProperty());
+
+		getColumnConstraints().add(new ColumnConstraints(col0Dimension));
 		getColumnConstraints().add(col1);
-		getColumnConstraints().add(col2);
+		getColumnConstraints().add(new ColumnConstraints(col2Dimension));
 
-		getRowConstraints().add(row0);
+		getRowConstraints().add(new RowConstraints(row0Dimension));
 		getRowConstraints().add(row1);
-		getRowConstraints().add(row2);
+		getRowConstraints().add(new RowConstraints(row2Dimension));
 
 		setGridLinesVisible(true);
 	}
-	
-	
-	
-	
-	
+
+	public DoubleProperty col1WidthProperty(){
+
+		return col1Width;
+	}
+
+	public DoubleProperty getRow1HeightProperty(){
+
+		return row1Height;
+	}
 }

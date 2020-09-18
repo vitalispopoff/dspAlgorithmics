@@ -1,22 +1,12 @@
 package gui;
 
 import javafx.beans.property.*;
-import javafx.stage.Stage;
 
 public abstract class StageParams{
 
 	public static double
 		stageWAdjust = 16,
 		stageHAdjust = 39;
-
-/*	public MainStage() {
-
-		super();
-
-		setWidth(getInitialStageWidth() + stageWAdjust);
-		setHeight(getInitialStageHeight() + stageHAdjust);
-		setResizable(true);
-	}*/	// ? disposable
 
 //	-------------------------------------------------------------------------------------------
 
@@ -27,16 +17,14 @@ public abstract class StageParams{
 
 		return initialStageWidth.get();
 	}
-	public static void setInitialStageWidth(double d) {
+	/*public static void setInitialStageWidth(double d) {
 
 		initialStageWidth.set(d);
-	}
+	}*/
 	public static DoubleProperty initialStageWidthProperty() {
 
 		return initialStageWidth;
 	}
-
-
 
 	private static final DoubleProperty
 		initialStageHeight = new SimpleDoubleProperty(480.);
@@ -45,10 +33,10 @@ public abstract class StageParams{
 
 		return initialStageHeight.get();
 	}
-	public static void setInitialStageHeight(double d) {
+	/*public static void setInitialStageHeight(double d) {
 
 		initialStageHeight.set(d);
-	}
+	}*/
 	public static DoubleProperty initialStageHeightProperty() {
 
 		return initialStageHeight;

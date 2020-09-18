@@ -13,7 +13,7 @@ public class Main extends Application {
 	public void start(Stage stage) {
 
 		Scene
-			scene = new MainScene(stage);
+			scene = MainScene.getInstance(stage);
 
 		stage.setWidth(getInitialStageWidth() + stageWAdjust);
 		stage.setHeight(getInitialStageHeight() + stageHAdjust);

@@ -49,7 +49,7 @@ public class MainScene extends Scene {
         addEventFilter(KeyEvent.KEY_RELEASED, this::setCtrlKeyIsDown);
         addEventFilter(KeyEvent.KEY_TYPED, this::setCtrlKeyIsDown);
 
-        ((Root) root).bindScrollBarsVisibleProperties(this);
+        ((Root) root).bindScrollBarsVisibleProperties(ctrlKeyIsDownProperty());
 
 //		setupCanvas();
     }

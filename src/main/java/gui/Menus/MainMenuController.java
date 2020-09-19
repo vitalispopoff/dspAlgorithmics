@@ -74,15 +74,15 @@ public class MainMenuController {
 
 		FileChooser
 			browser = new FileChooser();
-		browser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3"));
 
+		browser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3"));
 		browser.setTitle("Save As");
 		browser.setInitialDirectory(new File(FileManager.FileManagerSettings.getCurrentDefaultPath()));
 
 		File
 			file = browser.showSaveDialog(stage);
 
-		System.out.println(file.toString());
+//		System.out.println(file.toString());
 
 		if (file != null) saveFile(file);
 	}
@@ -97,79 +97,11 @@ public class MainMenuController {
 	public void enableAutoSave(ActionEvent event){
 
 		boolean
-		checkBoxIsSelected = ((CheckMenuItem)event.getSource()).isSelected();
+			checkBoxIsSelected = ((CheckMenuItem)event.getSource()).isSelected();
 
 		FileManager.FileManagerSettings.setAutoSave(checkBoxIsSelected);
 
-		System.out.println("autosave enable : " + FileManager.FileManagerSettings.getAutoSave());
-	}
-
-	private void setActionsToMenuFile(){
-
-//		List<MenuItem> fileItems = menuFile.getItems();
-
-/*
-		fileItems.get(0).setOnAction((ActionEvent e) -> {
-
-			FileChooser
-				browser = new FileChooser();
-
-			browser.setTitle("Open File");
-
-			browser.setInitialDirectory(new File(System.getProperty("user.home")));
-			File file = browser.showOpenDialog(stage);
-			WaveFile waveFile = new WaveFile(file);
-		});
-*/	// ? open file disposable ?
-
-/*
-		fileItems.get(1).setOnAction((ActionEvent e) ->{
-
-			if (FileManager.FileManagerSettings.getAutoSave()) {
-
-				WaveFile
-					file = FileCache.loadCurrent();
-
-				file.getFileAddress().setNameToDefault();
-
-				FileManager.saveFile(file);
-			}
-
-			FileCache.purgeCache();
-		});
-*/	// ? autosave disposable ?
-
-/*
-		fileItems.get(3).setOnAction((ActionEvent e) -> {
-
-			FileChooser
-				browser = new FileChooser();
-
-			browser.setTitle("Save As");
-
-			File
-				file = browser.showSaveDialog(stage);
-
-			saveFile(file);
-		});
-*/	// ? save disposable?
-
-/*
-		fileItems.get(5).setOnAction(close -> stage.close());
-*/	// ? quit disposable ?
-
-//		List<MenuItem> helpItems = menuHelp.getItems();
-
-/*
-
-		helpItems.get(0).setOnAction((ActionEvent e) -> {
-
-			FileManager.FileManagerSettings.setAutoSave(((CheckMenuItem)helpItems.get(0)).isSelected());
-
-			System.out.println("autosave enable : " + FileManager.FileManagerSettings.getAutoSave());
-		});
-*/	// ? autosave setting disposable ?
-
+//		System.out.println("autosave enable : " + FileManager.FileManagerSettings.getAutoSave());
 	}
 
 //	-------------------------------------------------------------------------------------------
@@ -188,11 +120,6 @@ public class MainMenuController {
 
 		cacheIsEmpty.set(FileCache.fileCache.size() == 0);
 	}
-
-	public final void setCacheIsEmpty(boolean b){
-
-		setCacheIsEmpty();
-	}	// just in case: a dummy overload.
 
 	public final BooleanProperty cacheIsEmptyProperty(){
 

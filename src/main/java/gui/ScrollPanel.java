@@ -80,9 +80,9 @@ public class ScrollPanel extends StackPane {
 		);
 	}
 
-	public void bindScrollBarVisibilityProperties(MainScene scene){
+	public void bindScrollBarVisibilityProperties(BooleanProperty b){
 
-		scale.visibleProperty().bind(scene.ctrlKeyIsDownProperty());
+		scale.visibleProperty().bind(b);
 	}
 
 	public DoubleProperty scrollPanelSizeProperty(){

@@ -87,10 +87,33 @@ public class Root extends GridPane {
 		setGridLinesVisible(true);
 	}
 
-	public void bindScrollBarsVisibleProperties(MainScene s){
+	private void setMainMenu(Stage stage) {
 
-		horizontalScrollPanel.bindScrollBarVisibilityProperties(s);
-		verticalScrollPanel.bindScrollBarVisibilityProperties(s);
+		MainMenuController.setStage(stage);
+
+		try {
+
+			URL
+					url = new File(location).toURI().toURL();
+
+			FXMLLoader
+					loader = new FXMLLoader(url);
+
+			Node
+					bar = loader.load();
+
+			add(bar, 0, 0, 3, 1);
+			GridPane.setValignment(bar, VPos.TOP);
+			GridPane.setHalignment(bar, HPos.LEFT);
+		}
+
+		catch (IOException e) {e.printStackTrace();}
+	}
+
+	public void bindScrollBarsVisibleProperties(BooleanProperty b){
+
+		horizontalScrollPanel.bindScrollBarVisibilityProperties(b);
+		verticalScrollPanel.bindScrollBarVisibilityProperties(b);
 	}
 
 	public DoubleProperty dynamicAreaWidthProperty(){
@@ -103,26 +126,5 @@ public class Root extends GridPane {
 		return dynamicAreaHeight;
 	}
 
-	private void setMainMenu(Stage stage) {
 
-		MainMenuController.setStage(stage);
-
-		try {
-
-			URL
-				url = new File(location).toURI().toURL();
-
-			FXMLLoader
-				loader = new FXMLLoader(url);
-
-			Node
-				bar = loader.load();
-
-			add(bar, 0, 0, 3, 1);
-			GridPane.setValignment(bar, VPos.TOP);
-			GridPane.setHalignment(bar, HPos.LEFT);
-		}
-
-		catch (IOException e) {e.printStackTrace();}
-	}
 }

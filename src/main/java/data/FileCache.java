@@ -1,24 +1,22 @@
 package data;
 
 import javafx.beans.property.*;
-import java.util.ArrayList;
+import javafx.collections.FXCollections;
 
-public class FileCache extends ArrayList<WaveFile> {
+public abstract class FileCache{
 
-	public static FileCache
-		fileCache = new FileCache();
+	public static SimpleListProperty<WaveFile>
+		fileCache = new SimpleListProperty<>(FXCollections.observableArrayList());
 
 	private static final BooleanProperty
-		cacheIsEmpty = new SimpleBooleanProperty(data.FileCache.fileCache.size() == 0);
+		cacheIsEmpty = new SimpleBooleanProperty(/*fileCache.size() == 0*/);
+
+	static {cacheIsEmpty.bind(fileCache.sizeProperty().isEqualTo(0));}
 
 	private static final IntegerProperty
 		currentIndexDue = new SimpleIntegerProperty(-1);
 
-//	--------------------------------------------------------------------------------------------------------------------
 
-	private FileCache(){ }
-
-//	--------------------------------------------------------------------------------------------------------------------
 
 	public static void addToCache(WaveFile waveFile){
 
@@ -29,11 +27,7 @@ public class FileCache extends ArrayList<WaveFile> {
 			"\n\tThe file is added to the cache at index: " + (getCurrentIndex()) + '\n');
 	}
 
-
-
 	public static WaveFile loadFromCache(int index){
-
-//		if(index >= 0 && index < fileCache.size())
 
 		try {
 
@@ -57,43 +51,6 @@ public class FileCache extends ArrayList<WaveFile> {
 		return loadFromCache(getCurrentIndex());
 	}
 
-
-
-	public static void updatedCache( ){
-
-		int
-			cI = getCurrentIndex();
-
-		if(cI < fileCache.size() - 1) {
-
-			fileCache.removeRange(cI + 1, fileCache.size());
-
-			System.out.println(
-				"\n\tThe cache has been updated. Current index (" + cI + ") is the the last.");
-		}
-
-		else
-			System.out.println("\n\tThe cache is already up-to-date.");
-	}
-
-	public static void clearCacheHistory( ){
-
-		int
-			cI = getCurrentIndex();
-
-		if (cI > 0){
-
-			fileCache.removeRange(0, cI);
-			setCurrentIndex(0);
-
-			System.out.println("\n\tHistory is cleared. Current index is 0");
-		}
-
-		else
-
-			System.out.println("\n\tHistory is already clear.");
-	}
-
 	public static void purgeCache( ){
 
 		fileCache.clear();
@@ -104,7 +61,7 @@ public class FileCache extends ArrayList<WaveFile> {
 		System.out.println("FileCache>\n\tCache is empty.");
 	}
 
-//	--------------------------------------------------------------------------------------------------------------------
+
 
 	public static boolean cacheIsEmpty(){
 
@@ -126,7 +83,6 @@ public class FileCache extends ArrayList<WaveFile> {
 
 		return cacheIsEmpty;
 	}
-
 
 
 

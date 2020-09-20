@@ -51,6 +51,10 @@ public class MainScene extends Scene {
 
         ((Root) root).bindScrollBarsVisibleProperties(ctrlKeyIsDownProperty());
 
+
+
+
+
 //		setupCanvas();
     }
 
@@ -78,13 +82,30 @@ public class MainScene extends Scene {
 
 // ? Properties	-----------------------------------------------
 
+
+    private static IntegerProperty
+        changeNotifier = new SimpleIntegerProperty(1);
+
+    public static Integer getChangeNotifier(){
+
+        return changeNotifier.get();
+    }
+
+    public static IntegerProperty changeNotifierProperty(){
+
+        return changeNotifier;
+    }
+
+
+
     private final BooleanProperty
             keyIsPressed = new SimpleBooleanProperty();
 
-    public BooleanProperty getKeyIsPressed() {
+    public BooleanProperty getKeyIsPressedProperty() {
 
         return keyIsPressed;
     }
+
 
 
     private final BooleanProperty

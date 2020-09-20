@@ -14,7 +14,7 @@ public class Main extends Application {
 
 		Root root = new Root(stage);
 
-		Scene
+		MainScene
 			scene = new MainScene(root);
 
 		stage.setWidth(getInitialStageWidth() + stageWAdjust);

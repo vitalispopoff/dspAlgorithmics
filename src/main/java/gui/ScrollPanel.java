@@ -21,10 +21,7 @@ public class ScrollPanel extends StackPane {
 		scroll,
 		scale;
 
-	private final DoubleProperty
-		scrollPanelSize = new SimpleDoubleProperty(),
-		scrollValue = new SimpleDoubleProperty(),
-		scaleValue = new SimpleDoubleProperty();
+
 
 
 
@@ -85,17 +82,47 @@ public class ScrollPanel extends StackPane {
 		scale.visibleProperty().bind(b);
 	}
 
+
+
+	private final DoubleProperty
+			scrollPanelSize = new SimpleDoubleProperty();
+
+	public double getScrollPanelSize(){
+
+		return scrollPanelSize.get();
+	}
+
 	public DoubleProperty scrollPanelSizeProperty(){
 
 		return scrollPanelSize;
 	}
 
-	private DoubleProperty scrollValueProperty() {
+
+
+	private final DoubleProperty
+			scrollValue = new SimpleDoubleProperty();
+
+	public double getScrollValue(){
+
+		return scrollValue.get();
+	}
+
+	public DoubleProperty scrollValueProperty() {
 
 		return scrollValue;
 	}
 
-	private DoubleProperty scaleValueProperty() {
+
+
+	private final DoubleProperty
+			scaleValue = new SimpleDoubleProperty();
+
+	public double getScaleValue(){
+
+		return scaleValue.get();
+	}
+
+	public DoubleProperty scaleValueProperty() {
 
 		return scaleValue;
 	}

@@ -36,6 +36,8 @@ public class Root extends GridPane {
             horizontalScrollPanel,
             verticalScrollPanel;
 
+    private PreviewRefreshTrigger
+        previewRefreshTrigger;
 
     public Root(Stage stage) {
 
@@ -81,16 +83,10 @@ public class Root extends GridPane {
 
         }    // ? height property binding, and adding rows to the root
 
-        setScrollPanelsStateValues();
-        bindScrollPanelsState();
+        previewRefreshTrigger = new PreviewRefreshTrigger(this);
 
-		horizontalScrollPanel.scrollValueProperty().addListener((observable, oldValue, newValue) -> {
-
-			System.out.println("BOOP");
-		});
-
-        scrollPanelsState.addListener((observable, oldValue, newValue) -> {
-
+        previewRefreshTrigger.getScrollPanelsState().addListener((observable, oldValue, newValue) ->
+        {
             System.out.println("BEEP");
         });
 
@@ -140,13 +136,25 @@ public class Root extends GridPane {
     private final DoubleProperty
             dynamicAreaWidth = new SimpleDoubleProperty();
 
+    public double getDynamicAreaWidth(){
+
+        return dynamicAreaWidth.get();
+    }
+
     public DoubleProperty dynamicAreaWidthProperty() {
 
         return dynamicAreaWidth;
     }
 
+
+
     private final DoubleProperty
             dynamicAreaHeight = new SimpleDoubleProperty();
+
+    public double getDynamicAreaHeight(){
+
+        return dynamicAreaHeight.get();
+    }
 
     public DoubleProperty dynamicAreaHeightProperty() {
 
@@ -155,67 +163,67 @@ public class Root extends GridPane {
 
 
 
-    private double
-            areaWidth,
-            areaHeight,
-            hScrollValue,
-            hScaleValue,
-            vScrollValue,
-            vScaleValue;
-
-    private int
-			change = -1;
-
-    private void setScrollPanelsStateValues() {
-
-        areaWidth = dynamicAreaWidth.get();
-        areaHeight = dynamicAreaHeight.get();
-        hScrollValue = horizontalScrollPanel.getScrollValue();
-        hScaleValue = horizontalScrollPanel.getScaleValue();
-        vScrollValue = verticalScrollPanel.getScrollValue();
-        vScaleValue = verticalScrollPanel.getScaleValue();
-    }
-
-	private IntegerBinding scrollPanelsState;
-
-	public IntegerBinding getScrollPanelsState() {
-
-		return scrollPanelsState;
-	}
-
-    private void bindScrollPanelsState() {
-
-        scrollPanelsState = new IntegerBinding() {
-
-            {
-                super.bind(
-                        dynamicAreaWidthProperty(),
-                        dynamicAreaHeightProperty(),
-                        horizontalScrollPanel.scrollValueProperty(),
-                        horizontalScrollPanel.scaleValueProperty(),
-                        verticalScrollPanel.scrollValueProperty(),
-                        verticalScrollPanel.scaleValueProperty()
-                );
-            }
-
-            @Override
-            protected int computeValue() {
-
-                int
-                        a = dynamicAreaWidth.get() - areaWidth != 0 ? ((- 1 *  change) & 1) : change & 1,
-                        b = dynamicAreaHeight.get() - areaHeight != 0 ? ((- 1 *  change) & 2) : change & 2,
-                        c = horizontalScrollPanel.getScrollValue() - hScrollValue != 0 ? ((- 1 *  change) & 4) : change & 4,
-                        d = horizontalScrollPanel.getScaleValue() - hScaleValue != 0 ? ((- 1 *  change) & 8) : change & 8,
-                        e = verticalScrollPanel.getScrollValue() - vScrollValue != 0 ? ((- 1 *  change) & 16) : change & 16,
-                        f = verticalScrollPanel.getScaleValue() - vScaleValue != 0 ? ((- 1 *  change) & 32) : change & 32,
-                        result = (a & 1) + (b & 2) + (c & 4) + (d & 8) + (e & 16) + (f & 32);
-
-                setScrollPanelsStateValues();
-
-				System.out.println(BitRepresent.bitRepresent(result));
-
-                return result;
-            }
-        };
-    }
+//    private double
+//            areaWidth,
+//            areaHeight,
+//            hScrollValue,
+//            hScaleValue,
+//            vScrollValue,
+//            vScaleValue;
+//
+//    private int
+//			change = -1;
+//
+//    private void setScrollPanelsStateValues() {
+//
+//        areaWidth = dynamicAreaWidth.get();
+//        areaHeight = dynamicAreaHeight.get();
+//        hScrollValue = horizontalScrollPanel.getScrollValue();
+//        hScaleValue = horizontalScrollPanel.getScaleValue();
+//        vScrollValue = verticalScrollPanel.getScrollValue();
+//        vScaleValue = verticalScrollPanel.getScaleValue();
+//    }
+//
+//	private IntegerBinding scrollPanelsState;
+//
+//	public IntegerBinding getScrollPanelsState() {
+//
+//		return scrollPanelsState;
+//	}
+//
+//    private void bindScrollPanelsState() {
+//
+//        scrollPanelsState = new IntegerBinding() {
+//
+//            {
+//                super.bind(
+//                        dynamicAreaWidthProperty(),
+//                        dynamicAreaHeightProperty(),
+//                        horizontalScrollPanel.scrollValueProperty(),
+//                        horizontalScrollPanel.scaleValueProperty(),
+//                        verticalScrollPanel.scrollValueProperty(),
+//                        verticalScrollPanel.scaleValueProperty()
+//                );
+//            }
+//
+//            @Override
+//            protected int computeValue() {
+//
+//                int
+//                        a = dynamicAreaWidth.get() - areaWidth != 0 ? ((- 1 *  change) & 1) : change & 1,
+//                        b = dynamicAreaHeight.get() - areaHeight != 0 ? ((- 1 *  change) & 2) : change & 2,
+//                        c = horizontalScrollPanel.getScrollValue() - hScrollValue != 0 ? ((- 1 *  change) & 4) : change & 4,
+//                        d = horizontalScrollPanel.getScaleValue() - hScaleValue != 0 ? ((- 1 *  change) & 8) : change & 8,
+//                        e = verticalScrollPanel.getScrollValue() - vScrollValue != 0 ? ((- 1 *  change) & 16) : change & 16,
+//                        f = verticalScrollPanel.getScaleValue() - vScaleValue != 0 ? ((- 1 *  change) & 32) : change & 32,
+//                        result = (a & 1) + (b & 2) + (c & 4) + (d & 8) + (e & 16) + (f & 32);
+//
+//                setScrollPanelsStateValues();
+//
+//				System.out.println(BitRepresent.bitRepresent(result));
+//
+//                return result;
+//            }
+//        };
+//    }
 }

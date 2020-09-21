@@ -11,7 +11,7 @@ public class Signal extends ArrayList<Integer>{
 	public ArrayList<Strip>
 		strips;
 
-//	--------------------------------------------------------------------------------------------------------------------
+
 
 	public Signal(){
 
@@ -34,7 +34,7 @@ public class Signal extends ArrayList<Integer>{
 		importToStrips(bytesToIntegers(source, blockAlign / channels), channels);
 	}
 
-//	--------------------------------------------------------------------------------------------------------------------
+
 
 	public void addChannel(){
 
@@ -86,15 +86,9 @@ public class Signal extends ArrayList<Integer>{
 		for (Integer i : input)
 
 			strips.get(index++ % channels).add(i);
-	}		// * tested
+	}
 
-		/**
-		 *
-	 * Converts raw byte source into signal array (interlaced channels).
-	 *
-	 * @param source ruff import from audio file
-	 * @param sampleLength length of a single sample in bytes, must comply with number of channels.
-	 * */	// ? description
+
 
 	Integer[] bytesToIntegers(byte[] source, int sampleLength){
 
@@ -112,7 +106,7 @@ public class Signal extends ArrayList<Integer>{
 			result[i] =  FileContentConverter.readDataSample(source, i * sampleLength, sampleLength);
 
 		return result;
-	}		// * tested
+	}
 
 
 
@@ -139,7 +133,7 @@ public class Signal extends ArrayList<Integer>{
 		}
 
 		return result;
-	}								// * tested
+	}
 
 	byte[] integersToBytes(Integer[] signal, int bitsPerSample){
 
@@ -161,7 +155,7 @@ public class Signal extends ArrayList<Integer>{
 		}
 
 		return result;
-	}		// * tested
+	}
 
 
 
@@ -175,7 +169,7 @@ public class Signal extends ArrayList<Integer>{
 		return false;
 	}
 
-//	--------------------------------------------------------------------------------------------------------------------
+
 
 	public Strip getStrip(int index){
 
@@ -205,8 +199,5 @@ public class Signal extends ArrayList<Integer>{
 
 		return integersToBytes(consolidateChannels(), bitsPerSample);
 	}
-
-//	--------------------------------------------------------------------------------------------------------------------
-
 
 }

@@ -1,5 +1,3 @@
-//	@formatter:off
-
 package algorithms.processors;
 
 public interface ConvolutionMachine {
@@ -11,6 +9,8 @@ public interface ConvolutionMachine {
 
 		return correlationMachine(signal, reversedImpulse);
 	}
+
+
 
 	static int[] correlationMachine(int[] signal, int[] impulse){
 
@@ -62,5 +62,3 @@ public interface ConvolutionMachine {
 		return result;
 	}
 }
-
-//	@formatter:on

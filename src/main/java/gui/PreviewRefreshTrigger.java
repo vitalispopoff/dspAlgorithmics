@@ -1,27 +1,18 @@
 package gui;
 
-import algorithms.analyzers.BitRepresent;
 import javafx.beans.property.*;
 
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PreviewRefreshTrigger {
 
-	private final Root
-		root;
-	
-	private DoubleProperty[]
-		properties;
-
-	final AtomicReference<Integer> index = new AtomicReference<>();
+	final
+	AtomicReference<Integer> index = new AtomicReference<>();
 
 	public PreviewRefreshTrigger(Root r) {
 
-		root = r;
+		DoubleProperty[] properties = new DoubleProperty[]{
 
-		properties = new DoubleProperty[] {
-			
 			r.dynamicAreaWidthProperty(),
 			r.dynamicAreaHeightProperty(),
 			r.getHorizontalScrollPanel().scrollValueProperty(),
@@ -30,19 +21,17 @@ public class PreviewRefreshTrigger {
 			r.getVerticalScrollPanel().scaleValueProperty(),
 		};
 
-		for (int i = 0 ; i < properties.length; i++) {
+		for (int i = 0; i < properties.length; i++) {
 
 			index.set(1 << i);
 
-			properties[i].addListener((observable, oldValue, newValue) -> {
-
-				scrollPanelState.set(
-					((scrollPanelState.get() & index.get()) == index.get())
-						? scrollPanelState.get() - index.get()
-						: scrollPanelState.get() + index.get());
-			});
+			properties[i].addListener((observable, oldValue, newValue) -> scrollPanelState.set(
+				(scrollPanelState.get() & index.get()) == index.get()
+					? scrollPanelState.get() - index.get()
+					: scrollPanelState.get() + index.get()));
 		}
 	}
+
 
 
 	private final IntegerProperty
@@ -53,17 +42,3 @@ public class PreviewRefreshTrigger {
 		return scrollPanelState;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

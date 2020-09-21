@@ -52,26 +52,17 @@ public class MainMenuController {
 			WaveFile
 				waveFile = new WaveFile(file);
 
-
-			System.out.println("\n\tMainMenuController > openFile : retrieving opened file from fileCache\n");
-
 			String
 //				path = waveFile.getFileAddress().getPath();
 				path = FileCache.getCurrentFile().getFileAddress().getPath();
 
 			FileManager.FileManagerSettings.setCurrentDefaultPath(path);
-
-			System.out.println(" MainMenuController > openFile : cache " + FileCache.getCurrentFile().toString());
-
-//			setCacheIsEmpty();
 		}
 	}
 
 	public void close(ActionEvent event) {
 
 		if (FileManager.FileManagerSettings.getAutoSave()) {
-
-			System.out.println("\n\tMainMenuController > close : retrieving current file from fileCache for an autosave \n");
 
 			WaveFile
 				waveFile = FileCache.getCurrentFile();
@@ -80,8 +71,6 @@ public class MainMenuController {
 		}
 
 		FileCache.purgeCache();
-
-//		setCacheIsEmpty();
 	}
 
 	public void save(ActionEvent event) {
@@ -95,8 +84,6 @@ public class MainMenuController {
 
 		File
 			file = browser.showSaveDialog(stage);
-
-//		System.out.println(file.toString());
 
 		if (file != null) saveFile(file);
 	}
@@ -114,8 +101,6 @@ public class MainMenuController {
 			checkBoxIsSelected = ((CheckMenuItem) event.getSource()).isSelected();
 
 		FileManager.FileManagerSettings.setAutoSave(checkBoxIsSelected);
-
-//		System.out.println("autosave enable : " + FileManager.FileManagerSettings.getAutoSave());
 	}
 
 //	-------------------------------------------------------------------------------------------
@@ -130,11 +115,6 @@ public class MainMenuController {
 		return cacheIsEmpty.get();
 	}
 
-//	public final void setCacheIsEmpty(){
-//
-//		cacheIsEmpty.set(FileCache.fileCache.size() == 0);
-//	}
-
 	public final BooleanProperty cacheIsEmptyProperty() {
 
 		return cacheIsEmpty;
@@ -146,7 +126,7 @@ public class MainMenuController {
 		return cacheIsEmpty;
 	}
 
-//	--------------------
+
 
 	public final KeyCombination getFileKey() {
 

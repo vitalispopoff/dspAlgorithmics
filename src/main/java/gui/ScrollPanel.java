@@ -31,6 +31,11 @@ public class ScrollPanel extends StackPane {
 		scroll = new ScrollBar();
 		scale = new ScrollBar();
 
+		scroll.setMax(1.);
+		scroll.setMin(0.);
+		scale.setMax(1.);
+		scale.setMin(0.);
+
 		scrollValueProperty().bind(scroll.valueProperty());
 		scaleValueProperty().bind(scale.valueProperty());
 
@@ -81,7 +86,7 @@ public class ScrollPanel extends StackPane {
 		scale.visibleProperty().bind(b);
 	}
 
-//	* Properties ----------------------------------------------
+
 
 	private final DoubleProperty
 			scrollPanelSize = new SimpleDoubleProperty();

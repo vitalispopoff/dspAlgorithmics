@@ -8,7 +8,7 @@ public class WaveHeader {
 	private byte[]
 		source;
 
-//	--------------------------------------------------------------------------------------------------------------------
+
 	
 	private WaveHeader(){ }
 	
@@ -22,7 +22,7 @@ public class WaveHeader {
 		}
 	}
 	
-//	--------------------------------------------------------------------------------------------------------------------
+
 
 	public static WaveHeader instanceOf(byte[] fileContent){
 

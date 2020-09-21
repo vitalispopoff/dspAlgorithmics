@@ -9,9 +9,6 @@ public abstract class FileCache{
 
 		fileCache.add(waveFile);
 		updateCurrentIndex();
-
-		System.out.println(
-			"\n\tThe file is added to the cache at index: " + (getCurrentIndex()) + '\n');
 	}
 
 	public static WaveFile getFile(int index){
@@ -35,8 +32,6 @@ public abstract class FileCache{
 
 	public static WaveFile getCurrentFile(){
 
-		System.out.println("FileCache > getCurrentFile : index = " + getCurrentIndex());
-
 		return getFile(getCurrentIndex());
 	}
 
@@ -44,13 +39,9 @@ public abstract class FileCache{
 
 		fileCache.clear();
 		updateCurrentIndex();
-
-		System.out.println("TEMPORAL : fileCache.size = " + fileCache.size());
-
-		System.out.println("FileCache>\n\tCache is empty.");
 	}
 
-//	* properties ----------------------------------------------
+
 
 	private static final SimpleListProperty<WaveFile>
 		fileCache = new SimpleListProperty<>(FXCollections.observableArrayList());

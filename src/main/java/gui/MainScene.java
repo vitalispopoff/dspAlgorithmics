@@ -1,22 +1,16 @@
 package gui;
 
-//import data.FileCache;
-//import data.structure.*;
 import javafx.beans.property.*;
 import javafx.scene.*;
 import javafx.scene.canvas.*;
 import javafx.scene.input.*;
-//import javafx.scene.text.Font;
-//import java.util.concurrent.atomic.AtomicReference;
-//
-//import static javafx.scene.paint.Color.*;
 
 public class MainScene extends Scene {
 
     static Canvas
             canvas = new Canvas();
 
-// ? Constructor	-------------------------------------------
+
 
     public MainScene(Parent root) {
 
@@ -27,10 +21,9 @@ public class MainScene extends Scene {
         addEventFilter(KeyEvent.KEY_TYPED, this::setCtrlKeyIsDown);
 
         ((Root) root).bindScrollBarsVisibleProperties(ctrlKeyIsDownProperty());
-
     }
 
-// ? Properties	-----------------------------------------------
+
 
     private static final IntegerProperty
         changeNotifier = new SimpleIntegerProperty(1);
@@ -82,171 +75,6 @@ public class MainScene extends Scene {
     public BooleanProperty ctrlKeyIsDownProperty() {
 
         return ctrlKeyIsDown;
-    }
-
-//	drawings ----------------------------------------------------------------------------------
-
-    void drawEverything() {
-
-//		GraphicsContext
-//			context = canvas.getGraphicsContext2D();
-//
-//		clean();
-//		context.setLineWidth(1);
-//
-//		double
-//			verticalScale = 1.,
-//			horizontalScale = 1.,
-//
-//			height = canvas.getHeight(),
-//			width = canvas.getWidth(),
-//
-//			scaledHeight = height * verticalScale,
-//			adjustToVerticalCenter = (scaledHeight / 2.),
-//			accountForMinResolution = adjustToVerticalCenter / 4;
-//
-//
-//		/*{
-//			context.setStroke(BLUE);
-//			context.strokeLine(0, height / 2, width, height / 2);
-//
-//			int
-//				numberOfLines = (32 - Integer.numberOfLeadingZeros((int) accountForMinResolution)),
-//				leftMargin = 20;
-//
-//			context.setFont(new Font("Arial", 10));
-//
-//			for (int i = 1; i <= numberOfLines; i++) {
-//
-//				context.setStroke(DODGERBLUE);
-//
-//				double
-//					y1 = (height / 2) - scaledHeight / (1 << i),
-//					y2 = (height / 2) + scaledHeight / (1 << i);
-//
-//				int
-//					txt = (-(i - 1) * 6);
-//
-//				if (y1 >= 0) {
-//
-//					if (i > 1 && i < numberOfLines) {
-//
-//						context.setStroke(BLUE);
-//						context.strokeText(Integer.toString(txt), 1, y1 + 4);
-//
-//						context.setStroke(DODGERBLUE);
-//						context.strokeLine(leftMargin * 0.85, y1, width, y1);
-//					}
-//
-//					else {
-//						context.strokeLine(leftMargin, y1, width, y1);
-//					}
-//				}
-//
-//				if (y2 <= height && y1 != y2) {
-//
-//					if (i > 1 && i < numberOfLines) {
-//
-//						context.setStroke(BLUE);
-//						context.strokeText(Integer.toString(txt), 1, y2 + 4);
-//
-//						context.setStroke(DODGERBLUE);
-//						context.strokeLine(leftMargin * 0.85, y2, width, y2);
-//					}
-//
-//					else {
-//						context.setStroke(DODGERBLUE);
-//						context.strokeLine(leftMargin, y2, width, y2);
-//					}
-//				}
-//			}
-//		}
-//		*/    // * horizontals
-//
-//		drawHorizontals();
-//		drawVerticals();
-//
-//
-//		//	-------------------------------------------------------------------------------
-//
-//		Strip
-//			strip = FileCache.loadCurrent().getSignal().getStrip(0);
-//
-//		WaveHeader
-//			currentHeader = FileCache.loadCurrent().getHeader();
-//
-//		int
-//			leftMargin = 20;
-//
-//		int
-//			waveLength = strip.size(),
-//			bitsPerSample = currentHeader.getField(FileContentStructure.BITS_PER_SAMPLE) - 1,
-//			samplingRate = currentHeader.getField(FileContentStructure.SAMPLE_PER_SEC),
-//			verticalGridResolution = samplingRate / 1000,
-//			movement = (int) hScroll.getValue(),
-//			verticalGridMovement = movement % verticalGridResolution;
-//
-//		// * verticals  -------------------------------------------------------------------
-//
-///*		context.setStroke(DODGERBLUE);
-//
-//		context.strokeLine(leftMargin, 0, leftMargin, height);
-//		context.strokeLine(width, 0, width + leftMargin, height);
-//
-//		context.setStroke(LIGHTGREY);
-//
-//		for (int i = 0; i < width - leftMargin - 2; i++) {
-//
-//			int
-//				x = (i * verticalGridResolution) - verticalGridMovement;
-//
-//			context.strokeLine(x, 0, x, height);
-//		}*/
-//
-//		// * waveForm  --------------------------------------------------------------------
-//
-//		context.setStroke(RED);
-//
-//		for (int i = 1; i < Math.min(width, strip.size() - width) - 2 - 20; i++) {
-//
-//			double
-//				prevSample = (double) strip.get(i + movement - 1),
-//				sample = (double) strip.get(i + movement),
-//
-//				verticalCenter = height / 2,
-//
-//				prevSampleAmplitude = prevSample / (double) (1 << bitsPerSample),
-//				prevDcOffset = verticalCenter * (1 - prevSampleAmplitude),
-//
-//				sampleAmplitude = sample / (double) (1 << bitsPerSample),
-//				dcOffset = verticalCenter * (1 - sampleAmplitude);
-//
-//			context.strokeLine(i + 20, prevDcOffset, i + 20 + 1, dcOffset);
-//		}
-//		if (!canvasArePainted) canvasArePainted = true;
-    }
-
-    void redraw() {
-//
-//		clean();
-//
-//		GraphicsContext
-//			context = canvas.getGraphicsContext2D();
-//
-//		drawEverything();
-//	}
-//
-//	void clean() {
-//
-//		if (canvasArePainted) {
-//
-//			GraphicsContext
-//				context = canvas.getGraphicsContext2D();
-//
-//			context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-//
-//			canvasArePainted = false;
-//		}
     }
 
 }

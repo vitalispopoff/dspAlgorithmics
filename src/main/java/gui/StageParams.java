@@ -17,14 +17,13 @@ public abstract class StageParams{
 
 		return initialStageWidth.get();
 	}
-	/*public static void setInitialStageWidth(double d) {
 
-		initialStageWidth.set(d);
-	}*/
 	public static DoubleProperty initialStageWidthProperty() {
 
 		return initialStageWidth;
 	}
+
+
 
 	private static final DoubleProperty
 		initialStageHeight = new SimpleDoubleProperty(480.);
@@ -33,10 +32,7 @@ public abstract class StageParams{
 
 		return initialStageHeight.get();
 	}
-	/*public static void setInitialStageHeight(double d) {
 
-		initialStageHeight.set(d);
-	}*/
 	public static DoubleProperty initialStageHeightProperty() {
 
 		return initialStageHeight;

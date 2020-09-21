@@ -16,7 +16,7 @@ public class FileAddress {
 		name,
 		extension;
 
-//	--------------------------------------------------------------------------------------------------------------------
+
 
 	public FileAddress(String path, String name, String extension){
 
@@ -25,7 +25,7 @@ public class FileAddress {
 		this.extension = extension;
 	}
 
-//	--------------------------------------------------------------------------------------------------------------------
+
 
 	public static FileAddress readFileAddress(String input){
 
@@ -122,8 +122,6 @@ public class FileAddress {
 		extension = establishExtension(fileContent);
 	}
 
-
-
 	static String establishExtension(byte[] source){
 
 		int[]
@@ -145,7 +143,7 @@ public class FileAddress {
 		return defaultExtensions.get(address);
 	}
 
-//	--------------------------------------------------------------------------------------------------------------------
+
 
 	private static HashMap<String, String> setDefaultExtensions() {
 

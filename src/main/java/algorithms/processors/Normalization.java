@@ -1,5 +1,3 @@
-//	@formatter:off
-
 package algorithms.processors;
 
 import static algorithms.analyzers.Peaks.*;
@@ -29,5 +27,3 @@ public interface Normalization {
 		return signal;
 	}
 }
-
-//	@formatter:on

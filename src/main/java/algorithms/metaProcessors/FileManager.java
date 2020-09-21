@@ -193,7 +193,7 @@ public interface FileManager {
 
 	// default path ---------------------------------------------------------------------------
 
-		private static String
+		private static final String
 //			"user.dir"
 //			"user.home"
 

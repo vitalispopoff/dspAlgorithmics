@@ -1,9 +1,6 @@
 package gui.Menus;
 
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCombination;
 
 import static javafx.scene.input.KeyCombination.*;
@@ -49,29 +46,7 @@ public enum MenuItems {
 		}
 	};
 
-//	--------------------------------------------------------------------------------------------------------------------
 
-	public KeyCombination getKeyCombination(){
-
-		return (KeyCombination) menuItemParams[this.ordinal()][1];
-	}
-
-	//	! TODO - inner logic need refactoring to generic programming techniques
-	public MenuItem getMenuItem (){
-
-		MenuItem
-			item;
-
-		if (menuItemParams[this.ordinal()][2] == "checkItem")
-			item = new CheckMenuItem((String) menuItemParams[this.ordinal()][0]);
-
-		else
-			item = new MenuItem((String) menuItemParams[this.ordinal()][0]);
-
-		item.setAccelerator(this.getKeyCombination());
-
-		return item;
-	}
 
 	public Menu getMenu(MenuItems... items){
 
@@ -91,6 +66,30 @@ public enum MenuItems {
 			item.getMenuItem().setMnemonicParsing(k != null);
 		}
 		return menu;
+	}
+
+
+
+	//	! TODO - inner logic need refactoring to generic programming techniques
+	public MenuItem getMenuItem (){
+
+		MenuItem
+			item;
+
+		if (menuItemParams[this.ordinal()][2] == "checkItem")
+			item = new CheckMenuItem((String) menuItemParams[this.ordinal()][0]);
+
+		else
+			item = new MenuItem((String) menuItemParams[this.ordinal()][0]);
+
+		item.setAccelerator(this.getKeyCombination());
+
+		return item;
+	}
+
+	public KeyCombination getKeyCombination(){
+
+		return (KeyCombination) menuItemParams[this.ordinal()][1];
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------

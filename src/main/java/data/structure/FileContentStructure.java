@@ -1,5 +1,3 @@
-//	@formatter:off
-
 package data.structure;
 
 public enum FileContentStructure {
@@ -22,6 +20,7 @@ public enum FileContentStructure {
 
 			return new int[]{Integer.MIN_VALUE, 0x666D7420};
 		}
+
 	},		//	4
 	FMT_SIZE,			//	5
 	FORMAT_TAG,			//	6
@@ -38,6 +37,7 @@ public enum FileContentStructure {
 
 			return new int[]{Integer.MIN_VALUE, 0x64617461};
 		}
+
 	},		//	12
 	DATA_SIZE,			//	13
 	SIGNAL;				//	14
@@ -82,5 +82,3 @@ public enum FileContentStructure {
 		{44, Integer.MIN_VALUE}		//	signal
 	};
 }
-
-//	@formatter:on

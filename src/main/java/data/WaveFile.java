@@ -1,14 +1,9 @@
 package data;
 
-import data.structure.FileAddress;
-import data.structure.Signal;
-import data.structure.WaveHeader;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.ObservableList;
+import data.structure.*;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
 
 import static data.FileCache.addToCache;
 import static data.structure.FileContentStructure.*;
@@ -17,8 +12,6 @@ import static data.structure.WaveHeader.instanceOf;
 import static algorithms.metaProcessors.FileManager.*;
 
 public class WaveFile {
-
-
 
 	public FileAddress
 		fileAddress;
@@ -29,9 +22,9 @@ public class WaveFile {
 	Signal
 		signal;
 
-//	--------------------------------------------------------------------------------------------------------------------
 
-	private WaveFile( ){ }
+
+//	private WaveFile( ){ }
 
 	public WaveFile(File file){
 
@@ -53,7 +46,7 @@ public class WaveFile {
 		addToCache(this);
 	}
 
-//	--------------------------------------------------------------------------------------------------------------------
+
 
 	public void setFileAddress(String fileAddress){
 

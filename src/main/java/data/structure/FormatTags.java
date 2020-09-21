@@ -1,5 +1,3 @@
-//	@formatter:off
-
 package data.structure;
 
 public enum FormatTags{
@@ -31,12 +29,10 @@ public enum FormatTags{
 	};
 
 	public static int[]
-		starts = {44, 58, 58, 58, 72};	// TODO to be dependent on the actual header stream readings
+		starts = {44, 58, 58, 58, 72};
 
 	public byte[] getBytes(){
 
 		return bytes[this.ordinal()];
 	}
 }
-
-//	@formatter:on

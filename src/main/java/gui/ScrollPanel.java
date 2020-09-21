@@ -3,14 +3,13 @@ package gui;
 import gui.Menus.MainMenuController;
 import javafx.beans.property.*;
 import javafx.geometry.Orientation;
-import javafx.scene.Scene;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.StackPane;
 
 public class ScrollPanel extends StackPane {
 
 	static double
-			scrollBarAdjust = 2.;
+		scrollBarAdjust = 2.;
 	private final Root
 		parent;
 
@@ -20,8 +19,6 @@ public class ScrollPanel extends StackPane {
 	public final ScrollBar
 		scroll,
 		scale;
-
-
 
 
 
@@ -35,7 +32,6 @@ public class ScrollPanel extends StackPane {
 		scale = new ScrollBar();
 
 		scrollValueProperty().bind(scroll.valueProperty());
-
 		scaleValueProperty().bind(scale.valueProperty());
 
 		bindScrollBarSizeProperties();
@@ -56,12 +52,15 @@ public class ScrollPanel extends StackPane {
 		bindPropertyPairs(scale, orientation);
 	}
 
+
+
 	private void bindPropertyPairs(ScrollBar s, Orientation o){
 
-		boolean isHorizontal = o == Orientation.HORIZONTAL;
+		boolean
+			isHorizontal = o == Orientation.HORIZONTAL;
 
 		(isHorizontal ? s.minWidthProperty() : s.minHeightProperty())
-		.bind(scrollPanelSizeProperty());
+			.bind(scrollPanelSizeProperty());
 
 		(isHorizontal ? s.maxWidthProperty() : s.maxHeightProperty())
 			.bind(scrollPanelSizeProperty());
@@ -82,7 +81,7 @@ public class ScrollPanel extends StackPane {
 		scale.visibleProperty().bind(b);
 	}
 
-
+//	* Properties ----------------------------------------------
 
 	private final DoubleProperty
 			scrollPanelSize = new SimpleDoubleProperty();

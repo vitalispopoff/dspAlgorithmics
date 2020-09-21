@@ -1,8 +1,6 @@
 package gui;
 
-import algorithms.analyzers.BitRepresent;
 import gui.Menus.MainMenuController;
-import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.*;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.*;
@@ -10,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.*;
 import java.net.URL;
 
@@ -26,6 +25,9 @@ public class Root extends GridPane {
             row0Dimension = 30.,
             row2Dimension = 25.;
 
+    private PreviewPanel
+        preview;
+
     private final static ColumnConstraints
             col1 = new ColumnConstraints();
 
@@ -36,18 +38,22 @@ public class Root extends GridPane {
             horizontalScrollPanel,
             verticalScrollPanel;
 
-    private PreviewRefreshTrigger
+    public final PreviewRefreshTrigger
         previewRefreshTrigger;
 
     public Root(Stage stage) {
 
         super();
 
-        setMainMenu(stage);
-
         horizontalScrollPanel = new ScrollPanel(this, Orientation.HORIZONTAL);
         verticalScrollPanel = new ScrollPanel(this, Orientation.VERTICAL);
 
+        previewRefreshTrigger = new PreviewRefreshTrigger(this);
+
+        setMainMenu(stage);
+        preview = new PreviewPanel(this);
+
+        add(preview, 1, 1);
         add(horizontalScrollPanel, 1, 2);
         add(verticalScrollPanel, 2, 1);
 
@@ -83,14 +89,8 @@ public class Root extends GridPane {
 
         }    // ? height property binding, and adding rows to the root
 
-        previewRefreshTrigger = new PreviewRefreshTrigger(this);
 
-        previewRefreshTrigger.getScrollPanelsState().addListener((observable, oldValue, newValue) ->
-        {
-            System.out.println("BEEP");
-        });
-
-        setGridLinesVisible(true);
+//        setGridLinesVisible(true);
     }
 
     private void setMainMenu(Stage stage) {

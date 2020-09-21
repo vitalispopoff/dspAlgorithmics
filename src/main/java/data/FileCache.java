@@ -54,7 +54,7 @@ public abstract class FileCache{
 	public static void purgeCache( ){
 
 		fileCache.clear();
-//		updateCurrentIndex();
+		updateCurrentIndex();
 
 		System.out.println("TEMPORAL : fileCache.size = " + fileCache.size());
 

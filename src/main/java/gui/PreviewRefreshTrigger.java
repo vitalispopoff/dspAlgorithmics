@@ -4,14 +4,14 @@ import javafx.beans.binding.IntegerBinding;
 
 public class PreviewRefreshTrigger {
 
-    private Root
+    private final Root
         root;
 
-    private double[]
-            observedParameters = new double[6];
+    private final double[]
+        observedParameters = new double[6];
 
-    private int
-            change = -1;
+/*    private final int
+        change = -1;*/
 
 
 
@@ -19,8 +19,20 @@ public class PreviewRefreshTrigger {
 
         root = r;
 
+        scrollPanelsState = bindScrollPanelsState();
+
         setScrollPanelsStateValues();
-        bindScrollPanelsState();
+
+    }
+
+
+
+    private final IntegerBinding
+            scrollPanelsState;
+
+    public IntegerBinding getScrollPanelsState() {
+
+        return scrollPanelsState;
     }
 
 
@@ -35,17 +47,9 @@ public class PreviewRefreshTrigger {
         observedParameters[5] = root.getVerticalScrollPanel().getScaleValue();
     }
 
-    private IntegerBinding
-            scrollPanelsState;
+    private IntegerBinding bindScrollPanelsState() {
 
-    public IntegerBinding getScrollPanelsState() {
-
-        return scrollPanelsState;
-    }
-
-    private void bindScrollPanelsState() {
-
-        scrollPanelsState = new IntegerBinding() {
+        IntegerBinding iB = new IntegerBinding() {
 
             {
                 super.bind(
@@ -61,26 +65,30 @@ public class PreviewRefreshTrigger {
             private int adjust(int index, double newValue){
 
                 int
-                        i = 1 << index;
+                    i = 1 << index;
 
-                return newValue - observedParameters[index] != 0 ? ((-1 * change) & i) : change & i;
+                return newValue - observedParameters[index] != 0
+                        ? /*((-1 * change) & i)*/ 0
+                        : /*-1 & i*/ i;
             }
 
             @Override
             protected int computeValue() {
 
                 int
-                        a = adjust(0, root.getDynamicAreaWidth()),
-                        b = adjust(1, root.getDynamicAreaHeight()),
-                        c = adjust(2, root.getHorizontalScrollPanel().getScrollValue()),
-                        d = adjust(3, root.getHorizontalScrollPanel().getScaleValue()),
-                        e = adjust(4, root.getVerticalScrollPanel().getScrollValue()),
-                        f = adjust(5, root.getVerticalScrollPanel().getScaleValue()),
-                        result = a + b + c + d + e + f;
+                    a = adjust(0, root.getDynamicAreaWidth()),
+                    b = adjust(1, root.getDynamicAreaHeight()),
+                    c = adjust(2, root.getHorizontalScrollPanel().getScrollValue()),
+                    d = adjust(3, root.getHorizontalScrollPanel().getScaleValue()),
+                    e = adjust(4, root.getVerticalScrollPanel().getScrollValue()),
+                    f = adjust(5, root.getVerticalScrollPanel().getScaleValue()),
+                    result = a + b + c + d + e + f;
 
                 setScrollPanelsStateValues();
                 return result;
             }
         };
+
+        return iB;
     }
 }

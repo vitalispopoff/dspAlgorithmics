@@ -13,29 +13,6 @@ import javafx.scene.input.*;
 
 public class MainScene extends Scene {
 
-//	static Stage
-//		stage;
-//
-//	static boolean
-//		canvasArePainted = false;
-//
-//	static double
-//		stageW = getInitialStageWidth(),
-//		stageH = StageParams.getInitialStageHeight(),
-//		stageWAdjust = StageParams.stageWAdjust,
-//		stageHAdjust = StageParams.stageHAdjust,
-//		col0W = 5.,
-//		col2W = 25.,
-//		row0H = 30.,
-//		row2H = 25.,
-//		scrollBarAdjust = 2.,
-//		leftMargin = 20.,
-//		bottomMargin = 20.;
-//
-//	static AtomicReference<Double>
-//		col1W = new AtomicReference<>(stageW - col0W - col2W),
-//		row1H = new AtomicReference<>(stageH - row0H - row2H);
-
     static Canvas
             canvas = new Canvas();
 
@@ -50,8 +27,6 @@ public class MainScene extends Scene {
         addEventFilter(KeyEvent.KEY_TYPED, this::setCtrlKeyIsDown);
 
         ((Root) root).bindScrollBarsVisibleProperties(ctrlKeyIsDownProperty());
-
-
 
 
 
@@ -83,7 +58,7 @@ public class MainScene extends Scene {
 // ? Properties	-----------------------------------------------
 
 
-    private static IntegerProperty
+    private static final IntegerProperty
         changeNotifier = new SimpleIntegerProperty(1);
 
     public static Integer getChangeNotifier(){
@@ -137,6 +112,18 @@ public class MainScene extends Scene {
 
 //	drawings ----------------------------------------------------------------------------------
 
+
+    static void drawFrame(){
+
+        GraphicsContext
+            context = canvas.getGraphicsContext2D();
+
+
+
+
+
+
+    }
 
     static void drawHorizontals() {
 //

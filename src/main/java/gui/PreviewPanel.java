@@ -171,18 +171,21 @@ public class PreviewPanel extends Canvas {
 			waveLength = strip.size(),
 			bitsPerSample = currentHeader.getField(BITS_PER_SAMPLE) - 1,
 			samplingRate = currentHeader.getField(SAMPLE_PER_SEC),
-			verticalGridResolution = samplingRate / 1000,
-			movement = (int) root.getHorizontalScrollPanel().getScrollValue(),
+			verticalGridResolution = (int) ((samplingRate - 1) * root.getHorizontalScrollPanel().getScaleValue()) + 1,
+			movement = computeMovement(),
 			verticalGridMovement = movement % verticalGridResolution;
 
 		context.setStroke(LIGHTGREY);
 
-		for (int i = 0; i < width - 2; i++) {
+
+		for (int i = 0 ; i < width + movement; i += verticalGridResolution) {
 
 			int
-				x = (i * verticalGridResolution) - verticalGridMovement;
+				x = (int) (margin + width / 2 - computeMovement() + i);
 
-			if ( x > 20) context.strokeLine(x, 0, x, height);
+			if (root.getHorizontalScrollPanel().getScrollValue() < 1.)
+
+				context.strokeLine(x, 0, x, height);
 		}
 	}
 
@@ -201,7 +204,6 @@ public class PreviewPanel extends Canvas {
 			adjustToVerticalCenter = (scaledHeight / 2.),
 			accountForMinResolution = adjustToVerticalCenter / 4;
 
-
 		Strip
 			strip = FileCache.getCurrentFile().getSignal().getStrip(0);
 
@@ -213,15 +215,14 @@ public class PreviewPanel extends Canvas {
 			bitsPerSample = currentHeader.getField(BITS_PER_SAMPLE) - 1,
 			samplingRate = currentHeader.getField(SAMPLE_PER_SEC),
 			verticalGridResolution = samplingRate / 1000,
-			movement = (int) (root.getHorizontalScrollPanel().getScrollValue() * (strip.size() - width)),
+			movement = computeMovement() - (int) width / 2,
 			verticalGridMovement = movement % verticalGridResolution;
 
-		context.setStroke(RED);
+		for (int i = 1; i < Math.min(width, strip.size()); i++) {
 
-		for (int i = 1; i < Math.min(width, strip.size() - width); i++) {
+			if (i + movement < strip.size() && i + movement > 0) {
 
-			if (i < strip.size()) {
-
+				context.setStroke(RED);
 				double
 					prevSample = (double) strip.get(i + movement - 1),
 					sample = (double) strip.get(i + movement),
@@ -237,7 +238,23 @@ public class PreviewPanel extends Canvas {
 				context.strokeLine(i + margin, prevDcOffset, i + 1 + margin, dcOffset);
 			}
 
-			else context.strokeLine(i + margin,  ((int) height >> 1), i + 1 + margin, ((int) height >> 1));
+			else{
+
+				context.setStroke(DARKRED);
+				context.strokeLine(i + margin, ((int) height >> 1), i + 1 + margin, ((int) height >> 1));
+			}
 		}
+	}
+
+	private int computeMovement(){
+
+		Strip
+			strip = FileCache.getCurrentFile().getSignal().getStrip(0);
+
+		double
+			height = getHeight() - margin,
+			width = getWidth() - margin;
+
+		return (int) (root.getHorizontalScrollPanel().getScrollValue() * (strip.size() + width / 2));
 	}
 }

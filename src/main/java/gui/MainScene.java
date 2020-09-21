@@ -28,35 +28,9 @@ public class MainScene extends Scene {
 
         ((Root) root).bindScrollBarsVisibleProperties(ctrlKeyIsDownProperty());
 
-
-
-//		setupCanvas();
-    }
-
-//	? element setups ------------------------------------------
-
-    private static void setupCanvas() {
-
-//		pane.add(canvas, 1, 1);
-//
-//		canvas.widthProperty().bind(
-//			stage.widthProperty()
-//				.subtract(stageWAdjust)
-//				.subtract(col0W)
-//				.subtract(col2W)
-//		);
-//
-//		canvas.heightProperty().bind(
-//			stage.heightProperty()
-//				.subtract(stageHAdjust)
-//				.subtract(row0H)
-//				.subtract(row2H)
-//		);
-
     }
 
 // ? Properties	-----------------------------------------------
-
 
     private static final IntegerProperty
         changeNotifier = new SimpleIntegerProperty(1);
@@ -111,19 +85,6 @@ public class MainScene extends Scene {
     }
 
 //	drawings ----------------------------------------------------------------------------------
-
-
-    static void drawFrame(){
-
-        GraphicsContext
-            context = canvas.getGraphicsContext2D();
-
-
-
-
-
-
-    }
 
     static void drawHorizontals() {
 //

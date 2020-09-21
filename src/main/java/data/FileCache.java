@@ -96,7 +96,7 @@ public abstract class FileCache{
 		currentIndexDue.set(value);
 	}
 
-	public static IntegerProperty currentIndexDueProperty(){
+	public static IntegerProperty currentIndexProperty(){
 
 		return currentIndexDue;
 	}

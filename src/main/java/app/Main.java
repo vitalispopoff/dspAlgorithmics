@@ -2,7 +2,6 @@ package app;
 
 import gui.*;
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.*;
 
 import static gui.StageParams.*;
@@ -12,7 +11,11 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) {
 
-		Root root = new Root(stage);
+		stage.setMinWidth(320 + stageWAdjust);
+		stage.setMinHeight(240 + stageHAdjust);
+
+		Root
+			root = new Root(stage);
 
 		MainScene
 			scene = new MainScene(root);

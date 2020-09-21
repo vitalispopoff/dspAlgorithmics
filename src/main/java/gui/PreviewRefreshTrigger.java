@@ -1,94 +1,69 @@
 package gui;
 
-import javafx.beans.binding.IntegerBinding;
+import algorithms.analyzers.BitRepresent;
+import javafx.beans.property.*;
+
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class PreviewRefreshTrigger {
 
-    private final Root
-        root;
+	private final Root
+		root;
+	
+	private DoubleProperty[]
+		properties;
 
-    private final double[]
-        observedParameters = new double[6];
+	final AtomicReference<Integer> index = new AtomicReference<>();
 
-/*    private final int
-        change = -1;*/
+	public PreviewRefreshTrigger(Root r) {
+
+		root = r;
+
+		properties = new DoubleProperty[] {
+			
+			r.dynamicAreaWidthProperty(),
+			r.dynamicAreaHeightProperty(),
+			r.getHorizontalScrollPanel().scrollValueProperty(),
+			r.getHorizontalScrollPanel().scaleValueProperty(),
+			r.getVerticalScrollPanel().scrollValueProperty(),
+			r.getVerticalScrollPanel().scaleValueProperty(),
+		};
+
+		for (int i = 0 ; i < properties.length; i++) {
+
+			index.set(1 << i);
+
+			properties[i].addListener((observable, oldValue, newValue) -> {
+
+				scrollPanelState.set(
+					((scrollPanelState.get() & index.get()) == index.get())
+						? scrollPanelState.get() - index.get()
+						: scrollPanelState.get() + index.get());
+			});
+		}
+	}
 
 
-
-    public PreviewRefreshTrigger(Root r){
-
-        root = r;
-
-        scrollPanelsState = bindScrollPanelsState();
-
-        setScrollPanelsStateValues();
-
-    }
-
-
-
-    private final IntegerBinding
-            scrollPanelsState;
-
-    public IntegerBinding getScrollPanelsState() {
-
-        return scrollPanelsState;
-    }
-
-
-
-    private void setScrollPanelsStateValues() {
-
-        observedParameters[0] = root.getDynamicAreaWidth();
-        observedParameters[1] = root.getDynamicAreaHeight();
-        observedParameters[2] = root.getHorizontalScrollPanel().getScrollValue();
-        observedParameters[3] = root.getHorizontalScrollPanel().getScaleValue();
-        observedParameters[4] = root.getVerticalScrollPanel().getScrollValue();
-        observedParameters[5] = root.getVerticalScrollPanel().getScaleValue();
-    }
-
-    private IntegerBinding bindScrollPanelsState() {
-
-        IntegerBinding iB = new IntegerBinding() {
-
-            {
-                super.bind(
-                        root.dynamicAreaWidthProperty(),
-                        root.dynamicAreaHeightProperty(),
-                        root.getHorizontalScrollPanel().scrollValueProperty(),
-                        root.getHorizontalScrollPanel().scaleValueProperty(),
-                        root.getVerticalScrollPanel().scrollValueProperty(),
-                        root.getVerticalScrollPanel().scaleValueProperty()
-                );
-            }
-
-            private int adjust(int index, double newValue){
-
-                int
-                    i = 1 << index;
-
-                return newValue - observedParameters[index] != 0
-                        ? /*((-1 * change) & i)*/ 0
-                        : /*-1 & i*/ i;
-            }
-
-            @Override
-            protected int computeValue() {
-
-                int
-                    a = adjust(0, root.getDynamicAreaWidth()),
-                    b = adjust(1, root.getDynamicAreaHeight()),
-                    c = adjust(2, root.getHorizontalScrollPanel().getScrollValue()),
-                    d = adjust(3, root.getHorizontalScrollPanel().getScaleValue()),
-                    e = adjust(4, root.getVerticalScrollPanel().getScrollValue()),
-                    f = adjust(5, root.getVerticalScrollPanel().getScaleValue()),
-                    result = a + b + c + d + e + f;
-
-                setScrollPanelsStateValues();
-                return result;
-            }
-        };
-
-        return iB;
-    }
+	private final IntegerProperty
+		scrollPanelState = new SimpleIntegerProperty(0);
+	
+	public final IntegerProperty scrollPanelStateProperty(){
+		
+		return scrollPanelState;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

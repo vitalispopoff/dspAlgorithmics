@@ -25,8 +25,8 @@ public class Root extends GridPane {
             row0Dimension = 30.,
             row2Dimension = 25.;
 
-    private PreviewPanel
-        preview;
+//    private final PreviewPanel
+//        preview;
 
     private final static ColumnConstraints
             col1 = new ColumnConstraints();
@@ -41,6 +41,8 @@ public class Root extends GridPane {
     public final PreviewRefreshTrigger
         previewRefreshTrigger;
 
+
+
     public Root(Stage stage) {
 
         super();
@@ -50,8 +52,10 @@ public class Root extends GridPane {
 
         previewRefreshTrigger = new PreviewRefreshTrigger(this);
 
+        PreviewPanel
+            preview = new PreviewPanel(this);
+
         setMainMenu(stage);
-        preview = new PreviewPanel(this);
 
         add(preview, 1, 1);
         add(horizontalScrollPanel, 1, 2);
@@ -89,9 +93,10 @@ public class Root extends GridPane {
 
         }    // ? height property binding, and adding rows to the root
 
-
 //        setGridLinesVisible(true);
     }
+
+
 
     private void setMainMenu(Stage stage) {
 
@@ -100,13 +105,13 @@ public class Root extends GridPane {
         try {
 
             URL
-                    url = new File(location).toURI().toURL();
+                url = new File(location).toURI().toURL();
 
             FXMLLoader
-                    loader = new FXMLLoader(url);
+                loader = new FXMLLoader(url);
 
             Node
-                    bar = loader.load();
+                bar = loader.load();
 
             add(bar, 0, 0, 3, 1);
             GridPane.setValignment(bar, VPos.TOP);
@@ -115,6 +120,7 @@ public class Root extends GridPane {
             e.printStackTrace();
         }
     }
+
 
 
     public ScrollPanel getHorizontalScrollPanel() {

@@ -17,7 +17,7 @@ public interface FileManager {
 	static void saveFile(File file){
 
 		WaveFile
-			waveFile = FileCache.loadCurrent();
+			waveFile = FileCache.getCurrentFile();
 
 		byte[]
 			source = waveFile.getSource();
@@ -36,7 +36,7 @@ public interface FileManager {
 	static void autoSaveFile(){
 
 		WaveFile
-			waveFile = FileCache.loadCurrent();
+			waveFile = FileCache.getCurrentFile();
 
 		FileAddress
 			address = new FileAddress(waveFile.getFileAddress().getPath(), "", "wav");

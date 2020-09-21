@@ -8,7 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.*;
 import java.net.URL;
 
@@ -24,9 +23,6 @@ public class Root extends GridPane {
             col2Dimension = 25.,
             row0Dimension = 30.,
             row2Dimension = 25.;
-
-//    private final PreviewPanel
-//        preview;
 
     private final static ColumnConstraints
             col1 = new ColumnConstraints();

@@ -5,19 +5,6 @@ import javafx.collections.FXCollections;
 
 public abstract class FileCache{
 
-	public static SimpleListProperty<WaveFile>
-		fileCache = new SimpleListProperty<>(FXCollections.observableArrayList());
-
-	private static final BooleanProperty
-		cacheIsEmpty = new SimpleBooleanProperty(/*fileCache.size() == 0*/);
-
-	static {cacheIsEmpty.bind(fileCache.sizeProperty().isEqualTo(0));}
-
-	private static final IntegerProperty
-		currentIndexDue = new SimpleIntegerProperty(-1);
-
-
-
 	public static void addToCache(WaveFile waveFile){
 
 		fileCache.add(waveFile);
@@ -27,7 +14,7 @@ public abstract class FileCache{
 			"\n\tThe file is added to the cache at index: " + (getCurrentIndex()) + '\n');
 	}
 
-	public static WaveFile loadFromCache(int index){
+	public static WaveFile getFile(int index){
 
 		try {
 
@@ -40,15 +27,17 @@ public abstract class FileCache{
 
 		catch (ArrayIndexOutOfBoundsException e){
 
-			System.out.println("WaveFile> loadFromCache> no file to load");
+			System.out.println("FileCache> getFile : no file to load");
 		}
 
 		return null;	// dummy return i hope.
 	}
 
-	public static WaveFile loadCurrent(){
+	public static WaveFile getCurrentFile(){
 
-		return loadFromCache(getCurrentIndex());
+		System.out.println("FileCache > getCurrentFile : index = " + getCurrentIndex());
+
+		return getFile(getCurrentIndex());
 	}
 
 	public static void purgeCache( ){
@@ -61,22 +50,29 @@ public abstract class FileCache{
 		System.out.println("FileCache>\n\tCache is empty.");
 	}
 
+//	* properties ----------------------------------------------
 
+	private static final SimpleListProperty<WaveFile>
+		fileCache = new SimpleListProperty<>(FXCollections.observableArrayList());
 
-	public static boolean cacheIsEmpty(){
+	public static SimpleListProperty<WaveFile> getFileCache(){
 
-		return cacheIsEmpty.get();
+		return fileCache;
 	}
 
-	public final boolean getCacheIsEmptyDue(){
+	public static SimpleListProperty<WaveFile> fileCacheProperty(){
 
-		return cacheIsEmpty.get();
+		return fileCache;
 	}
 
-	public final BooleanProperty cacheIsEmptyProperty(){
 
-		return cacheIsEmpty;
 
+	private static final BooleanProperty
+		cacheIsEmpty = new SimpleBooleanProperty();
+
+	public static boolean getCacheIsEmpty(){
+
+		return cacheIsEmpty.get();
 	}
 
 	public static BooleanProperty cacheIsEmptyStaticProperty(){
@@ -84,25 +80,30 @@ public abstract class FileCache{
 		return cacheIsEmpty;
 	}
 
+	static {cacheIsEmpty.bind(fileCache.sizeProperty().isEqualTo(0));}
 
+
+
+	private static final IntegerProperty
+		currentIndex = new SimpleIntegerProperty(-1);
 
 	public static int getCurrentIndex() {
 
-		return currentIndexDue.get();
+		return currentIndex.get();
 	}
 
 	public static void setCurrentIndex(int value){
 
-		currentIndexDue.set(value);
-	}
-
-	public static IntegerProperty currentIndexProperty(){
-
-		return currentIndexDue;
+		currentIndex.set(value);
 	}
 
 	private static void updateCurrentIndex(){
 
 		setCurrentIndex(fileCache.size() - 1);
+	}
+
+	public static IntegerProperty currentIndexProperty(){
+
+		return currentIndex;
 	}
 }

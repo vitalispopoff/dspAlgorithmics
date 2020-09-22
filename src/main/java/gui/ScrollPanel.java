@@ -61,13 +61,14 @@ public class ScrollPanel extends StackPane {
 	}
 
 
-
 	private void bindScrollRangeProperties() {
 
-		DoubleBinding	// ! TODO - needs rework
+		DoubleBinding    // ! TODO - needs rework
 			power = new DoubleBinding() {
 
-			{super.bind(scale.valueProperty());}
+			{
+				super.bind(scale.valueProperty());
+			}
 
 			@Override
 			protected double computeValue() {
@@ -77,18 +78,31 @@ public class ScrollPanel extends StackPane {
 		};
 
 		NumberBinding
-			minScroll = ((Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0)))
-							.then(power.multiply(-1.))
-							.otherwise(0.)),
+			minScroll =
+			isHorizontal()
+				? (new DoubleBinding() {
 
-			maxScroll = ((Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0)))
-							 .then(power)
+				@Override
+				protected double computeValue() {
+
+					return 0.;
+				}
+			})
+				: ((Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0)))
+					   .then(power.multiply(-1.))
+					   .otherwise(0.)),
+
+			maxScroll =
+				isHorizontal()
+					? FileCache.currentFileSignalLengthBinding()
+					: ((Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0)))
+						   .then(power)
 						   .otherwise(0.)),
 
 			minScale =
 				isHorizontal()
 					? (Bindings.when(FileCache.currentFileSignalLengthBinding().greaterThan(0))
-						   .then(5.)
+						   .then(1.)
 						   .otherwise(0.))
 					: (Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))
 						   .then(1.)
@@ -97,7 +111,19 @@ public class ScrollPanel extends StackPane {
 			maxScale =
 				isHorizontal()
 					? (Bindings.when(FileCache.currentFileSignalLengthBinding().greaterThan(0))
-						   .then(FileCache.currentFileSignalLengthBinding())
+						   .then(new DoubleBinding() {
+
+							   {
+								   super.bind(FileCache.currentFileSignalLengthBinding());
+							   }
+
+							   @Override
+							   protected double computeValue() {
+
+								   return
+									   Math.log(FileCache.getCurrentFileSignalLength()) / Math.log(2.);
+							   }
+						   })
 						   .otherwise(0.))
 					: (Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))
 						   .then(FileCache.currentFileBitsPerSampleBinding())

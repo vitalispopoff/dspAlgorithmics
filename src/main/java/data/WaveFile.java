@@ -24,7 +24,7 @@ public class WaveFile {
 
 
 
-//	private WaveFile( ){ }
+	private WaveFile( ){ }
 
 	public WaveFile(File file){
 

@@ -46,6 +46,9 @@ public class Root extends GridPane {
         horizontalScrollPanel = new ScrollPanel(this, Orientation.HORIZONTAL);
         verticalScrollPanel = new ScrollPanel(this, Orientation.VERTICAL);
 
+        getHorizontalScrollPanel().setAlignment(Pos.CENTER_RIGHT);
+        getVerticalScrollPanel().setAlignment(Pos.TOP_CENTER);
+
         previewRefreshTrigger = new PreviewRefreshTrigger(this);
 
         PreviewPanel

@@ -16,9 +16,9 @@ public class MainScene extends Scene {
 
         super(root);
 
-        addEventFilter(KeyEvent.KEY_PRESSED, this::setCtrlKeyIsDown);
-        addEventFilter(KeyEvent.KEY_RELEASED, this::setCtrlKeyIsDown);
-        addEventFilter(KeyEvent.KEY_TYPED, this::setCtrlKeyIsDown);
+        addEventFilter(KeyEvent.KEY_PRESSED, this::ctrlKeyIsDown);
+        addEventFilter(KeyEvent.KEY_RELEASED, this::ctrlKeyIsDown);
+        addEventFilter(KeyEvent.KEY_TYPED, this::ctrlKeyIsDown);
 
         ((Root) root).bindScrollBarsVisibleProperties(ctrlKeyIsDownProperty());
     }
@@ -51,21 +51,21 @@ public class MainScene extends Scene {
 
 
     private final BooleanProperty
-            ctrlKeyIsDown = new SimpleBooleanProperty(true);
+            ctrlKeyIsDown = new SimpleBooleanProperty(false);
 
     public boolean getCtrlKeyIsDown() {
 
         return ctrlKeyIsDown.get();
     }
 
-    private void setCtrlKeyIsDown(boolean b) {
+    private void ctrlKeyIsDown(boolean b) {
 
         ctrlKeyIsDown.set(b);
 
         System.out.println(getCtrlKeyIsDown());
     }
 
-    private void setCtrlKeyIsDown(KeyEvent event) {
+    private void ctrlKeyIsDown(KeyEvent event) {
 
         if (event.getCode() == KeyCode.CONTROL) ctrlKeyIsDown.set(event.isControlDown());
 

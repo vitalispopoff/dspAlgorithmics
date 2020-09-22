@@ -2,30 +2,30 @@ package gui;
 
 import data.FileCache;
 import gui.Menus.MainMenuController;
-import javafx.beans.binding.Binding;
-import javafx.beans.binding.Bindings;
+import javafx.beans.binding.*;
 import javafx.beans.property.*;
 import javafx.geometry.Orientation;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.StackPane;
 
+import static javafx.geometry.Orientation.*;
+
 public class ScrollPanel extends StackPane {
 
 	static double
-		scrollBarAdjust = 2.;
+		scrollBarAdjust = 1.;
 	private final Root
 		parent;
 
 	Orientation
 		orientation;
 
-	public final ScrollBar
+	private final ScrollBar
 		scroll,
 		scale;
 
 
-
-	public ScrollPanel(Root r, Orientation o){
+	public ScrollPanel(Root r, Orientation o) {
 
 		super();
 
@@ -34,40 +34,9 @@ public class ScrollPanel extends StackPane {
 		scroll = new ScrollBar();
 		scale = new ScrollBar();
 
-		scroll.setMin(0.);
-		scroll.setValue(0.);
 		scale.setValue(1.);
+		scroll.setValue(0.);
 
-		scroll.maxProperty().bind(
-			FileCache.currentFileSignalLengthBinding()
-			.subtract(scrollPanelSizeProperty())
-			.subtract(20.)	// for preview panel margin
-		);
-
-		scale.minProperty().bind(
-			Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))
-			.then(5.)
-			.otherwise(0.)
-		);
-
-		scale.maxProperty().bind(
-			Bindings.when(FileCache.currentFileSignalLengthBinding().greaterThan(0))
-			.then(FileCache.currentFileSignalLengthBinding())
-			.otherwise(0.)
-		);
-
-//		scale.visibleAmountProperty().bind(
-//			Bindings.when(FileCache.currentFileSignalLengthBinding().greaterThan(0))
-//			.then(scrollPanelSizeProperty().subtract(20))
-//			.otherwise(0.)
-//		);
-
-		scroll.valueProperty();
-
-		scrollValueProperty().bind(scroll.valueProperty());
-		scaleValueProperty().bind(scale.valueProperty());
-
-		bindScrollBarSizeProperties();
 		setupScrollBars();
 		getChildren().addAll(scroll, scale);
 
@@ -75,66 +44,123 @@ public class ScrollPanel extends StackPane {
 	}
 
 
-
-	private void setupScrollBars(){
+	private void setupScrollBars() {
 
 		scroll.setOrientation(orientation);
 		scale.setOrientation(orientation);
 
-		bindPropertyPairs(scroll, orientation);
-		bindPropertyPairs(scale, orientation);
+		bindPropertyPairs(scroll);
+		bindPropertyPairs(scale);
+
+		scrollValueProperty().bind(scroll.valueProperty());
+		scaleValueProperty().bind(scale.valueProperty());
+
+		bindScrollBarSizeProperties();
+
+		bindScrollRangeProperties();
 	}
 
 
 
-	private void bindPropertyPairs(ScrollBar s, Orientation o){
+	private void bindScrollRangeProperties() {
 
-		boolean
-			isHorizontal = o == Orientation.HORIZONTAL;
+		DoubleBinding	// ! TODO - needs rework
+			power = new DoubleBinding() {
 
-		(isHorizontal ? s.minWidthProperty() : s.minHeightProperty())
+			{super.bind(scale.valueProperty());}
+
+			@Override
+			protected double computeValue() {
+
+				return 2. * getScrollPanelSize() * Math.pow(2., scale.getValue()) / scale.getMax();
+			}
+		};
+
+		NumberBinding
+			minScroll = ((Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0)))
+							.then(power.multiply(-1.))
+							.otherwise(0.)),
+
+			maxScroll = ((Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0)))
+							 .then(power)
+						   .otherwise(0.)),
+
+			minScale =
+				isHorizontal()
+					? (Bindings.when(FileCache.currentFileSignalLengthBinding().greaterThan(0))
+						   .then(5.)
+						   .otherwise(0.))
+					: (Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))
+						   .then(1.)
+						   .otherwise(0.)),
+
+			maxScale =
+				isHorizontal()
+					? (Bindings.when(FileCache.currentFileSignalLengthBinding().greaterThan(0))
+						   .then(FileCache.currentFileSignalLengthBinding())
+						   .otherwise(0.))
+					: (Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))
+						   .then(FileCache.currentFileBitsPerSampleBinding())
+						   .otherwise(0.));
+
+		scroll.minProperty().bind(minScroll);
+		scroll.maxProperty().bind(maxScroll);
+		scale.minProperty().bind(minScale);
+		scale.maxProperty().bind(maxScale);
+
+	}
+
+	private void bindPropertyPairs(ScrollBar s) {
+
+		(isHorizontal() ? s.minWidthProperty() : s.minHeightProperty())
 			.bind(scrollPanelSizeProperty());
 
-		(isHorizontal ? s.maxWidthProperty() : s.maxHeightProperty())
+		(isHorizontal() ? s.maxWidthProperty() : s.maxHeightProperty())
 			.bind(scrollPanelSizeProperty());
+
+//		scroll.visibleAmountProperty().bind(scroll.maxProperty().divide(scale.valueProperty().divide(2.)));
 	}
 
-	private void bindScrollBarSizeProperties(){
-
-		scrollPanelSizeProperty().bind(
-			(orientation == Orientation.HORIZONTAL
-				? parent.dynamicAreaWidthProperty()
-				: parent.dynamicAreaHeightProperty())
-			.subtract(scrollBarAdjust)
-		);
-	}
-
-	public void bindScrollBarVisibilityProperties(BooleanProperty b){
+	public void bindScrollBarVisibilityProperties(BooleanProperty b) {
 
 		scale.visibleProperty().bind(b);
 	}
 
+	private void bindScrollBarSizeProperties() {
+
+		scrollPanelSizeProperty().bind(
+			(isHorizontal()
+				 ? parent.dynamicAreaWidthProperty()
+				 : parent.dynamicAreaHeightProperty())
+				.add(scrollBarAdjust)
+				.subtract(20.)
+		);
+	}
+
+	private boolean isHorizontal() {
+
+		return orientation == HORIZONTAL;
+	}
 
 
 	private final DoubleProperty
-			scrollPanelSize = new SimpleDoubleProperty();
+		scrollPanelSize = new SimpleDoubleProperty();
 
-	public double getScrollPanelSize(){
+	public double getScrollPanelSize() {
 
 		return scrollPanelSize.get();
 	}
 
-	public DoubleProperty scrollPanelSizeProperty(){
+	public DoubleProperty scrollPanelSizeProperty() {
 
 		return scrollPanelSize;
 	}
 
 
-
 	private final DoubleProperty
-			scrollValue = new SimpleDoubleProperty();
+		scrollValue = new SimpleDoubleProperty();
 
-	public double getScrollValue(){
+	public double getScrollValue() {
 
 		return scrollValue.get();
 	}
@@ -145,11 +171,10 @@ public class ScrollPanel extends StackPane {
 	}
 
 
-
 	private final DoubleProperty
-			scaleValue = new SimpleDoubleProperty();
+		scaleValue = new SimpleDoubleProperty();
 
-	public double getScaleValue(){
+	public double getScaleValue() {
 
 		return scaleValue.get();
 	}

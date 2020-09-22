@@ -37,9 +37,9 @@ public class PreviewPanel extends Canvas {
 		widthProperty().bind(root.dynamicAreaWidthProperty());
 		heightProperty().bind(root.dynamicAreaHeightProperty());
 
-		FileCache.currentIndexProperty().addListener((observable, oldValue, newValue) -> {
+		FileCache.fileCacheProperty().sizeProperty().addListener((observable/*, oldValue, newValue*/) -> {
 
-			if ((int) newValue >= 0) {
+			if ((int) FileCache.getFileCache().size() >= 0) {
 
 				waveFile = FileCache.getCurrentFile();
 
@@ -50,20 +50,20 @@ public class PreviewPanel extends Canvas {
 				drawWaveform();
 
 				root.previewRefreshTrigger.scrollPanelStateProperty()
-					.addListener((observable1, oldValue1, newValue1) -> {
+					.addListener((observable1/*, oldValue1, newValue1*/) -> {
 
-					clean();
-					drawBorders();
-					drawHorizontals();
-					drawVerticals();
-					drawWaveform();
-				});
+						clean();
+						drawBorders();
+						drawHorizontals();
+						drawVerticals();
+						drawWaveform();
+					});
 			}
 
 			else {
 
 				root.previewRefreshTrigger.scrollPanelStateProperty()
-					.removeListener(((observable1, oldValue1, newValue1) -> {}));
+					.removeListener(((observable1/*, oldValue1, newValue1*/) -> {}));
 
 				clean();
 
@@ -91,7 +91,7 @@ public class PreviewPanel extends Canvas {
 		double
 			verticalScale = 1.,
 			horizontalScale = 1.,
-			
+
 			height = getHeight() - margin,
 			width = getWidth(),
 
@@ -100,14 +100,14 @@ public class PreviewPanel extends Canvas {
 			accountForMinResolution = adjustToVerticalCenter / 4;
 
 		int
-			numberOfLines = (32 - Integer.numberOfLeadingZeros((int) accountForMinResolution)) - 1 ;
+			numberOfLines = (32 - Integer.numberOfLeadingZeros((int) accountForMinResolution)) - 1;
 
 
 		context.setStroke(DODGERBLUE);
 		context.setTextAlign(TextAlignment.RIGHT);
 		context.setFont(font);
 
-		context.strokeLine(margin * 0.75,  (int) height >>> 1, width, (int) height >>> 1);
+		context.strokeLine(margin * 0.75, (int) height >>> 1, width, (int) height >>> 1);
 
 		for (int i = 1; i <= numberOfLines; i++) {
 
@@ -171,38 +171,28 @@ public class PreviewPanel extends Canvas {
 			waveLength = strip.size(),
 			bitsPerSample = currentHeader.getField(BITS_PER_SAMPLE) - 1,
 			samplingRate = currentHeader.getField(SAMPLE_PER_SEC),
-			verticalGridResolution = (int) ((samplingRate - 1) * root.getHorizontalScrollPanel().getScaleValue()) + 1,
+//			horizontalGridResolution = (int) ((samplingRate - 1) * root.getHorizontalScrollPanel().getScaleValue()) + 1,
+			horizontalGridResolution = samplingRate / 1000,
 			movement = computeMovement(),
-			verticalGridMovement = movement % verticalGridResolution;
+			verticalGridMovement = movement % horizontalGridResolution;
 
 		context.setStroke(LIGHTGREY);
 
 
-		for (int i = 0 ; i < width + movement; i += verticalGridResolution) {
+		for (int i = 0; i < width + movement; i += horizontalGridResolution) {
 
 			int
 				x = (int) (margin + width / 2 - computeMovement() + i);
 
-			if (root.getHorizontalScrollPanel().getScrollValue() < 1.)
-
+			if (root.getHorizontalScrollPanel().getScrollValue() < 1.) {
 				context.strokeLine(x, 0, x, height);
+			}
 		}
 	}
 
 	void drawWaveform() {
 
 		context.setLineWidth(1);
-
-		double
-			verticalScale = 1.,
-			horizontalScale = 1.,
-
-			height = getHeight() - margin,
-			width = getWidth() - margin,
-
-			scaledHeight = height * verticalScale,
-			adjustToVerticalCenter = (scaledHeight / 2.),
-			accountForMinResolution = adjustToVerticalCenter / 4;
 
 		Strip
 			strip = FileCache.getCurrentFile().getSignal().getStrip(0);
@@ -213,10 +203,24 @@ public class PreviewPanel extends Canvas {
 		int
 			waveLength = strip.size(),
 			bitsPerSample = currentHeader.getField(BITS_PER_SAMPLE) - 1,
-			samplingRate = currentHeader.getField(SAMPLE_PER_SEC),
-			verticalGridResolution = samplingRate / 1000,
-			movement = computeMovement() - (int) width / 2,
-			verticalGridMovement = movement % verticalGridResolution;
+			samplingRate = currentHeader.getField(SAMPLE_PER_SEC);
+
+		double
+			verticalScale = 1.,
+			horizontalScale = root.getHorizontalScrollPanel().getScaleValue(),
+
+			height = getHeight() - margin,
+			width = getWidth() - margin,
+
+			scaledHeight = height * verticalScale,
+			adjustToVerticalCenter = (scaledHeight / 2.),
+			accountForMinResolution = adjustToVerticalCenter / 4;
+//			horizontalGridResolution = ((samplingRate - 1) * root.getHorizontalScrollPanel().getScaleValue()) + 1;
+
+		int
+			movement = computeMovement() - (int) width / 2;
+
+
 
 		for (int i = 1; i < Math.min(width, strip.size()); i++) {
 
@@ -238,7 +242,7 @@ public class PreviewPanel extends Canvas {
 				context.strokeLine(i + margin, prevDcOffset, i + 1 + margin, dcOffset);
 			}
 
-			else{
+			else {
 
 				context.setStroke(DARKRED);
 				context.strokeLine(i + margin, ((int) height >> 1), i + 1 + margin, ((int) height >> 1));
@@ -246,7 +250,7 @@ public class PreviewPanel extends Canvas {
 		}
 	}
 
-	private int computeMovement(){
+	private int computeMovement() {
 
 		Strip
 			strip = FileCache.getCurrentFile().getSignal().getStrip(0);

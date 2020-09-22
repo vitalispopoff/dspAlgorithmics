@@ -31,10 +31,12 @@ public class ScrollPanel extends StackPane {
 		scroll = new ScrollBar();
 		scale = new ScrollBar();
 
-		scroll.setMax(1.);
-		scroll.setMin(0.);
-		scale.setMax(1.);
-		scale.setMin(0.);
+//		scroll.setMax(1.);
+//		scroll.setMin(0.);
+//		scale.setMax(1.);
+//		scale.setMin(0.);
+
+		scroll.valueProperty();
 
 		scrollValueProperty().bind(scroll.valueProperty());
 		scaleValueProperty().bind(scale.valueProperty());

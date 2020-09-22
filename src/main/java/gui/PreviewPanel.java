@@ -5,7 +5,10 @@ import data.*;
 import data.structure.Strip;
 import data.structure.WaveHeader;
 import javafx.scene.canvas.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.*;
+
+import java.util.ArrayList;
 
 import static data.structure.FileContentStructure.*;
 import static javafx.scene.paint.Color.*;
@@ -39,15 +42,18 @@ public class PreviewPanel extends Canvas {
 
 		FileCache.fileCacheProperty().sizeProperty().addListener((observable/*, oldValue, newValue*/) -> {
 
-			if ((int) FileCache.getFileCache().size() >= 0) {
+			if (FileCache.getFileCacheIsNotEmpty()) {
 
-				waveFile = FileCache.getCurrentFile();
+				waveFile = FileCache.getFile();
 
 				clean();
 				drawBorders();
 				drawHorizontals();
-				drawVerticals();
-				drawWaveform();
+//				drawVerticals();
+
+				for (int i = 0; i < FileCache.getFile().getSignal().strips.size(); i++)
+					drawWaveform(i);
+
 
 				root.previewRefreshTrigger.scrollPanelStateProperty()
 					.addListener((observable1/*, oldValue1, newValue1*/) -> {
@@ -55,8 +61,10 @@ public class PreviewPanel extends Canvas {
 						clean();
 						drawBorders();
 						drawHorizontals();
-						drawVerticals();
-						drawWaveform();
+//						drawVerticals();
+
+						for (int i = 0; i < FileCache.getFile().getSignal().strips.size(); i++)
+							drawWaveform(i);
 					});
 			}
 
@@ -190,70 +198,123 @@ public class PreviewPanel extends Canvas {
 		}
 	}
 
-	void drawWaveform() {
+	void drawWaveform(int channel) {
 
 		context.setLineWidth(1);
 
+		Color[]
+			light = new Color[]{RED, GREEN},
+			dark = new Color[]{DARKRED, DARKGREEN};
+
 		Strip
-			strip = FileCache.getCurrentFile().getSignal().getStrip(0);
-
-		WaveHeader
-			currentHeader = FileCache.getCurrentFile().getHeader();
-
-		int
-			waveLength = strip.size(),
-			bitsPerSample = currentHeader.getField(BITS_PER_SAMPLE) - 1,
-			samplingRate = currentHeader.getField(SAMPLE_PER_SEC);
+			strip = FileCache.getFile().getSignal().getStrip(channel);
 
 		double
-			verticalScale = 1.,
-			horizontalScale = root.getHorizontalScrollPanel().getScaleValue(),
-
-			height = getHeight() - margin,
-			width = getWidth() - margin,
-
-			scaledHeight = height * verticalScale,
-			adjustToVerticalCenter = (scaledHeight / 2.),
-			accountForMinResolution = adjustToVerticalCenter / 4;
-//			horizontalGridResolution = ((samplingRate - 1) * root.getHorizontalScrollPanel().getScaleValue()) + 1;
-
-		int
-			movement = computeMovement() - (int) width / 2;
+			previewWidth = getWidth() - margin,
+			previewHeight = getHeight() - margin,
+			scale = root.getHorizontalScrollPanel().getScaleValue() / previewWidth,
+			scroll = root.getHorizontalScrollPanel().getScrollValue() / (int) (Math.max(scale, 1.)),
+			bitsPerSample = FileCache.getCurrentFileBitsPerSample();
 
 
+		for (int i = (int) scroll; i < scroll + previewWidth; i++) {
 
-		for (int i = 1; i < Math.min(width, strip.size()); i++) {
+			int
+				firstIndex = (int) (i * (Math.max(scale, 1.))),
+				secondIndex = (int) ((i + 1) * (Math.max(scale, 1.)));
 
-			if (i + movement < strip.size() && i + movement > 0) {
+			double
+				firstX = (i - scroll) / Math.min(1., scale) + margin,
+				secondX = ((i + 1) - scroll) / Math.min(1., scale) + margin,
 
-				context.setStroke(RED);
-				double
-					prevSample = (double) strip.get(i + movement - 1),
-					sample = (double) strip.get(i + movement),
+				firstSample = firstIndex < strip.size() ? strip.get(firstIndex) : 0,
+				secondSample = secondIndex < strip.size() ? strip.get(secondIndex) : 0,
 
-					verticalCenter = height / 2,
+				firstY = firstSample / (double) (1 << (int) bitsPerSample),
+				secondY = secondSample / (double) (1 << (int) bitsPerSample),
 
-					prevSampleAmplitude = prevSample / (double) (1 << bitsPerSample),
-					prevDcOffset = verticalCenter * (1 - prevSampleAmplitude),
+				verticalCenter = previewHeight / 2,
 
-					sampleAmplitude = sample / (double) (1 << bitsPerSample),
-					dcOffset = verticalCenter * (1 - sampleAmplitude);
+				firstYOffset = verticalCenter * (1. - firstY),
+				secondYOffset = verticalCenter * (1. - secondY);
 
-				context.strokeLine(i + margin, prevDcOffset, i + 1 + margin, dcOffset);
+			if (firstIndex >= 0 && secondIndex < strip.size()) {
+
+				context.setStroke(light[channel]);
+				context.strokeLine(firstX, firstYOffset, secondX, secondYOffset);
 			}
 
 			else {
 
-				context.setStroke(DARKRED);
-				context.strokeLine(i + margin, ((int) height >> 1), i + 1 + margin, ((int) height >> 1));
+				context.setStroke(dark[channel]);
+				context.strokeLine(firstX, firstYOffset, secondX, secondYOffset);
 			}
 		}
+
+//
+//		context.setLineWidth(1);
+//
+//		Strip
+//			strip = FileCache.getFile().getSignal().getStrip(0);
+//
+//		WaveHeader
+//			currentHeader = FileCache.getFile().getHeader();
+//
+//		int
+//			waveLength = strip.size(),
+//			bitsPerSample = currentHeader.getField(BITS_PER_SAMPLE) - 1,
+//			samplingRate = currentHeader.getField(SAMPLE_PER_SEC);
+//
+//		double
+//			verticalScale = 1.,
+//			horizontalScale = root.getHorizontalScrollPanel().getScaleValue(),
+//
+//			height = getHeight() - margin,
+//			width = getWidth() - margin,
+//
+//			scaledHeight = height * verticalScale,
+//			adjustToVerticalCenter = (scaledHeight / 2.),
+//			accountForMinResolution = adjustToVerticalCenter / 4;
+////			horizontalGridResolution = ((samplingRate - 1) * root.getHorizontalScrollPanel().getScaleValue()) + 1;
+//
+//		int
+//			movement = computeMovement() - (int) width / 2;
+//
+//
+//
+//		for (int i = 1; i < Math.min(width, strip.size()); i++) {
+//
+//			if (i + movement < strip.size() && i + movement > 0) {
+//
+//				context.setStroke(RED);
+//				double
+//					prevSample = (double) strip.get(i + movement - 1),
+//					sample = (double) strip.get(i + movement),
+//
+//					verticalCenter = height / 2,
+//
+//					prevSampleAmplitude = prevSample / (double) (1 << bitsPerSample),
+//					prevDcOffset = verticalCenter * (1 - prevSampleAmplitude),
+//
+//					sampleAmplitude = sample / (double) (1 << bitsPerSample),
+//					dcOffset = verticalCenter * (1 - sampleAmplitude);
+//
+//				context.strokeLine(i + margin, prevDcOffset, i + 1 + margin, dcOffset);
+//			}
+//
+//			else {
+//
+//				context.setStroke(DARKRED);
+//				context.strokeLine(i + margin, ((int) height >> 1), i + 1 + margin, ((int) height >> 1));
+//			}
+//		}
+
 	}
 
 	private int computeMovement() {
 
 		Strip
-			strip = FileCache.getCurrentFile().getSignal().getStrip(0);
+			strip = FileCache.getFile().getSignal().getStrip(0);
 
 		double
 			height = getHeight() - margin,

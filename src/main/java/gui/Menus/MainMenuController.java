@@ -22,7 +22,7 @@ public class MainMenuController {
 
 	public MainMenuController() {
 
-		cacheIsEmptyProperty().bind(FileCache.cacheIsEmptyStaticProperty());
+		cacheIsEmptyProperty().bind(FileCache.fileCacheIsEmptyStaticProperty());
 	}
 
 //	-------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ public class MainMenuController {
 
 	public void openFile(ActionEvent event) {
 
-		if ( ! FileCache.getCacheIsEmpty()) FileCache.purgeCache();
+		if (FileCache.getFileCacheIsNotEmpty()) FileCache.purgeCache();
 
 		FileChooser
 			browser = new FileChooser();
@@ -54,7 +54,7 @@ public class MainMenuController {
 
 			String
 //				path = waveFile.getFileAddress().getPath();
-				path = FileCache.getCurrentFile().getFileAddress().getPath();
+				path = FileCache.getFile().getFileAddress().getPath();
 
 			FileManager.FileManagerSettings.setCurrentDefaultPath(path);
 		}
@@ -65,7 +65,7 @@ public class MainMenuController {
 		if (FileManager.FileManagerSettings.getAutoSave()) {
 
 			WaveFile
-				waveFile = FileCache.getCurrentFile();
+				waveFile = FileCache.getFile();
 
 			FileManager.autoSaveFile();
 		}

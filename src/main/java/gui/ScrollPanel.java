@@ -1,6 +1,9 @@
 package gui;
 
+import data.FileCache;
 import gui.Menus.MainMenuController;
+import javafx.beans.binding.Binding;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Orientation;
 import javafx.scene.control.ScrollBar;
@@ -31,10 +34,33 @@ public class ScrollPanel extends StackPane {
 		scroll = new ScrollBar();
 		scale = new ScrollBar();
 
-//		scroll.setMax(1.);
-//		scroll.setMin(0.);
-//		scale.setMax(1.);
-//		scale.setMin(0.);
+		scroll.setMin(0.);
+		scroll.setValue(0.);
+		scale.setValue(1.);
+
+		scroll.maxProperty().bind(
+			FileCache.currentFileSignalLengthBinding()
+			.subtract(scrollPanelSizeProperty())
+			.subtract(20.)	// for preview panel margin
+		);
+
+		scale.minProperty().bind(
+			Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))
+			.then(5.)
+			.otherwise(0.)
+		);
+
+		scale.maxProperty().bind(
+			Bindings.when(FileCache.currentFileSignalLengthBinding().greaterThan(0))
+			.then(FileCache.currentFileSignalLengthBinding())
+			.otherwise(0.)
+		);
+
+//		scale.visibleAmountProperty().bind(
+//			Bindings.when(FileCache.currentFileSignalLengthBinding().greaterThan(0))
+//			.then(scrollPanelSizeProperty().subtract(20))
+//			.otherwise(0.)
+//		);
 
 		scroll.valueProperty();
 

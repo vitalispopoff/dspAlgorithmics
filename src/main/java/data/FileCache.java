@@ -1,28 +1,27 @@
 package data;
 
-import data.structure.FileContentStructure;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 
 import java.util.List;
 
+import static data.structure.FileContentStructure.*;
+
 public abstract class FileCache {
 
 	public static void addToCache(WaveFile waveFile) {
 
 		getFileCache().add(waveFile);
-		updateCurrentIndex();
+//		if (getFileCache().size() == 1) setCurrentIndex(0);
 	}
 
 	public static WaveFile getFile(int index) {
 
 		try {
 
-			if (index != getCurrentIndex())
-				setCurrentIndex(index);
-
-
+/*			if (index != getCurrentIndex())
+				setCurrentIndex(index);*/
 			return getFileCache().get(index);
 		}
 
@@ -34,16 +33,18 @@ public abstract class FileCache {
 		return null;    // dummy return i hope.
 	}
 
-	public static WaveFile getCurrentFile() {
+	public static WaveFile getFile(){
 
-		return getFile(getCurrentIndex());
+		if (getFileCacheIsNotEmpty()) return getFileCache().get(getFileCache().size() - 1);
+		else return null;
 	}
 
 	public static void purgeCache() {
 
 		fileCache.clear();
-		updateCurrentIndex();
+//		updateCurrentIndex();
 	}
+
 
 
 	private static final SimpleListProperty<WaveFile>
@@ -60,26 +61,116 @@ public abstract class FileCache {
 	}
 
 
+
 	private static final BooleanProperty
-		cacheIsEmpty = new SimpleBooleanProperty();
+		fileCacheIsEmpty = new SimpleBooleanProperty();
 
-	public static boolean getCacheIsEmpty() {
+	public static boolean getFileCacheIsNotEmpty() {
 
-		return cacheIsEmpty.get();
+		return !fileCacheIsEmpty.get();
 	}
 
-	public static BooleanProperty cacheIsEmptyStaticProperty() {
+	public static BooleanProperty fileCacheIsEmptyStaticProperty() {
 
-		return cacheIsEmpty;
+		return fileCacheIsEmpty;
 	}
 
 	static {
-		cacheIsEmpty.bind(fileCache.sizeProperty().isEqualTo(0));
+		fileCacheIsEmpty.bind(fileCache.sizeProperty().isEqualTo(0));
 	}
 
 
 
-	private static final IntegerProperty
+	private static final IntegerBinding
+		currentFileSignalLength = new IntegerBinding(){
+
+		{
+			super.bind(fileCache.sizeProperty());
+
+		}
+
+		@Override
+		protected int computeValue() {
+
+			return
+				getFileCacheIsNotEmpty()
+				? getFile().getSignal().getStrip(0).size()
+				: 0;
+		}
+	};
+
+	public static int getCurrentFileSignalLength(){
+
+		return currentFileSignalLength.get();
+	}
+
+	public static IntegerBinding currentFileSignalLengthBinding(){
+
+		return currentFileSignalLength;
+	}
+
+
+
+	private static final IntegerBinding
+		currentFileBitsPerSample = new IntegerBinding() {
+
+		{
+			super.bind(fileCache.sizeProperty());
+		}
+
+
+		@Override
+		protected int computeValue() {
+
+			return
+				getFileCacheIsNotEmpty()
+				? getFile().getHeader().getField(BITS_PER_SAMPLE)
+				: 0;
+		}
+	};
+
+	public static int getCurrentFileBitsPerSample(){
+
+		return currentFileBitsPerSample.get();
+	}
+
+	public static IntegerBinding currentFileBitsPerSampleBinding(){
+
+		return currentFileBitsPerSample;
+	}
+
+
+
+	private static final IntegerBinding
+		currentFileSamplesPerSecond = new IntegerBinding(){
+
+		{
+			super.bind(fileCache.sizeProperty());
+		}
+
+		@Override
+		protected int computeValue() {
+
+			return
+				getFileCacheIsNotEmpty()
+				? getFile().getHeader().getField(SAMPLE_PER_SEC)
+				: 0;
+		}
+	};
+
+	public static int getCurrentFileSamplesPerSecond(){
+
+		return currentFileSamplesPerSecond.get();
+	}
+
+	public static IntegerBinding currentFileSamplesPerSecondBinding(){
+
+		return currentFileSamplesPerSecond;
+	}
+
+}
+
+/*	private static final IntegerProperty
 		currentIndex = new SimpleIntegerProperty(-1);
 
 	public static int getCurrentIndex() {
@@ -94,48 +185,10 @@ public abstract class FileCache {
 
 	private static void updateCurrentIndex() {
 
-		setCurrentIndex(fileCache.size() - 1);
+		setCurrentIndex(getFileCache().size() - 1);
 	}
 
 	public static IntegerProperty currentIndexProperty() {
 
 		return currentIndex;
-	}
-
-
-	private static final IntegerBinding
-		temporalBinding = new IntegerBinding() {
-
-		{
-			super.bind(
-				fileCache.sizeProperty()
-			);
-		}
-
-
-		@Override
-		protected int computeValue() {
-
-			return fileCache.size() > 0 ? getFile(0).getHeader().getField(FileContentStructure.BITS_PER_SAMPLE) : 0;
-		}
-	};
-
-	public static int getTemporalBinding(){
-
-		return temporalBinding.get();
-	}
-
-	public static IntegerBinding temporalBindingProperty(){
-
-		return temporalBinding;
-	}
-
-	static {
-
-		temporalBinding.addListener((observable, oldValue, newValue) -> {
-
-			System.out.println(newValue);
-		});
-	}
-
-}
+	}*/	// TODO - current index property to be fixed

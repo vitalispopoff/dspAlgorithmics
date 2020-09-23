@@ -100,8 +100,13 @@ public class ScrollPanel extends StackPane {
 
 					@Override
 					protected double computeValue() {
+
+						double result = getScaleValue() == 1. ? 0 : getScaleValue();
+
+						if(result < getScrollValue())
+							scroll.setValue(result);
+
 						return getScaleValue() == 1. ? 0 : getScaleValue();
-//							(1 << (int) getScaleValue());
 					}
 				})
 

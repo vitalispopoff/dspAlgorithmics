@@ -44,8 +44,8 @@ public class PreviewPanel extends Canvas {
 
 				clean();
 				drawBorders();
-				drawHorizontals();
-				drawVerticals();
+//				drawHorizontals();
+//				drawVerticals();
 				drawWaveForm();
 
 				root.previewRefreshTrigger.scrollPanelStateProperty()
@@ -53,8 +53,8 @@ public class PreviewPanel extends Canvas {
 
 						clean();
 						drawBorders();
-						drawHorizontals();
-						drawVerticals();
+//						drawHorizontals();
+//						drawVerticals();
 						drawWaveForm();
 					});
 			}
@@ -89,12 +89,16 @@ public class PreviewPanel extends Canvas {
 			height = getHeight() - margin,
 			width = getWidth(),
 
-			scaledHeight = height * Math.pow(2., root.getVerticalScrollPanel().getScaleValue() - 1),
-			adjustToVerticalCenter = (scaledHeight / 2.),
-			accountForMinResolution = adjustToVerticalCenter / 4,
+			verticalScale = root.getVerticalScrollPanel().getScaleValue(),
+			verticalScroll = root.getVerticalScrollPanel().getScrollValue(),
 
-			verticalOffset = (0.5 * scaledHeight - 0.25 * height) * root.getVerticalScrollPanel().getScrollValue(),    // ! TODO probably needs a dependency on the preview height
-			y0 = (height / 2.) - verticalOffset;
+			gridYScale = height * verticalScale / 2.,
+			zoom = height * Math.pow(2., verticalScale),
+
+			accountForMinResolution = gridYScale / 8,
+
+			yOffset = (0.5 * zoom - 0.25 * height) * verticalScroll,
+			y0 = (height / 2.) - yOffset;
 
 		int
 			numberOfLines = (32 - Integer.numberOfLeadingZeros((int) accountForMinResolution)) - 1;
@@ -110,11 +114,12 @@ public class PreviewPanel extends Canvas {
 		context.setTextAlign(RIGHT);
 		context.setFont(font);
 
+
 		for (int i = 1; i <= numberOfLines; i++) {
 
 			double
-				y1 = (height / 2) - scaledHeight / (1 << i) - verticalOffset,
-				y2 = (height / 2) + scaledHeight / (1 << i) - verticalOffset;
+				y1 = (height / 2) - gridYScale / (1 << i) - yOffset,
+				y2 = (height / 2) + gridYScale / (1 << i) - yOffset;
 
 			int
 				txt = (-(i - 1) * 6);
@@ -146,17 +151,13 @@ public class PreviewPanel extends Canvas {
 			fileLength = FileCache.getCurrentFileSignalLength();
 
 		double
-//			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
 			horizontalScale = root.getHorizontalScrollPanel().getScaleValue(),
 
 			width = getWidth() - margin,
 			height = getHeight() - margin,
 
 			gridScale = 64,
-
-//			scaledWidth = Math.pow(2., horizontalScale),
-			scaledWidth = horizontalScale,
-			horizontalOffset,
+			hOffset = root.getHorizontalScrollPanel().getScrollValue(),
 
 			x1 = width / 2,
 			x2 = width / 2;
@@ -173,10 +174,10 @@ public class PreviewPanel extends Canvas {
 		for (int i = 0; x1 > margin || x2 < width + margin; i++) {
 
 			double
-				gridIncrement = i * gridScale * scaledWidth / /*(1 << (int) horizontalScale);*/ scaledIntegerWidth;
+				gridIncrement = i * gridScale * horizontalScale / scaledIntegerWidth;
 
-			x1 = (width / 2) - (gridIncrement);
-			x2 = (width / 2) + (gridIncrement);
+			x1 = (width / 2) - (gridIncrement) /*- horizontalOffset*/;
+			x2 = (width / 2) + (gridIncrement) /*- horizontalOffset*/;
 
 			if (x1 > margin && txt - gridIncrement >= 0) {
 
@@ -203,44 +204,29 @@ public class PreviewPanel extends Canvas {
 
 	private void drawWaveForm() {
 
-		double
-			horizontalScroll = (int) root.getHorizontalScrollPanel().getScrollValue(),
-			horizontalScale = root.getHorizontalScrollPanel().getScaleValue();
-
 		Strip
 			strip = FileCache.getFile().getSignal().getStrip(0);
 
-		int
-			samplesPerSecond = FileCache.getCurrentFileSamplesPerSecond(),
-			bitsPerSample = FileCache.getCurrentFileBitsPerSample(),
-			fileLength = FileCache.getCurrentFileSignalLength(),
-
-			previewArea = (int)(fileLength /  (Math.pow(2., horizontalScale) * 0.5)),
-			previewStart = (int) horizontalScroll
-		;
-
-
-		System.out.println(horizontalScroll);
-
-//		System.out.println(root.);
-
-
 		double
-
 			width = getWidth() - margin,
 			height = getHeight() - margin,
 
-			gridScale = 64,
+			horizontalScroll = (int) root.getHorizontalScrollPanel().getScrollValue(),
+			horizontalScale = root.getHorizontalScrollPanel().getScaleValue(),
 
-			scaledWidth = Math.pow(2., horizontalScale),
-			verticalScale = ((double) (1 << bitsPerSample)) / height,
-			horizontalOffset,
+			scaledHeight = height * Math.pow(2., root.getVerticalScrollPanel().getScaleValue()),
+			vOffset = (0.5 * scaledHeight - 0.25 * height) * root.getVerticalScrollPanel().getScrollValue(),    // ! TODO probably needs a dependency on the preview height;
 
-			middle = width / 2,
-			x1 = middle,
-			x2 = middle,
-			y1 = 0.,
-			y2 = 0;
+			samplesPerSecond = FileCache.getCurrentFileSamplesPerSecond(),
+			bitsPerSample = FileCache.getCurrentFileBitsPerSample(),
+			fileLength = FileCache.getCurrentFileSignalLength(),
+			previewArea = (fileLength + 1. - horizontalScale),
+			stepInArea = Math.max(1., previewArea / width),
+			stepInPreview = Math.max(1., width / previewArea),
+
+			vScale = ((double) (1 << (int) bitsPerSample)) / height / root.getVerticalScrollPanel().getScaleValue(),
+			middle = width / 2;
+
 
 
 		context.setTextAlign(CENTER);
@@ -251,21 +237,21 @@ public class PreviewPanel extends Canvas {
 
 			if (i < middle) {
 
-				int
-					index = (int) middle + i + (int) horizontalScroll;
+				double
+					index = (stepInArea * (middle + i) + horizontalScroll),
+					index1 = index + stepInArea;
 
-				x1 = middle - i;
-				x2 = middle + 1 - i ;
+				double
+					y1 = 0.,
+					y2 = 0.;
 
-				y1 = (x1 > 0 && index >= 0 && index + 1 < strip.size())
-						 ? strip.get(index) / verticalScale
-						 : 0.;
+				if (index1 < fileLength) {
 
-				y2 = (x2 > 0 && index >= 0 && index + 1 < strip.size())
-						 ? strip.get(index + 1) / verticalScale
-						 : 0.;
+					y1 = ((strip.get((int) index) / vScale) + vOffset);
+					y2 = ((strip.get((int) index1) / vScale) + vOffset);
+				}
 
-				context.strokeLine(i + middle + margin, -y1 + height / 2, i + middle + 1 + margin, -y2 + height / 2);
+				context.strokeLine(stepInPreview * (i + middle) + margin, (height / 2) - y1, stepInPreview * (i + middle + 1) + margin, (height / 2) - y2);
 			}
 		}
 	}

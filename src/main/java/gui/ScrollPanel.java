@@ -63,7 +63,7 @@ public class ScrollPanel extends StackPane {
 
 	private void bindScrollRangeProperties() {
 
-		DoubleBinding    // ! TODO - needs rework
+		DoubleBinding
 			power = new DoubleBinding() {
 
 			{
@@ -89,14 +89,14 @@ public class ScrollPanel extends StackPane {
 				}
 			})
 				: ((Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0)))
-					   .then(power.multiply(-1.))
+					   .then(/*power.multiply(*/-1.)//)
 					   .otherwise(0.)),
 
 			maxScroll =
 				isHorizontal()
 					? FileCache.currentFileSignalLengthBinding()
 					: ((Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0)))
-						   .then(power)
+						   .then(/*power*/ 1.)
 						   .otherwise(0.)),
 
 			minScale =
@@ -143,8 +143,6 @@ public class ScrollPanel extends StackPane {
 
 		(isHorizontal() ? s.maxWidthProperty() : s.maxHeightProperty())
 			.bind(scrollPanelSizeProperty());
-
-//		scroll.visibleAmountProperty().bind(scroll.maxProperty().divide(scale.valueProperty().divide(2.)));
 	}
 
 	public void bindScrollBarVisibilityProperties(BooleanProperty b) {

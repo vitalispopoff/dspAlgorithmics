@@ -5,7 +5,6 @@ import data.*;
 import javafx.scene.canvas.*;
 import javafx.scene.text.*;
 
-import static data.structure.FileContentStructure.*;
 import static javafx.scene.paint.Color.*;
 import static javafx.scene.text.TextAlignment.*;
 
@@ -84,9 +83,6 @@ public class PreviewPanel extends Canvas {
 	private void drawHorizontals() {
 
 		double
-			bitsPerSample = FileCache.getFile().getHeader().getField(BITS_PER_SAMPLE),
-//			verticalScale = 1.,
-//			horizontalScale = 1.,
 			height = getHeight() - margin,
 			width = getWidth(),
 
@@ -94,58 +90,49 @@ public class PreviewPanel extends Canvas {
 			adjustToVerticalCenter = (scaledHeight / 2.),
 			accountForMinResolution = adjustToVerticalCenter / 4,
 
-			verticalOffset = root.getVerticalScrollPanel().getScrollValue(),
-			y0 = (height / 2.) + verticalOffset;
+			verticalOffset = (0.5 * scaledHeight - 0.25 * height)* root.getVerticalScrollPanel().getScrollValue(),	// ! TODO probably needs a dependency on the preview height
+			y0 = (height / 2.) - verticalOffset;
 
 		int
 			numberOfLines = (32 - Integer.numberOfLeadingZeros((int) accountForMinResolution)) - 1;
 
+
 		context.setStroke(DODGERBLUE);
+		context.setLineWidth(1.);
+
+		context.strokeLine(margin * 0.75, height / 2, margin, height /2); // central indicator
+		context.strokeLine(margin * 0.75, y0, width, y0);    // central line
+
+		context.setLineWidth(0.6);
 		context.setTextAlign(RIGHT);
 		context.setFont(font);
-		context.strokeLine(margin * 0.75, y0, width, (int) y0);    // central line
-
 
 		for (int i = 1; i <= numberOfLines; i++) {
 
 			double
-				y1 = (height / 2) - scaledHeight / (1 << i) + verticalOffset,
-				y2 = (height / 2) + scaledHeight / (1 << i) + verticalOffset;
+				y1 = (height / 2) - scaledHeight / (1 << i) - verticalOffset,
+				y2 = (height / 2) + scaledHeight / (1 << i) - verticalOffset;
 
 			int
 				txt = (-(i - 1) * 6);
 
 			if (y1 > 0) {
 
-				if (i > 1 && i < numberOfLines) {
+				if (i > 1 && i < numberOfLines) context.strokeText(txt + " ", margin * 0.85, y1 + 4);
 
-					context.strokeText(txt + " ", margin * 0.85, y1 + 4);
-					context.strokeLine(margin * 0.85, y1, width, y1);
-				}
-
-				else {
-					context.strokeLine(margin, y1, width, y1);
-				}
+				context.strokeLine(margin, y1, width, y1);
 			}
 
 			if (y2 < height && y1 != y2) {
 
-				if (i > 1 && i < numberOfLines) {
+				if (i > 1 && i < numberOfLines) context.strokeText(txt + " ", margin * 0.85, y2 + 4);
 
-					context.strokeText(txt + " ", margin * 0.85, y2 + 4);
-					context.strokeLine(margin * 0.85, y2, width, y2);
-				}
-
-				else {
-					context.strokeLine(margin, y2, width, y2);
-				}
+				context.strokeLine(margin, y2, width, y2);
 			}
 		}
 	}
 
 	private void drawVerticals() {
-
-
 
 		double
 			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
@@ -169,9 +156,6 @@ public class PreviewPanel extends Canvas {
 		context.setTextAlign(CENTER);
 		context.setFont(font);
 
-		context.strokeText(txt + " ms", width /2 , height + margin * 0.85);
-		context.strokeLine(width / 2, 0, width / 2, height);
-
 
 		for (int i = 0; x1 > margin || x2 < width + margin; i++) {
 
@@ -181,15 +165,15 @@ public class PreviewPanel extends Canvas {
 			x1 = (width / 2) - (gridIncrement);
 			x2 = (width / 2) + (gridIncrement);
 
-			if (x1 > margin && x1 != width / 2 && txt - gridIncrement >= 0 ) {
+			if (x1 > margin && txt - gridIncrement >= 0) {
 
-					context.strokeText((int) (txt - gridIncrement) + " ", x1, height + margin * 0.85);
+				context.strokeText((int) (txt - gridIncrement) + " ", x1, height + margin * 0.85);
 				context.strokeLine(x1, 0, x1, height);
 			}
 
 			if (x2 < width + margin && x2 != width / 2 && x1 != x2 && txt + gridIncrement < fileLength) {
 
-					context.strokeText((int) (txt + gridIncrement) + " ", x2, height + margin * 0.85);
+				context.strokeText((int) (txt + gridIncrement) + " ", x2, height + margin * 0.85);
 				context.strokeLine(x2, 0, x2, height);
 			}
 		}

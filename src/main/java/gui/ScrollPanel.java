@@ -8,6 +8,8 @@ import javafx.geometry.Orientation;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.StackPane;
 
+import java.io.File;
+
 import static javafx.geometry.Orientation.*;
 
 public class ScrollPanel extends StackPane {
@@ -82,8 +84,23 @@ public class ScrollPanel extends StackPane {
 			isHorizontal()
 				? (new DoubleBinding() {
 
+				{
+					super.bind(
+						FileCache.currentFileSignalLengthBinding(),
+						scaleValueProperty(),
+						scroll.valueProperty()
+				);}
+
 				@Override
-				protected double computeValue() { return 0.; }
+				protected double computeValue() {
+
+					double result =
+						FileCache.getCurrentFileSignalLength() / (getScaleValue() / 2);
+
+//					if(result > scroll.getValue()) scroll.setValue(result);
+
+					return result;
+				}
 			})
 				: ((Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0)))
 					   .then(-1.)
@@ -95,18 +112,18 @@ public class ScrollPanel extends StackPane {
 
 					{ super.bind(
 							FileCache.currentFileSignalLengthBinding(),
-							scaleValueProperty()
+							scaleValueProperty(),
+							scroll.valueProperty()
 						); }
 
 					@Override
 					protected double computeValue() {
 
-						double result = getScaleValue() == 1. ? 0 : getScaleValue();
+						double result = FileCache.getCurrentFileSignalLength() * (1. - 1. / (getScaleValue() / 2));
 
-						if(result < getScrollValue())
-							scroll.setValue(result);
+//						if(result < scroll.getValue()) scroll.setValue(result);
 
-						return getScaleValue() == 1. ? 0 : getScaleValue();
+						return getScaleValue();
 					}
 				})
 
@@ -137,7 +154,7 @@ public class ScrollPanel extends StackPane {
 
 								   return
 //									   Math.log(FileCache.getCurrentFileSignalLength()) / Math.log(2.)
-									   FileCache.getCurrentFileSignalLength()
+									   (FileCache.getCurrentFileSignalLength())
 									   ;
 							   }
 						   })

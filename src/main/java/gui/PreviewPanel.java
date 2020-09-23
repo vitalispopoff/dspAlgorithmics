@@ -43,20 +43,20 @@ public class PreviewPanel extends Canvas {
 				waveFile = FileCache.getFile();
 
 				clean();
-//				drawBorders();
+				drawBorders();
 //				drawHorizontals();
 				drawWaveForm();
-//				drawVerticals();
+				drawVerticals();
 
 
 				root.previewRefreshTrigger.scrollPanelStateProperty()
 					.addListener((observable1) -> {
 
 						clean();
-//						drawBorders();
+						drawBorders();
 //						drawHorizontals();
 						drawWaveForm();
-//						drawVerticals();
+						drawVerticals();
 					});
 			}
 
@@ -221,147 +221,62 @@ public class PreviewPanel extends Canvas {
 			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
 			horizontalScale = root.getHorizontalScrollPanel().getScaleValue(),
 
-			scaledHeight = height * Math.pow(2.,verticalScale),
+			scaledHeight = height * Math.pow(2., verticalScale),
 			vOffset = (0.5 * scaledHeight - 0.25 * height) * verticalScroll,
 
 
 			previewArea = (fileLength + 1. - horizontalScale),
-			stepInArea = Math.max(1., previewArea / width),
+			stepInArea = Math.max(1., previewArea / width),		//
 			stepInPreview = Math.max(1., width / previewArea),
 
 			vScale = ((double) (1 << (int) bitsPerSample)) / height / verticalScale,
 			middle = width / 2;
 
-		System.out.println("\t Scroll = " + horizontalScroll + ", scale = ");
 
 		context.setTextAlign(CENTER);
 		context.setFont(font);
 		context.setLineWidth(1.);
 
+
+		System.out.println(horizontalScroll - stepInArea);
+
+
 		for (int i = 0; i < (int) middle; i++) {
 
-//			if (i < middle) {
-
-				double
-					index1Start = /*middle*/ (previewArea / 2.) + (stepInArea * i) + horizontalScroll,
+			double
+					index1Start = horizontalScroll + (stepInArea * i),
 					index1End = index1Start + stepInArea,
-					index2Start = /*middle*/ (previewArea / 2.) - (stepInArea * (i + 1)) + horizontalScroll,
-					index2End = index2Start + stepInArea,
 
-
-					x1Start = stepInPreview * (middle + i) + margin,
-					x1End = stepInPreview * (middle + (i + 1)) + margin,
-					x2End = stepInPreview * (middle -  i) + margin,
-					x2Start = stepInPreview * (middle - (i + 1)) + margin,
-
+					x1Start = stepInPreview * (middle + i),
+					x1End = stepInPreview * (middle + (i + 1)),
 
 					y1Start = index1Start < fileLength && index1Start >=0
-								? (height / 2) - ((strip.get((int) index1Start) / vScale) + vOffset)
-								: height / 2.,
+								  ? (height / 2) - ((strip.get((int) index1Start) / vScale) + vOffset)
+								  : height / 2.,
 					y1End = index1End < fileLength && index1End >= 0
 								? (height / 2) - ((strip.get((int) index1End) / vScale) + vOffset)
-								: height / 2.,
-					y2Start = index2Start < fileLength && index2Start >=0
-						  		? (height / 2) - ((strip.get((int) index2Start) / vScale) + vOffset)
-						  		: height / 2.,
-					y2End = index2Start < fileLength && index2End >= 0
-								? (height / 2) - ((strip.get((int) index2End) / vScale) + vOffset)
-								: height / 2.
-								;
+								: height / 2.;
 
 				context.strokeLine(x1Start, y1Start, x1End, y1End);
-				context.strokeLine(x2Start, y2Start, x2End, y2End);
-
-
-/*
-			//					y2Start = index2Start < previewArea && index2Start >= 0
-//								  ? ((height / 2) - (strip.get((int) index2Start) / vScale) + vOffset) - (height / 2)
-//								  : 0.,
-//
-//
-//
-//					y2End = index2End < previewArea && index2End >= 0
-//								? ((height / 2) - (strip.get((int) index2End) / vScale) + vOffset) - (height / 2)
-//								: 0.;
-
-				double
-					index = (stepInArea * (middle + i) + horizontalScroll),
-					index1 = index + stepInArea;
-
-				double
-					y1 = 0.,
-					y2 = 0.;
-
-				if (index1 < fileLength) {
-
-					y1 = ((strip.get((int) index) / vScale) + vOffset);
-					y2 = ((strip.get((int) index1) / vScale) + vOffset);
-				}
-
-				context.strokeLine(stepInPreview * (i + middle) + margin, (height / 2) - y1, stepInPreview * (i + middle + 1) + margin, (height / 2) - y2);*/
-			}
-		}
-	}
-//}
-
-/*	void iterateDrawing(int channel) {
-
-		context.setLineWidth(1);
-
-					context.setLineWidth(1);
-
-		Color[]
-			light = new Color[]{RED, GREEN},
-			dark = new Color[]{DARKRED, DARKGREEN};
-
-		Strip
-			strip = FileCache.getFile().getSignal().getStrip(channel);
-
-		double
-			previewWidth = getWidth() - margin,
-			previewHeight = getHeight() - margin,
-
-			scale = root.getHorizontalScrollPanel().getScaleValue() / previewWidth,
-			scroll = root.getHorizontalScrollPanel().getScrollValue() /  (Math.max(scale, 1.)),
-
-//			bitsPerSample = FileCache.getCurrentFileBitsPerSample();
-			bitsPerSample = root.verticalScrollPanel().getScaleValue();
-
-
-		for (int i = (int) scroll; i < scroll + previewWidth; i++) {
-
-						int
-				firstIndex = (int) (i * (Math.max(scale, 1.))),
-				secondIndex = (int) ((i + 1) * (Math.max(scale, 1.)));
 
 			double
-				firstSample = firstIndex < strip.size() ? strip.get(firstIndex) : 0,
-				secondSample = secondIndex < strip.size() ? strip.get(secondIndex) : 0,
+				index2Start = horizontalScroll - (stepInArea * (i + 1)),
+				index2End = index2Start + stepInArea,
+
+				x2End =  stepInPreview * (middle - i),
+				x2Start = stepInPreview * (middle - (i + 1)),
+
+				y2Start = index2Start < fileLength && index2Start >= 0
+							  ? (height / 2) - ((strip.get((int) index2Start) / vScale) + vOffset)
+							  : height / 2.,
+				y2End = index2End < fileLength && index2End >= 0
+							? (height / 2) - ((strip.get((int) index2End) / vScale) + vOffset)
+							: height / 2.;
 
 
-				firstX = ((i - scroll) / Math.min(1., scale)) + margin,
-				secondX = ((i + 1 - scroll) / Math.min(1., scale)) + margin,
+			if (x2Start > margin && x2End > margin)
+			context.strokeLine(x2Start, y2Start, x2End, y2End);
 
-
-				firstY = firstSample / (double) (Math.pow(2., bitsPerSample),	// !
-				secondY = secondSample / (double) (1 << (int) bitsPerSample),
-
-				verticalCenter = previewHeight / 2,
-
-				firstYOffset = verticalCenter * (1. - firstY),
-				secondYOffset = verticalCenter * (1. - secondY);
-
-			if (firstIndex >= 0 && secondIndex < strip.size()) {
-
-				context.setStroke(light[channel]);
-				context.strokeLine(firstX, firstYOffset, secondX, secondYOffset);
-			}
-
-//			else {
-//
-//				context.setStroke(dark[channel]);
-//				context.strokeLine(firstX, firstYOffset, secondX, secondYOffset);
-//			}
 		}
-   // drawing waveform
-	}*/
+	}
+}

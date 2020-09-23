@@ -87,8 +87,10 @@ public class ScrollPanel extends StackPane {
 				{
 					super.bind(
 						FileCache.currentFileSignalLengthBinding(),
-						scaleValueProperty(),
-						scroll.valueProperty()
+//						scale.valueProperty(),
+						scaleValueProperty()
+//						,
+//						scroll.valueProperty()
 				);}
 
 				@Override
@@ -112,8 +114,10 @@ public class ScrollPanel extends StackPane {
 
 					{ super.bind(
 							FileCache.currentFileSignalLengthBinding(),
-							scaleValueProperty(),
-							scroll.valueProperty()
+//							scale.valueProperty(),
+							scaleValueProperty()
+//						,
+//							scroll.valueProperty()
 						); }
 
 					@Override

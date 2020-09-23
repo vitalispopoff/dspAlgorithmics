@@ -226,7 +226,7 @@ public class PreviewPanel extends Canvas {
 
 
 			previewArea = (fileLength + 1. - horizontalScale),
-			stepInArea = Math.max(1., previewArea / width),		//
+			stepInArea = Math.max(1., previewArea / width),        //
 			stepInPreview = Math.max(1., width / previewArea),
 
 			vScale = ((double) (1 << (int) bitsPerSample)) / height / verticalScale,
@@ -238,45 +238,49 @@ public class PreviewPanel extends Canvas {
 		context.setLineWidth(1.);
 
 
-		System.out.println(horizontalScroll - stepInArea);
 
-
-		for (int i = 0; i < (int) middle; i++) {
+		for (int i = 0; i < (int) middle + margin; i++) {
 
 			double
-					index1Start = horizontalScroll + (stepInArea * i),
-					index1End = index1Start + stepInArea,
+				index1Start = horizontalScroll + (stepInArea * i),
+				index1End = index1Start + stepInArea,
 
-					x1Start = stepInPreview * (middle + i),
-					x1End = stepInPreview * (middle + (i + 1)),
+				x1Start = middle + i,
+				x1End = middle + i + 1,
 
-					y1Start = index1Start < fileLength && index1Start >=0
-								  ? (height / 2) - ((strip.get((int) index1Start) / vScale) + vOffset)
-								  : height / 2.,
-					y1End = index1End < fileLength && index1End >= 0
-								? (height / 2) - ((strip.get((int) index1End) / vScale) + vOffset)
-								: height / 2.;
+				y1Start =
+					index1Start < fileLength && index1Start >= 0
+						? (height / 2) - ((strip.get((int) index1Start) / vScale) + vOffset)
+						: height / 2.,
 
-				context.strokeLine(x1Start, y1Start, x1End, y1End);
+				y1End =
+					index1End < fileLength && index1End >= 0
+						? (height / 2) - ((strip.get((int) index1End) / vScale) + vOffset)
+						: height / 2.;
+
+			context.strokeLine(x1Start, y1Start, x1End, y1End);
 
 			double
 				index2Start = horizontalScroll - (stepInArea * (i + 1)),
 				index2End = index2Start + stepInArea,
 
-				x2End =  stepInPreview * (middle - i),
-				x2Start = stepInPreview * (middle - (i + 1)),
+				x2Start = middle - i,
+				x2End = middle - i + 1,
 
-				y2Start = index2Start < fileLength && index2Start >= 0
-							  ? (height / 2) - ((strip.get((int) index2Start) / vScale) + vOffset)
-							  : height / 2.,
-				y2End = index2End < fileLength && index2End >= 0
-							? (height / 2) - ((strip.get((int) index2End) / vScale) + vOffset)
-							: height / 2.;
+				y2Start =
+					index2Start < fileLength && index2Start >= 0
+						? (height / 2) - ((strip.get((int) index2Start) / vScale) + vOffset)
+						: height / 2.,
+
+				y2End =
+					index2End < fileLength && index2End >= 0
+						? (height / 2) - ((strip.get((int) index2End) / vScale) + vOffset)
+						: height / 2.;
 
 
-			if (x2Start > margin && x2End > margin)
-			context.strokeLine(x2Start, y2Start, x2End, y2End);
-
+			if (x2Start > margin && x2End > margin) {
+				context.strokeLine(x2Start, y2Start, x2End, y2End);
+			}
 		}
 	}
 }

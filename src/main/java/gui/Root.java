@@ -115,7 +115,8 @@ public class Root extends GridPane {
             add(bar, 0, 0, 3, 1);
             GridPane.setValignment(bar, VPos.TOP);
             GridPane.setHalignment(bar, HPos.LEFT);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }

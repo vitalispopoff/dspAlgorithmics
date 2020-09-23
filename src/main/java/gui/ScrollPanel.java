@@ -20,7 +20,7 @@ public class ScrollPanel extends StackPane {
 	Orientation
 		orientation;
 
-	private final ScrollBar
+	public final ScrollBar
 		scroll,
 		scale;
 
@@ -49,19 +49,19 @@ public class ScrollPanel extends StackPane {
 		scroll.setOrientation(orientation);
 		scale.setOrientation(orientation);
 
-		bindPropertyPairs(scroll);
-		bindPropertyPairs(scale);
+		bindScrollBarSizeProperties(scroll);
+		bindScrollBarSizeProperties(scale);
 
 		scrollValueProperty().bind(scroll.valueProperty());
 		scaleValueProperty().bind(scale.valueProperty());
 
 		bindScrollBarSizeProperties();
 
-		bindScrollRangeProperties();
+		bindScrollBarRangeProperties();
 	}
 
 
-	private void bindScrollRangeProperties() {
+	private void bindScrollBarRangeProperties() {
 
 		DoubleBinding
 			power = new DoubleBinding() {
@@ -83,20 +83,30 @@ public class ScrollPanel extends StackPane {
 				? (new DoubleBinding() {
 
 				@Override
-				protected double computeValue() {
-
-					return 0.;
-				}
+				protected double computeValue() { return 0.; }
 			})
 				: ((Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0)))
-					   .then(/*power.multiply(*/-1.)//)
+					   .then(-1.)
 					   .otherwise(0.)),
 
 			maxScroll =
 				isHorizontal()
-					? FileCache.currentFileSignalLengthBinding()
+					? (new DoubleBinding() {
+
+					{ super.bind(
+							FileCache.currentFileSignalLengthBinding(),
+							scaleValueProperty()
+						); }
+
+					@Override
+					protected double computeValue() {
+						return getScaleValue() == 1. ? 0 : getScaleValue();
+//							(1 << (int) getScaleValue());
+					}
+				})
+
 					: ((Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0)))
-						   .then(/*power*/ 1.)
+						   .then(1.)
 						   .otherwise(0.)),
 
 			minScale =
@@ -121,7 +131,9 @@ public class ScrollPanel extends StackPane {
 							   protected double computeValue() {
 
 								   return
-									   Math.log(FileCache.getCurrentFileSignalLength()) / Math.log(2.);
+//									   Math.log(FileCache.getCurrentFileSignalLength()) / Math.log(2.)
+									   FileCache.getCurrentFileSignalLength()
+									   ;
 							   }
 						   })
 						   .otherwise(0.))
@@ -136,7 +148,7 @@ public class ScrollPanel extends StackPane {
 
 	}
 
-	private void bindPropertyPairs(ScrollBar s) {
+	private void bindScrollBarSizeProperties(ScrollBar s) {
 
 		(isHorizontal() ? s.minWidthProperty() : s.minHeightProperty())
 			.bind(scrollPanelSizeProperty());

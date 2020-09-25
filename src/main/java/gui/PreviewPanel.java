@@ -258,12 +258,12 @@ public class PreviewPanel extends Canvas {
 
 		for (int i = 0; flag; i++) {
 
-			flag = x2End > margin && x1Start < width - margin;
+			flag = x2End > margin || x1Start < width + margin;
 
-			x1Start += 1 / Double.min(1., getHorizontalRescaleFactor());
+
+
+			x1Start = middle + (i / Double.min(1., getHorizontalRescaleFactor()));
 			x1End = x1Start + (1 / Double.min(1., getHorizontalRescaleFactor()));
-
-//			x1Start = middle + (i / Double.min(1., getHorizontalRescaleFactor()));
 
 			double
 				index1Start = horizontalScroll + (i * Double.max(1., getHorizontalRescaleFactor())),
@@ -280,6 +280,10 @@ public class PreviewPanel extends Canvas {
 						: (height / 2.) - vOffset;
 
 			context.strokeLine(x1Start, y1Start, x1End, y1End);
+
+
+
+
 
 			x2Start = middle - ((i + 1) / Double.min(1., getHorizontalRescaleFactor()));
 			x2End = x2Start + (1 / Double.min(1., getHorizontalRescaleFactor()));

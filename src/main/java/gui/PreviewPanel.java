@@ -44,7 +44,7 @@ public class PreviewPanel extends Canvas {
 
 				clean();
 				drawBorders();
-//				drawHorizontals();
+				drawHorizontals();
 				drawWaveForm();
 				drawVerticals();
 
@@ -54,7 +54,7 @@ public class PreviewPanel extends Canvas {
 
 						clean();
 						drawBorders();
-//						drawHorizontals();
+						drawHorizontals();
 						drawWaveForm();
 						drawVerticals();
 					});
@@ -174,7 +174,7 @@ public class PreviewPanel extends Canvas {
 		for (int i = 0; x1 > margin || x2 < width + margin; i++) {
 
 			double
-				gridIncrement = horizontalScale * ((i * gridScale)  / scaledIntegerWidth);
+				gridIncrement = horizontalScale * ((i * gridScale) / scaledIntegerWidth);
 
 			x1 = (width / 2) - (gridIncrement) /*- hOffset*/;
 			x2 = (width / 2) + (gridIncrement) /*- hOffset*/;
@@ -221,7 +221,6 @@ public class PreviewPanel extends Canvas {
 	private void drawWaveForm() {
 
 
-
 		Strip
 			strip = FileCache.getFile().getSignal().getStrip(0);
 
@@ -239,12 +238,8 @@ public class PreviewPanel extends Canvas {
 			scaledHeight = height * Math.pow(2., verticalScale),
 			vOffset = (0.5 * scaledHeight - 0.25 * height) * verticalScroll,
 
-			previewArea = (fileLength + 1. - horizontalScale),
-			stepInArea = Math.max(1., previewArea / width),
-			stepInPreview = Math.max(1., width / previewArea),
-
-			vScale = ((double) (1 << (int) bitsPerSample)) / height / verticalScale,
-			middle = width / 2;
+			vScale = Math.pow(2., bitsPerSample) / height / verticalScale,
+			middle = width / 2.;
 
 
 		context.setTextAlign(CENTER);
@@ -252,14 +247,27 @@ public class PreviewPanel extends Canvas {
 		context.setLineWidth(1.);
 
 
-		for (int i = 0; i < (int) middle + margin; i++) {
+		double
+			x1Start = middle,
+			x1End = middle,
+			x2Start = middle,
+			x2End = middle;
+
+		boolean
+			flag = true;
+
+		for (int i = 0; flag; i++) {
+
+			flag = x2End > margin && x1Start < width - margin;
+
+			x1Start += 1 / Double.min(1., getHorizontalRescaleFactor());
+			x1End = x1Start + (1 / Double.min(1., getHorizontalRescaleFactor()));
+
+//			x1Start = middle + (i / Double.min(1., getHorizontalRescaleFactor()));
 
 			double
 				index1Start = horizontalScroll + (i * Double.max(1., getHorizontalRescaleFactor())),
 				index1End = index1Start + Double.max(1., getHorizontalRescaleFactor()),
-
-				x1Start = middle + (i / Double.min(1., getHorizontalRescaleFactor())),
-				x1End = x1Start + (1 / Double.min(1., getHorizontalRescaleFactor())),
 
 				y1Start =
 					index1Start < fileLength && index1Start >= 0
@@ -273,12 +281,12 @@ public class PreviewPanel extends Canvas {
 
 			context.strokeLine(x1Start, y1Start, x1End, y1End);
 
-			double
-				index2Start = horizontalScroll - ((i + 1)* Double.max(1., getHorizontalRescaleFactor())),
-				index2End = index2Start + Double.max(1., getHorizontalRescaleFactor()),
+			x2Start = middle - ((i + 1) / Double.min(1., getHorizontalRescaleFactor()));
+			x2End = x2Start + (1 / Double.min(1., getHorizontalRescaleFactor()));
 
-				x2Start = middle - ((i + 1) / Double.min(1., getHorizontalRescaleFactor())),
-				x2End = x2Start + (1 / Double.min(1., getHorizontalRescaleFactor())),
+			double
+				index2Start = horizontalScroll - ((i + 1) * Double.max(1., getHorizontalRescaleFactor())),
+				index2End = index2Start + Double.max(1., getHorizontalRescaleFactor()),
 
 				y2Start =
 					index2Start < fileLength && index2Start >= 0
@@ -289,6 +297,8 @@ public class PreviewPanel extends Canvas {
 					index2End < fileLength && index2End >= 0
 						? (height / 2) - ((strip.get((int) index2End) / vScale) + vOffset)
 						: (height / 2.) - vOffset;
+
+
 
 
 			if (x2Start > margin && x2End > margin) {

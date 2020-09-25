@@ -91,7 +91,7 @@ public class PreviewPanel extends Canvas {
 			verticalScale = root.getVerticalScrollPanel().getScaleValue(),
 			verticalScroll = root.getVerticalScrollPanel().getScrollValue(),
 
-			gridYScale = height * verticalScale / 2.,
+			gridYScale = height * Math.pow(2., verticalScale - 2.)/* / 2.*/,
 			zoom = height * Math.pow(2., verticalScale),
 
 			accountForMinResolution = gridYScale / 8,
@@ -120,7 +120,7 @@ public class PreviewPanel extends Canvas {
 				y2 = (height / 2) + gridYScale / (1 << i) - yOffset;
 
 			int
-				txt = (-i * 6);
+				txt = ((/*1 */- i) * 6);
 
 			if (y1 > 0) {
 
@@ -238,7 +238,7 @@ public class PreviewPanel extends Canvas {
 			scaledHeight = height * Math.pow(2., verticalScale),
 			vOffset = (0.5 * scaledHeight - 0.25 * height) * verticalScroll,
 
-			vScale = Math.pow(2., bitsPerSample) / height / verticalScale,
+			vScale = (Math.pow(2., bitsPerSample) / height) / Math.pow(2., verticalScale - 1.),
 			middle = width / 2.;
 
 
@@ -258,12 +258,12 @@ public class PreviewPanel extends Canvas {
 
 		for (int i = 0; flag; i++) {
 
-			flag = x2End > margin && x1Start < width - margin;
+			flag = x2End > margin || x1Start < width + margin;
 
-			x1Start += 1 / Double.min(1., getHorizontalRescaleFactor());
+
+
+			x1Start = middle + (i / Double.min(1., getHorizontalRescaleFactor()));
 			x1End = x1Start + (1 / Double.min(1., getHorizontalRescaleFactor()));
-
-//			x1Start = middle + (i / Double.min(1., getHorizontalRescaleFactor()));
 
 			double
 				index1Start = horizontalScroll + (i * Double.max(1., getHorizontalRescaleFactor())),
@@ -280,6 +280,10 @@ public class PreviewPanel extends Canvas {
 						: (height / 2.) - vOffset;
 
 			context.strokeLine(x1Start, y1Start, x1End, y1End);
+
+
+
+
 
 			x2Start = middle - ((i + 1) / Double.min(1., getHorizontalRescaleFactor()));
 			x2End = x2Start + (1 / Double.min(1., getHorizontalRescaleFactor()));

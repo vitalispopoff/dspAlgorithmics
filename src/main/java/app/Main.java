@@ -26,7 +26,11 @@ public class Main extends Application {
 
 		//	! TEMPORAL ----------------------------------------
 
-		new WaveFile(new File("src\\main\\resources\\shortie-mono-16bit.wav"));
+		String
+			adr0 = "src\\main\\resources\\shortie-mono-16bit.wav",
+			adr1 = "H:\\_LIBS\\User Lib\\Samples\\Own shots\\6425-klik\\001.wav";
+
+		new WaveFile(new File(adr1));
 
 		// ! --------------------------------------------------
 

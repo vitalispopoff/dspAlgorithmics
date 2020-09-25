@@ -132,7 +132,7 @@ public class ScrollPanel extends StackPane {
 						   .then(16.)
 						   .otherwise(0.))
 					: (Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))
-						   .then(1.)
+						   .then(0.)
 						   .otherwise(0.)),
 
 			maxScale =
@@ -155,7 +155,7 @@ public class ScrollPanel extends StackPane {
 						   })
 						   .otherwise(0.))
 					: (Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))
-						   .then(FileCache.currentFileBitsPerSampleBinding())
+						   .then(FileCache.currentFileBitsPerSampleBinding().subtract(3.))
 						   .otherwise(0.));
 
 		scroll.minProperty().bind(minScroll);

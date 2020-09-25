@@ -1,14 +1,11 @@
 package gui;
 
 import data.FileCache;
-import gui.Menus.MainMenuController;
 import javafx.beans.binding.*;
 import javafx.beans.property.*;
 import javafx.geometry.Orientation;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.StackPane;
-
-import java.io.File;
 
 import static javafx.geometry.Orientation.*;
 
@@ -16,8 +13,9 @@ public class ScrollPanel extends StackPane {
 
 	static double
 		scrollBarAdjust = 1.;
+
 	private final Root
-		parent;
+		root;
 
 	Orientation
 		orientation;
@@ -31,18 +29,23 @@ public class ScrollPanel extends StackPane {
 
 		super();
 
-		parent = r;
+		root = r;
 		orientation = o;
 		scroll = new ScrollBar();
 		scale = new ScrollBar();
 
-		scale.setValue(1.);
+
 		scroll.setValue(0.);
+		scale.setValue(isHorizontal() ? 4. : 1.);
+
 
 		setupScrollBars();
+
+
+
 		getChildren().addAll(scroll, scale);
 
-		visibleProperty().bind(MainMenuController.cacheIsEmptyStaticProperty().not());
+		visibleProperty().bind(FileCache.fileCacheIsEmptyStaticProperty().not());
 	}
 
 
@@ -84,24 +87,17 @@ public class ScrollPanel extends StackPane {
 			isHorizontal()
 				? (new DoubleBinding() {
 
-				{
+/*				{
 					super.bind(
 						FileCache.currentFileSignalLengthBinding(),
-//						scale.valueProperty(),
 						scaleValueProperty()
-//						,
-//						scroll.valueProperty()
 				);}
+*/
 
 				@Override
 				protected double computeValue() {
 
-					double result =
-						FileCache.getCurrentFileSignalLength() / (getScaleValue() / 2);
-
-//					if(result > scroll.getValue()) scroll.setValue(result);
-
-					return result;
+					return 0.;
 				}
 			})
 				: ((Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0)))
@@ -114,20 +110,15 @@ public class ScrollPanel extends StackPane {
 
 					{ super.bind(
 							FileCache.currentFileSignalLengthBinding(),
-//							scale.valueProperty(),
 							scaleValueProperty()
-//						,
-//							scroll.valueProperty()
 						); }
 
 					@Override
 					protected double computeValue() {
 
-						double result = FileCache.getCurrentFileSignalLength() * (1. - 1. / (getScaleValue() / 2));
+//						return FileCache.getCurrentFileSignalLength() * (1. - 1. / (getScaleValue() / 2));
 
-//						if(result < scroll.getValue()) scroll.setValue(result);
-
-						return getScaleValue();
+						return FileCache.getCurrentFileSignalLength();
 					}
 				})
 
@@ -138,7 +129,7 @@ public class ScrollPanel extends StackPane {
 			minScale =
 				isHorizontal()
 					? (Bindings.when(FileCache.currentFileSignalLengthBinding().greaterThan(0))
-						   .then(1.)
+						   .then(16.)
 						   .otherwise(0.))
 					: (Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))
 						   .then(1.)
@@ -158,7 +149,7 @@ public class ScrollPanel extends StackPane {
 
 								   return
 //									   Math.log(FileCache.getCurrentFileSignalLength()) / Math.log(2.)
-									   (FileCache.getCurrentFileSignalLength())
+									   (FileCache.getCurrentFileSignalLength()) / 4.
 									   ;
 							   }
 						   })
@@ -192,8 +183,8 @@ public class ScrollPanel extends StackPane {
 
 		scrollPanelSizeProperty().bind(
 			(isHorizontal()
-				 ? parent.dynamicAreaWidthProperty()
-				 : parent.dynamicAreaHeightProperty())
+				 ? root.dynamicAreaWidthProperty()
+				 : root.dynamicAreaHeightProperty())
 				.add(scrollBarAdjust)
 				.subtract(20.)
 		);

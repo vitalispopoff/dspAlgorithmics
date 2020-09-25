@@ -80,8 +80,6 @@ public class PreviewPanel extends Canvas {
 
 		context.setLineWidth(1);
 		context.setStroke(DODGERBLUE);
-
-		context.strokeRect(margin, 1, getWidth() - margin - 1., getHeight() - margin);
 	}
 
 	private void drawHorizontals() {
@@ -104,7 +102,6 @@ public class PreviewPanel extends Canvas {
 		int
 			numberOfLines = (32 - Integer.numberOfLeadingZeros((int) accountForMinResolution)) - 1;
 
-
 		context.setStroke(DODGERBLUE);
 		context.setLineWidth(1.);
 
@@ -123,18 +120,18 @@ public class PreviewPanel extends Canvas {
 				y2 = (height / 2) + gridYScale / (1 << i) - yOffset;
 
 			int
-				txt = (-(i - 1) * 6);
+				txt = (-i * 6);
 
 			if (y1 > 0) {
 
-				if (i > 1 && i < numberOfLines) context.strokeText(txt + " ", margin * 0.85, y1 + 4);
+				if (/*i > 1 &&*/ i < numberOfLines) context.strokeText(txt + " ", margin * 0.85, y1 + 4);
 
 				context.strokeLine(margin, y1, width, y1);
 			}
 
 			if (y2 < height && y1 != y2) {
 
-				if (i > 1 && i < numberOfLines) context.strokeText(txt + " ", margin * 0.85, y2 + 4);
+				if (/*i > 1 &&*/ i < numberOfLines) context.strokeText(txt + " ", margin * 0.85, y2 + 4);
 
 				context.strokeLine(margin, y2, width, y2);
 			}
@@ -167,8 +164,8 @@ public class PreviewPanel extends Canvas {
 			scaledIntegerWidth = 1 << (int) (Math.log(horizontalScale) / Math.log(2.)),
 			txt = 0 /*(int) horizontalScroll*/;
 
-		context.clearRect(margin, height + 2, width + margin, margin);
 
+		context.strokeRect(margin + 1, 1, getWidth() - 1 - margin, getHeight() + 1 - margin);
 		context.setTextAlign(CENTER);
 		context.setFont(font);
 		context.setLineWidth(0.6);
@@ -177,12 +174,12 @@ public class PreviewPanel extends Canvas {
 		for (int i = 0; x1 > margin || x2 < width + margin; i++) {
 
 			double
-				gridIncrement = i * gridScale * horizontalScale / scaledIntegerWidth;
+				gridIncrement = horizontalScale * ((i * gridScale)  / scaledIntegerWidth);
 
-			x1 = (width / 2) - (gridIncrement) /*- horizontalOffset*/;
-			x2 = (width / 2) + (gridIncrement) /*- horizontalOffset*/;
+			x1 = (width / 2) - (gridIncrement) /*- hOffset*/;
+			x2 = (width / 2) + (gridIncrement) /*- hOffset*/;
 
-			if (x1 > margin && txt - gridIncrement >= 0) {
+			if (x1 > margin) {
 
 				context.setStroke(GREY);
 				context.strokeLine(x1, 0, x1, height);
@@ -192,7 +189,7 @@ public class PreviewPanel extends Canvas {
 
 			}
 
-			if (x2 < width + margin && x2 != width / 2 && x1 != x2 && txt + gridIncrement < fileLength) {
+			if (x2 < width + margin && x1 != x2) {
 
 				context.setStroke(GREY);
 				context.strokeLine(x2, 0, x2, height);
@@ -205,7 +202,25 @@ public class PreviewPanel extends Canvas {
 	}
 
 
+	private double getHorizontalRescaleFactor() {
+
+		double
+			width = getWidth() - margin,
+			height = getHeight() - margin,
+
+			bitsPerSample = FileCache.getCurrentFileBitsPerSample(),
+			fileLength = FileCache.getCurrentFileSignalLength(),
+
+			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
+			horizontalScale = root.getHorizontalScrollPanel().getScaleValue();
+
+		return width / horizontalScale;
+	}
+
+
 	private void drawWaveForm() {
+
+
 
 		Strip
 			strip = FileCache.getFile().getSignal().getStrip(0);
@@ -224,9 +239,8 @@ public class PreviewPanel extends Canvas {
 			scaledHeight = height * Math.pow(2., verticalScale),
 			vOffset = (0.5 * scaledHeight - 0.25 * height) * verticalScroll,
 
-
 			previewArea = (fileLength + 1. - horizontalScale),
-			stepInArea = Math.max(1., previewArea / width),        //
+			stepInArea = Math.max(1., previewArea / width),
 			stepInPreview = Math.max(1., width / previewArea),
 
 			vScale = ((double) (1 << (int) bitsPerSample)) / height / verticalScale,
@@ -238,44 +252,43 @@ public class PreviewPanel extends Canvas {
 		context.setLineWidth(1.);
 
 
-
 		for (int i = 0; i < (int) middle + margin; i++) {
 
 			double
-				index1Start = horizontalScroll + (stepInArea * i),
-				index1End = index1Start + stepInArea,
+				index1Start = horizontalScroll + (i * Double.max(1., getHorizontalRescaleFactor())),
+				index1End = index1Start + Double.max(1., getHorizontalRescaleFactor()),
 
-				x1Start = middle + i,
-				x1End = middle + i + 1,
+				x1Start = middle + (i / Double.min(1., getHorizontalRescaleFactor())),
+				x1End = x1Start + (1 / Double.min(1., getHorizontalRescaleFactor())),
 
 				y1Start =
 					index1Start < fileLength && index1Start >= 0
 						? (height / 2) - ((strip.get((int) index1Start) / vScale) + vOffset)
-						: height / 2.,
+						: (height / 2.) - vOffset,
 
 				y1End =
 					index1End < fileLength && index1End >= 0
 						? (height / 2) - ((strip.get((int) index1End) / vScale) + vOffset)
-						: height / 2.;
+						: (height / 2.) - vOffset;
 
 			context.strokeLine(x1Start, y1Start, x1End, y1End);
 
 			double
-				index2Start = horizontalScroll - (stepInArea * (i + 1)),
-				index2End = index2Start + stepInArea,
+				index2Start = horizontalScroll - ((i + 1)* Double.max(1., getHorizontalRescaleFactor())),
+				index2End = index2Start + Double.max(1., getHorizontalRescaleFactor()),
 
-				x2Start = middle - i,
-				x2End = middle - i + 1,
+				x2Start = middle - ((i + 1) / Double.min(1., getHorizontalRescaleFactor())),
+				x2End = x2Start + (1 / Double.min(1., getHorizontalRescaleFactor())),
 
 				y2Start =
 					index2Start < fileLength && index2Start >= 0
 						? (height / 2) - ((strip.get((int) index2Start) / vScale) + vOffset)
-						: height / 2.,
+						: (height / 2.) - vOffset,
 
 				y2End =
 					index2End < fileLength && index2End >= 0
 						? (height / 2) - ((strip.get((int) index2End) / vScale) + vOffset)
-						: height / 2.;
+						: (height / 2.) - vOffset;
 
 
 			if (x2Start > margin && x2End > margin) {

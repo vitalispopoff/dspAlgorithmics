@@ -120,7 +120,7 @@ public class PreviewPanel extends Canvas {
 				y2 = (height / 2) + gridYScale / (1 << i) - yOffset;
 
 			int
-				txt = ((/*1 */- i) * 6);
+				txt = ((/*1 */-i) * 6);
 
 			if (y1 > 0) {
 
@@ -208,6 +208,8 @@ public class PreviewPanel extends Canvas {
 			width = getWidth() - margin,
 			height = getHeight() - margin,
 
+			samplesPerSecond = FileCache.getCurrentFileSamplesPerSecond(),
+
 			bitsPerSample = FileCache.getCurrentFileBitsPerSample(),
 			fileLength = FileCache.getCurrentFileSignalLength(),
 
@@ -220,7 +222,6 @@ public class PreviewPanel extends Canvas {
 
 	private void drawWaveForm() {
 
-
 		Strip
 			strip = FileCache.getFile().getSignal().getStrip(0);
 
@@ -228,8 +229,10 @@ public class PreviewPanel extends Canvas {
 			samplesPerSecond = FileCache.getCurrentFileSamplesPerSecond(),
 			bitsPerSample = FileCache.getCurrentFileBitsPerSample(),
 			fileLength = FileCache.getCurrentFileSignalLength(),
+
 			width = getWidth() - margin,
 			height = getHeight() - margin,
+
 			verticalScroll = root.getVerticalScrollPanel().getScrollValue(),
 			verticalScale = root.getVerticalScrollPanel().getScaleValue(),
 			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
@@ -241,73 +244,67 @@ public class PreviewPanel extends Canvas {
 			vScale = (Math.pow(2., bitsPerSample) / height) / Math.pow(2., verticalScale - 1.),
 			middle = width / 2.;
 
-
 		context.setTextAlign(CENTER);
 		context.setFont(font);
-		context.setLineWidth(1.);
-
+		context.setLineWidth(0.5);
 
 		double
+			y0 = (height / 2.) - vOffset,
+			indexStep = Double.max(1., getHorizontalRescaleFactor()),
+			viewStep = 1. / Double.min(1., getHorizontalRescaleFactor());
+
+		double
+			index1Start = horizontalScroll,
 			x1Start = middle,
-			x1End = middle,
-			x2Start = middle,
-			x2End = middle;
+			y1Start = y0,
 
-		boolean
-			flag = true;
+			index1End = horizontalScroll + indexStep,
+			x1End = middle + viewStep,
+			y1End = y0;
 
-		for (int i = 0; flag; i++) {
+		do {
+			index1Start += indexStep;
+			index1End += indexStep;
 
-			flag = x2End > margin || x1Start < width + margin;
+			x1Start += viewStep;
+			x1End += viewStep;
 
+			if (index1Start < fileLength && index1Start >= 0) y1Start = y0 - strip.get((int) index1Start) / vScale;
 
-
-			x1Start = middle + (i / Double.min(1., getHorizontalRescaleFactor()));
-			x1End = x1Start + (1 / Double.min(1., getHorizontalRescaleFactor()));
-
-			double
-				index1Start = horizontalScroll + (i * Double.max(1., getHorizontalRescaleFactor())),
-				index1End = index1Start + Double.max(1., getHorizontalRescaleFactor()),
-
-				y1Start =
-					index1Start < fileLength && index1Start >= 0
-						? (height / 2) - ((strip.get((int) index1Start) / vScale) + vOffset)
-						: (height / 2.) - vOffset,
-
-				y1End =
-					index1End < fileLength && index1End >= 0
-						? (height / 2) - ((strip.get((int) index1End) / vScale) + vOffset)
-						: (height / 2.) - vOffset;
+			if (index1End < fileLength && index1End >=0) y1End = y0 - strip.get((int) index1End) / vScale;
 
 			context.strokeLine(x1Start, y1Start, x1End, y1End);
 
-
-
-
-
-			x2Start = middle - ((i + 1) / Double.min(1., getHorizontalRescaleFactor()));
-			x2End = x2Start + (1 / Double.min(1., getHorizontalRescaleFactor()));
-
-			double
-				index2Start = horizontalScroll - ((i + 1) * Double.max(1., getHorizontalRescaleFactor())),
-				index2End = index2Start + Double.max(1., getHorizontalRescaleFactor()),
-
-				y2Start =
-					index2Start < fileLength && index2Start >= 0
-						? (height / 2) - ((strip.get((int) index2Start) / vScale) + vOffset)
-						: (height / 2.) - vOffset,
-
-				y2End =
-					index2End < fileLength && index2End >= 0
-						? (height / 2) - ((strip.get((int) index2End) / vScale) + vOffset)
-						: (height / 2.) - vOffset;
-
-
-
-
-			if (x2Start > margin && x2End > margin) {
-				context.strokeLine(x2Start, y2Start, x2End, y2End);
-			}
 		}
+
+		while (index1Start < fileLength && x1Start < width + margin);
+
+
+
+		double
+			index2Start = horizontalScroll - indexStep,
+			x2Start = middle - viewStep,
+			y2Start = y0,
+
+			index2End = horizontalScroll,
+			x2End = middle,
+			y2End = y0;
+
+		do {
+			index2Start -= indexStep;
+			index2End -= indexStep;
+
+			x2Start -= viewStep;
+			x2End -= viewStep;
+
+			if (index2Start < fileLength && index2Start >= 0) y2Start = y0 - strip.get((int) index2Start) / vScale;
+
+			if (index2End < fileLength && index2End >= 0) y2End = y0 - strip.get((int) index2End) / vScale;
+
+			context.strokeLine(x2Start, y2Start, x2End, y2End);
+
+		}
+
+		while (index2End >=0 && x2End > margin);
 	}
 }

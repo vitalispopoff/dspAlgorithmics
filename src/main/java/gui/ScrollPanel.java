@@ -129,7 +129,7 @@ public class ScrollPanel extends StackPane {
 			minScale =
 				isHorizontal()
 					? (Bindings.when(FileCache.currentFileSignalLengthBinding().greaterThan(0))
-						   .then(16.)
+						   .then(4.)
 						   .otherwise(0.))
 					: (Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))
 						   .then(0.)

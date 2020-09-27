@@ -229,8 +229,7 @@ public class PreviewPanel extends Canvas {
 		context.setLineWidth(0.6);
 
 		int
-			scaledIntegerWidth = 1 << (int) (Math.log(horizontalScale) / Math.log(2.)),
-			txt = 0/*(int) (horizontalScroll)*/;
+			scaledIntegerWidth = 1 << (int) (Math.log(horizontalScale) / Math.log(2.));
 
 		double
 			samplesPerSecond = FileCache.getCurrentFileSamplesPerSecond(),
@@ -246,45 +245,30 @@ public class PreviewPanel extends Canvas {
 
 			viewStep = horizontalScale / fileLength,
 
-			x0 = width / 2.,
-			x1 = x0,
-			x2 = x0;
+			gridIncrement = horizontalScale * (32. / scaledIntegerWidth),
+
+			x2 = (width / 2.) - gridIncrement,
+			x,
+			txt = 0;
 
 
+		do {
+
+			x2 += gridIncrement;
+
+			x = x2 - (horizontalScroll * viewStep);
+
+			txt = (x2 - ((width / 2.))) / viewStep;
+
+			context.setStroke(GREY);
+			context.strokeLine(x, 0, x, height);
+
+				context.setStroke(DODGERBLUE);
+				context.strokeText((int) txt + " ", x, height + margin * 0.85);
 
 
+		}	while (x2 < width + margin);
 
-
-
-		for (int i = 0; x1 > margin || x2 < width + margin; i++) {
-
-			double
-				gridIncrement = horizontalScale * ((i * 32./*gridScale*/) / scaledIntegerWidth);
-
-			x1 = x0 - (gridIncrement) /*- horizontalScroll*/;
-			x2 = x0 + (gridIncrement) /*- horizontalScroll*/;
-
-			if (x1 > margin) {
-
-				context.setStroke(GREY);
-//				context.strokeLine(x1, 0, x1, height);
-
-//				context.setStroke(DODGERBLUE);
-//				context.strokeText((int) (txt - gridIncrement) + " ", x1, height + margin * 0.85);
-
-			}
-
-			if (x2 < width + margin /*&& x1 != x2*/) {
-
-				context.setStroke(GREY);
-				context.strokeLine(x2, 0, x2, height);
-
-//				context.setStroke(DODGERBLUE);
-//				context.strokeText((int) (txt + gridIncrement) + " ", x2, height + margin * 0.85);
-				// txt
-
-			}
-		}
 	}
 
 	private boolean indexIsInRange(double index) {

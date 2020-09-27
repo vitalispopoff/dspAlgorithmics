@@ -4,6 +4,8 @@ import data.*;
 
 import data.structure.Strip;
 import javafx.scene.canvas.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.*;
 
 import static javafx.scene.paint.Color.*;
@@ -186,7 +188,14 @@ public class PreviewPanel extends Canvas {
 				if (indexIsInRange(index1Start)) {
 
 					y1Start = y0 - strip.get((int) index1Start) / vScale;
+					context.setStroke(RED);
 					context.strokeLine(x1Start, y1Start, x1End, y1End);
+
+					if(horizontalScale > 1.) {
+
+						context.setStroke(new Color(0, 0, 0, Double.min((horizontalScale - 1.) / 2., 1.)));
+						context.strokeOval(x1Start - 0.5, y1Start - 0.5, 1, 1);
+					}
 				}
 
 			} while (index1End >= 0 && x1End > margin);
@@ -213,10 +222,16 @@ public class PreviewPanel extends Canvas {
 				if (indexIsInRange(index2End)) {
 
 					y2End = y0 - strip.get((int) index2End) / vScale;
+					context.setStroke(RED);
 					context.strokeLine(x2Start, y2Start, x2End, y2End);
+
+					if (horizontalScale > 1.) {
+						context.setStroke(new Color(0, 0, 0, Double.min((horizontalScale - 1.) / 2., 1.)));
+						context.strokeOval(x2Start - 0.5, y2Start - 0.5, 1, 1);
+					}
 				}
 
-			} while (index2Start < fileLength && x2Start < width + margin);
+			} while (index2End < fileLength && x2End < width + margin);
 		}
 	}
 
@@ -241,28 +256,32 @@ public class PreviewPanel extends Canvas {
 
 			viewStep = horizontalScale,
 
-			gridIncrement = 32. * Math.pow(2., root.getHorizontalScrollPanel().getScaleValue() -  (int) root.getHorizontalScrollPanel().getScaleValue()),
+			gridIncrement = gridScale * Math.pow(2., root.getHorizontalScrollPanel().getScaleValue() -  (int) root.getHorizontalScrollPanel().getScaleValue()),
 
 			x2 = (width / 2.) - gridIncrement,
 			x,
 			txt = 0;
 
+
 		do {
-
 			x2 += gridIncrement;
-
 			x = x2 - (horizontalScroll * horizontalScale);
 
-//			txt = (x2 - (width / 2.)) / viewStep;
+			if (x > margin && x < fileLength) {
 
-			context.setStroke(GREY);
-			context.strokeLine(x, 0, x, height);
+				txt = (x2 - (width / 2.)) / viewStep / gridScale;
+				context.setStroke(GREY);
+				context.strokeLine(x, 0, x, height);
+				context.setStroke(DODGERBLUE);
+				context.strokeText((int) txt + " ", x, height + margin * 0.85);
+			}
 
-//				context.setStroke(DODGERBLUE);
-//				context.strokeText((int) txt + " ", x, height + margin * 0.85);
+
+		}	while (x < width + margin && x < fileLength);
 
 
-		}	while (x < width + margin);
+		System.out.println(horizontalScroll * viewStep);
+
 
 	}
 

@@ -78,7 +78,7 @@ public class PreviewPanel extends Canvas {
 		horizontalScale;
 
 	private void setHorizontalScale(){
-		horizontalScale =  Math.pow(Math.E, root.getHorizontalScrollPanel().getScaleValue()) / Math.log(2.);
+		horizontalScale =  Math.pow(2., root.getHorizontalScrollPanel().getScaleValue());
 	}
 
 	private void drawAmplitudeGrid() {
@@ -159,12 +159,10 @@ public class PreviewPanel extends Canvas {
 			vScale = (Math.pow(2., bitsPerSample) / height) / Math.pow(2., verticalScale - 1.),
 			y0 = (height / 2.) - vOffset,
 
-
 			fileLength = FileCache.getCurrentFileSignalLength(),
 			width = getWidth() - margin,
 			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
 
-			viewStep = horizontalScale / fileLength,
 			x0 = width / 2.;
 
 		{
@@ -174,15 +172,15 @@ public class PreviewPanel extends Canvas {
 				y1Start,
 
 				index1End = horizontalScroll + 1,
-				x1End = x0 + viewStep,
+				x1End = x0 + horizontalScale,
 				y1End = y0;
 
 			do {
 				index1Start--;
 				index1End--;
 
-				x1Start -= viewStep;
-				x1End -= viewStep;
+				x1Start -= horizontalScale;
+				x1End -= horizontalScale;
 
 				if (indexIsInRange(index1End)) y1End = y0 - strip.get((int) index1End) / vScale;
 				if (indexIsInRange(index1Start)) {
@@ -197,7 +195,7 @@ public class PreviewPanel extends Canvas {
 		{
 			double
 				index2Start = horizontalScroll - 1,
-				x2Start = x0 - viewStep,
+				x2Start = x0 - horizontalScale,
 				y2Start = y0,
 
 				index2End = horizontalScroll,
@@ -208,8 +206,8 @@ public class PreviewPanel extends Canvas {
 				index2Start++;
 				index2End++;
 
-				x2Start += viewStep;
-				x2End += viewStep;
+				x2Start += horizontalScale;
+				x2End += horizontalScale;
 
 				if (indexIsInRange(index2Start)) y2Start = y0 - strip.get((int) index2Start) / vScale;
 				if (indexIsInRange(index2End)) {
@@ -228,8 +226,6 @@ public class PreviewPanel extends Canvas {
 		context.setFont(font);
 		context.setLineWidth(0.6);
 
-		int
-			scaledIntegerWidth = 1 << (int) (Math.log(horizontalScale) / Math.log(2.));
 
 		double
 			samplesPerSecond = FileCache.getCurrentFileSamplesPerSecond(),
@@ -243,31 +239,30 @@ public class PreviewPanel extends Canvas {
 
 			gridScale = (samplesPerSecond / 1000.), // ? 1 ms
 
-			viewStep = horizontalScale / fileLength,
+			viewStep = horizontalScale,
 
-			gridIncrement = horizontalScale * (32. / scaledIntegerWidth),
+			gridIncrement = 32. * Math.pow(2., root.getHorizontalScrollPanel().getScaleValue() -  (int) root.getHorizontalScrollPanel().getScaleValue()),
 
 			x2 = (width / 2.) - gridIncrement,
 			x,
 			txt = 0;
 
-
 		do {
 
 			x2 += gridIncrement;
 
-			x = x2 - (horizontalScroll * viewStep);
+			x = x2 - (horizontalScroll * horizontalScale);
 
-			txt = (x2 - ((width / 2.))) / viewStep;
+//			txt = (x2 - (width / 2.)) / viewStep;
 
 			context.setStroke(GREY);
 			context.strokeLine(x, 0, x, height);
 
-				context.setStroke(DODGERBLUE);
-				context.strokeText((int) txt + " ", x, height + margin * 0.85);
+//				context.setStroke(DODGERBLUE);
+//				context.strokeText((int) txt + " ", x, height + margin * 0.85);
 
 
-		}	while (x2 < width + margin);
+		}	while (x < width + margin);
 
 	}
 

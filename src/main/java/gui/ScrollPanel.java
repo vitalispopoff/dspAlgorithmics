@@ -34,17 +34,11 @@ public class ScrollPanel extends StackPane {
 		scroll = new ScrollBar();
 		scale = new ScrollBar();
 
-
 		scroll.setValue(0.);
-		scale.setValue(isHorizontal() ? 5. : 1.);
-
+		scale.setValue(isHorizontal() ? 0. : 1.);
 
 		setupScrollBars();
-
-
-
 		getChildren().addAll(scroll, scale);
-
 		visibleProperty().bind(FileCache.fileCacheIsEmptyStaticProperty().not());
 	}
 
@@ -80,29 +74,21 @@ public class ScrollPanel extends StackPane {
 
 				return 2. * getScrollPanelSize() * Math.pow(2., scale.getValue()) / scale.getMax();
 			}
-		};
+		},
+			zero = new DoubleBinding() {
+
+				@Override
+				protected double computeValue() {
+					return 0.;
+				}
+			};
 
 		NumberBinding
 			minScroll =
 			isHorizontal()
-				? (new DoubleBinding() {
-
-/*				{
-					super.bind(
-						FileCache.currentFileSignalLengthBinding(),
-						scaleValueProperty()
-				);}
-*/
-
-				@Override
-				protected double computeValue() {
-
-					return 0.;
-				}
-			})
+				? (zero)
 				: ((Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0)))
-					   .then(-1.)
-					   .otherwise(0.)),
+					   .then(-1.).otherwise(0.)),
 
 			maxScroll =
 				isHorizontal()
@@ -115,27 +101,14 @@ public class ScrollPanel extends StackPane {
 
 					@Override
 					protected double computeValue() {
-
-//						return FileCache.getCurrentFileSignalLength() * (1. - 1. / (getScaleValue() / 2));
-
 						return FileCache.getCurrentFileSignalLength();
 					}
 				})
 
 					: ((Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0)))
-						   .then(1.)
-						   .otherwise(0.)),
+						   .then(1.).otherwise(0.)),
 
 			minScale =
-				isHorizontal()
-					? (Bindings.when(FileCache.currentFileSignalLengthBinding().greaterThan(0))
-						   .then(5.)
-						   .otherwise(0.))
-					: (Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))
-						   .then(0.)
-						   .otherwise(0.)),
-
-			maxScale =
 				isHorizontal()
 					? (Bindings.when(FileCache.currentFileSignalLengthBinding().greaterThan(0))
 						   .then(new DoubleBinding() {
@@ -146,16 +119,18 @@ public class ScrollPanel extends StackPane {
 
 							   @Override
 							   protected double computeValue() {
-
-								   return
-									   Math.log(FileCache.getCurrentFileSignalLength() / 4.)  / Math.log(2.)
-									   ;
+								   	return gi - Math.log(FileCache.getCurrentFileSignalLength()) / Math.log(2.) / 2.;
 							   }
-						   })
-						   .otherwise(0.))
+						   }).otherwise(0.))
 					: (Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))
-						   .then(FileCache.currentFileBitsPerSampleBinding().subtract(3.))
-						   .otherwise(0.));
+						   .then(0.9).otherwise(0.)),
+
+			maxScale =
+				isHorizontal()
+					? (Bindings.when(FileCache.currentFileSignalLengthBinding().greaterThan(0))
+						   .then(4.).otherwise(0.))
+					: (Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))
+						   .then(FileCache.currentFileBitsPerSampleBinding().subtract(3.)).otherwise(0.));
 
 		scroll.minProperty().bind(minScroll);
 		scroll.maxProperty().bind(maxScroll);

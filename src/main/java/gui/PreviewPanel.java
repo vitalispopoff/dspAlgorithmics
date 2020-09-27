@@ -33,33 +33,16 @@ public class PreviewPanel extends Canvas {
 		this.root = root;
 
 		context = getGraphicsContext2D();
-
 		widthProperty().bind(root.dynamicAreaWidthProperty());
 		heightProperty().bind(root.dynamicAreaHeightProperty());
-
 
 		FileCache.fileCacheProperty().sizeProperty().addListener((observable) -> {
 
 			if (FileCache.getFileCacheIsNotEmpty()) {
 
 				waveFile = FileCache.getFile();
-
-				clean();
-				drawAmplitudeGrid();
-				drawWaveForm();
-				drawFrame();
-				drawTimeGrid();
-
-
-				root.previewRefreshTrigger.scrollPanelStateProperty()
-					.addListener((observable1) -> {
-
-						clean();
-						drawAmplitudeGrid();
-						drawWaveForm();
-						drawFrame();
-						drawTimeGrid();
-					});
+				drawEverything();
+				root.previewRefreshTrigger.scrollPanelStateProperty().addListener((observable1) -> drawEverything());
 			}
 
 			else {
@@ -69,7 +52,6 @@ public class PreviewPanel extends Canvas {
 				waveFile = null;
 			}
 		});
-
 	}
 
 
@@ -77,6 +59,15 @@ public class PreviewPanel extends Canvas {
 	void clean() {
 
 		context.clearRect(0, 0, getWidth(), getHeight());
+	}
+
+	private void drawEverything(){
+
+		clean();
+		drawAmplitudeGrid();
+		drawWaveForm();
+		drawFrame();
+		drawTimeGrid();
 	}
 
 	private void drawAmplitudeGrid() {
@@ -135,28 +126,11 @@ public class PreviewPanel extends Canvas {
 		}
 	}
 
-	private double getHorizontalRescaleFactor() {
-
-		double
-			width = getWidth() - margin,
-			height = getHeight() - margin,
-
-			samplesPerSecond = FileCache.getCurrentFileSamplesPerSecond(),
-
-			bitsPerSample = FileCache.getCurrentFileBitsPerSample(),
-			fileLength = FileCache.getCurrentFileSignalLength(),
-
-			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
-			horizontalScale = root.getHorizontalScrollPanel().getScaleValue();
-
-		return width / horizontalScale;
-	}
-
-	double
-		indexStep = 0,
-		viewStep = 0;
-
 	private void drawWaveForm() {
+
+		context.setTextAlign(CENTER);
+		context.setFont(font);
+		context.setLineWidth(0.5);
 
 		Strip
 			strip = FileCache.getFile().getSignal().getStrip(0);
@@ -172,26 +146,21 @@ public class PreviewPanel extends Canvas {
 			verticalScroll = root.getVerticalScrollPanel().getScrollValue(),
 			verticalScale = root.getVerticalScrollPanel().getScaleValue(),
 			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
-			horizontalScale = root.getHorizontalScrollPanel().getScaleValue(),
+			horizontalScale = Math.pow(Math.E, root.getHorizontalScrollPanel().getScaleValue()) / Math.log(2.),
 
 			zoom = height * Math.pow(2., verticalScale),                // ! copy from drawHorizontals
 			vOffset = (0.5 * zoom - 0.25 * height) * verticalScroll,    // !
 
 			vScale = (Math.pow(2., bitsPerSample) / height) / Math.pow(2., verticalScale - 1.),
 
-			x0 = width / 2.;
+			x0 = width / 2.,
+			viewStep = horizontalScale / fileLength,
+			y0 = (height / 2.) - vOffset;
 
-		context.setTextAlign(CENTER);
-		context.setFont(font);
-		context.setLineWidth(0.5);
-
-		indexStep = Double.max(1., getHorizontalRescaleFactor());
-		viewStep = 1. / Double.min(1., getHorizontalRescaleFactor());
+		System.out.println("hScale = " + horizontalScale + " , viewStep = " + viewStep);
 
 		double
-			y0 = (height / 2.) - vOffset,
-
-			index1Start = horizontalScroll - indexStep,
+			index1Start = horizontalScroll - 1,
 			x1Start = x0 - viewStep,
 			y1Start = y0,
 
@@ -200,8 +169,8 @@ public class PreviewPanel extends Canvas {
 			y1End;
 
 		do {
-			index1Start += indexStep;
-			index1End += indexStep;
+			index1Start++ ;
+			index1End++ ;
 
 			x1Start += viewStep;
 			x1End += viewStep;
@@ -220,13 +189,13 @@ public class PreviewPanel extends Canvas {
 			x2Start = x0 ,
 			y2Start,
 
-			index2End = horizontalScroll + indexStep,
+			index2End = horizontalScroll +1 ,
 			x2End = x0 + viewStep,
 			y2End = y0;
 
 		do {
-			index2Start -= indexStep;
-			index2End -= indexStep;
+			index2Start--;
+			index2End--;
 
 			x2Start -= viewStep;
 			x2End -= viewStep;
@@ -258,7 +227,7 @@ public class PreviewPanel extends Canvas {
 
 		double
 			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
-			horizontalScale = root.getHorizontalScrollPanel().getScaleValue(),
+			horizontalScale = Math.pow(Math.E, root.getHorizontalScrollPanel().getScaleValue()) / Math.log(2.),
 
 			width = getWidth() - margin,
 			height = getHeight() - margin,

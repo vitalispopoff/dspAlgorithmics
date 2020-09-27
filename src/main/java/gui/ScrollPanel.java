@@ -36,7 +36,7 @@ public class ScrollPanel extends StackPane {
 
 
 		scroll.setValue(0.);
-		scale.setValue(isHorizontal() ? 4. : 1.);
+		scale.setValue(isHorizontal() ? 5. : 1.);
 
 
 		setupScrollBars();
@@ -129,7 +129,7 @@ public class ScrollPanel extends StackPane {
 			minScale =
 				isHorizontal()
 					? (Bindings.when(FileCache.currentFileSignalLengthBinding().greaterThan(0))
-						   .then(4.)
+						   .then(5.)
 						   .otherwise(0.))
 					: (Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))
 						   .then(0.)
@@ -148,8 +148,7 @@ public class ScrollPanel extends StackPane {
 							   protected double computeValue() {
 
 								   return
-//									   Math.log(FileCache.getCurrentFileSignalLength()) / Math.log(2.)
-									   (FileCache.getCurrentFileSignalLength()) / 4.
+									   Math.log(FileCache.getCurrentFileSignalLength() / 4.)  / Math.log(2.)
 									   ;
 							   }
 						   })

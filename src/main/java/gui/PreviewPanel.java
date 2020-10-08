@@ -5,7 +5,6 @@ import data.*;
 import data.structure.Strip;
 import javafx.scene.canvas.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.*;
 
 import static javafx.scene.paint.Color.*;
@@ -241,13 +240,13 @@ public class PreviewPanel extends Canvas {
 		context.setFont(font);
 		context.setLineWidth(0.6);
 
-
 		double
 			samplesPerSecond = FileCache.getCurrentFileSamplesPerSecond(),
 			bitsPerSample = FileCache.getCurrentFileBitsPerSample(),
 			fileLength = FileCache.getCurrentFileSignalLength(),
 
 			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
+			hScale = root.getHorizontalScrollPanel().getScaleValue(),
 
 			width = getWidth() - margin,
 			height = getHeight() - margin,
@@ -256,12 +255,11 @@ public class PreviewPanel extends Canvas {
 
 			viewStep = horizontalScale,
 
-			gridIncrement = gridScale * Math.pow(2., root.getHorizontalScrollPanel().getScaleValue() -  (int) root.getHorizontalScrollPanel().getScaleValue()),
+			gridIncrement = gridScale * Math.pow(2., hScale - (int) hScale),
 
 			x2 = (width / 2.) - gridIncrement,
 			x,
-			txt = 0;
-
+			txt;
 
 		do {
 			x2 += gridIncrement;
@@ -276,13 +274,9 @@ public class PreviewPanel extends Canvas {
 				context.strokeText((int) txt + " ", x, height + margin * 0.85);
 			}
 
-
 		}	while (x < width + margin && x < fileLength);
 
-
 		System.out.println(horizontalScroll * viewStep);
-
-
 	}
 
 	private boolean indexIsInRange(double index) {

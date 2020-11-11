@@ -1,10 +1,7 @@
 package gui;
 
 import data.*;
-
-import data.structure.Strip;
 import javafx.scene.canvas.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 
 import static javafx.scene.paint.Color.*;
@@ -24,9 +21,6 @@ public class PreviewPanel extends Canvas {
 	private final Font
 		font = new Font("Arial", 10);
 
-	private WaveFile
-		waveFile;
-
 	private boolean
 		theFlag = true;
 
@@ -43,7 +37,6 @@ public class PreviewPanel extends Canvas {
 
 			if (FileCache.getFileCacheIsNotEmpty()) {
 
-				waveFile = FileCache.getFile();
 				drawEverything();
 				root.previewRefreshTrigger.scrollPanelStateProperty().addListener((observable1) -> {
 
@@ -53,10 +46,8 @@ public class PreviewPanel extends Canvas {
 			}
 
 			else {
-
 				root.previewRefreshTrigger.scrollPanelStateProperty().removeListener(((observable1) -> {}));
 				clean();
-				waveFile = null;
 			}
 		});
 	}
@@ -65,6 +56,7 @@ public class PreviewPanel extends Canvas {
 	void clean() {
 
 		context.clearRect(0, 0, getWidth(), getHeight());
+		drawFrame();
 	}
 
 	private void drawEverything() {
@@ -74,10 +66,9 @@ public class PreviewPanel extends Canvas {
 			theFlag = false;
 
 			clean();
-//			drawAmplitudeGrid();
-			drawWaveForm();
+			drawAmplitudeGrid();
 			drawFrame();
-//			drawTimeGrid();
+			drawTimeGrid();
 
 			theFlag = true;
 		}
@@ -147,6 +138,73 @@ public class PreviewPanel extends Canvas {
 		}
 	}
 
+	private void drawTimeGrid() {
+
+		context.setTextAlign(CENTER);
+		context.setFont(font);
+		context.setLineWidth(0.6);
+
+		double
+			samplesPerSecond = FileCache.getCurrentFileSamplesPerSecond(),
+			bitsPerSample = FileCache.getCurrentFileBitsPerSample(),
+			fileLength = FileCache.getCurrentFileSignalLength(),
+
+			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
+			hScale = root.getHorizontalScrollPanel().getScaleValue(),
+
+			width = getWidth() - margin,
+			height = getHeight() - margin,
+
+			gridScale = (samplesPerSecond / 1000.), // ? 1 ms
+
+			viewStep = horizontalScale,
+
+			gridIncrement = gridScale * Math.pow(2., hScale - (int) hScale),
+
+			x2 = (width / 2.) - gridIncrement,
+			x,
+			txt;
+
+		do {
+			x2 += gridIncrement;
+			x = x2 - (horizontalScroll * horizontalScale);
+
+			if (x > margin && x < fileLength) {
+
+				txt = (x2 - (width / 2.)) / viewStep / gridScale;
+				context.setStroke(GREY);
+				context.strokeLine(x, 0, x, height);
+				context.setStroke(DODGERBLUE);
+				context.strokeText((int) txt + " ", x, height + margin * 0.85);
+			}
+
+		} while (x < width + margin && x < fileLength);
+	}
+
+	private void drawFrame() {
+
+		context.clearRect(margin, getHeight() + 2 - margin, getWidth(), getHeight());            // clear footer
+
+		double
+			y0 = (getHeight() - margin) / 2.,
+			x0 = (getWidth() - margin) / 2.;
+
+		context.setLineWidth(1.);
+		context.setStroke(DODGERBLUE);
+
+		context.strokeLine(margin * 0.75, y0, margin, y0);                                        // vertical indicator
+		context.strokeLine(x0, 2 + y0 * 2., x0, getHeight() + 2 - (margin * 0.75));                // horizontal indicator
+		context.strokeRect(margin + 1, 1, getWidth() - 2 - margin, getHeight() + 1 - margin);    // frame
+	}
+
+}
+
+/*	private boolean indexIsInRange(double index) {
+
+			return index >= 0 && index < FileCache.getCurrentFileSignalLength();
+		}*/ // indexInRange()
+
+/*
 	private void drawWaveForm() {
 
 		context.setTextAlign(CENTER);
@@ -175,7 +233,9 @@ public class PreviewPanel extends Canvas {
 			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
 
 			x0 = width / 2.,
-			hScaleParam = Math.max(0.9 * getWidth() / dupa, horizontalScale);	// ! 1. / 128. to be replaced with signal length
+//			hScaleParam = Math.max(0.9 * getWidth() / dupa, horizontalScale);	// ! 1. / 128. to be replaced with signal length
+
+			hScaleParam = horizontalScale;
 
 		{
 			double
@@ -241,82 +301,15 @@ public class PreviewPanel extends Canvas {
 					context.setStroke(RED);
 					context.strokeLine(x2Start, y2Start, x2End, y2End);
 
-/*					if (horizontalScale > 1.) {
+					if (horizontalScale > 1.) {
 						context.setStroke(new Color(0, 0, 0, Double.min((horizontalScale - 1.) / 2., 1.)));
 						context.strokeOval(x2Start - 0.5, y2Start - 0.5, 1, 1);
 
-					}*/	// drawing sample points at zoom in
+					}	// drawing sample points at zoom in
 				}
 
 			} while (index2End < fileLength && x2End < width + margin);
 
 		} // print right side
 	}
-
-	private void drawTimeGrid() {
-
-		context.setTextAlign(CENTER);
-		context.setFont(font);
-		context.setLineWidth(0.6);
-
-		double
-			samplesPerSecond = FileCache.getCurrentFileSamplesPerSecond(),
-			bitsPerSample = FileCache.getCurrentFileBitsPerSample(),
-			fileLength = FileCache.getCurrentFileSignalLength(),
-
-			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
-			hScale = root.getHorizontalScrollPanel().getScaleValue(),
-
-			width = getWidth() - margin,
-			height = getHeight() - margin,
-
-			gridScale = (samplesPerSecond / 1000.), // ? 1 ms
-
-			viewStep = horizontalScale,
-
-			gridIncrement = gridScale * Math.pow(2., hScale - (int) hScale),
-
-			x2 = (width / 2.) - gridIncrement,
-			x,
-			txt;
-
-		do {
-			x2 += gridIncrement;
-			x = x2 - (horizontalScroll * horizontalScale);
-
-			if (x > margin && x < fileLength) {
-
-				txt = (x2 - (width / 2.)) / viewStep / gridScale;
-				context.setStroke(GREY);
-				context.strokeLine(x, 0, x, height);
-				context.setStroke(DODGERBLUE);
-				context.strokeText((int) txt + " ", x, height + margin * 0.85);
-			}
-
-		} while (x < width + margin && x < fileLength);
-
-
-	}
-
-	private boolean indexIsInRange(double index) {
-
-		return index >= 0 && index < FileCache.getCurrentFileSignalLength();
-	}
-
-
-	private void drawFrame() {
-
-		context.clearRect(margin, getHeight() + 2 - margin, getWidth(), getHeight());            // clear footer
-
-		double
-			y0 = (getHeight() - margin) / 2.,
-			x0 = (getWidth() - margin) / 2.;
-
-		context.setLineWidth(1.);
-		context.setStroke(DODGERBLUE);
-
-		context.strokeLine(margin * 0.75, y0, margin, y0);                                        // vertical indicator
-		context.strokeLine(x0, 2 + y0 * 2., x0, getHeight() + 2 - (margin * 0.75));                // horizontal indicator
-		context.strokeRect(margin + 1, 1, getWidth() - 2 - margin, getHeight() + 1 - margin);    // frame
-	}
-}
+*/	// drawWaveForm()

@@ -30,13 +30,9 @@ public class Root extends GridPane {
     private final static RowConstraints
             row1 = new RowConstraints();
 
-    private final ScrollPanel
-            horizontalScrollPanel,
-            verticalScrollPanel;
 
     public final PreviewRefreshTrigger
         previewRefreshTrigger;
-
 
 
     public Root(Stage stage) {
@@ -44,9 +40,9 @@ public class Root extends GridPane {
         super();
 
         horizontalScrollPanel = new ScrollPanel(this, Orientation.HORIZONTAL);
-        verticalScrollPanel = new ScrollPanel(this, Orientation.VERTICAL);
-
         getHorizontalScrollPanel().setAlignment(Pos.CENTER_RIGHT);
+
+        verticalScrollPanel = new ScrollPanel(this, Orientation.VERTICAL);
         getVerticalScrollPanel().setAlignment(Pos.TOP_CENTER);
 
         previewRefreshTrigger = new PreviewRefreshTrigger(this);
@@ -91,8 +87,6 @@ public class Root extends GridPane {
             getRowConstraints().add(new RowConstraints(row2Dimension));
 
         }    // ? height property binding, and adding rows to the root
-
-        /*setGridLinesVisible(true);*/ // ? disposable in long term
     }
 
 
@@ -123,6 +117,10 @@ public class Root extends GridPane {
 
 
 
+    private final ScrollPanel
+        horizontalScrollPanel,
+        verticalScrollPanel;
+
     public ScrollPanel getHorizontalScrollPanel() {
 
         return horizontalScrollPanel;
@@ -138,6 +136,8 @@ public class Root extends GridPane {
         horizontalScrollPanel.bindScrollBarVisibilityProperties(b);
         verticalScrollPanel.bindScrollBarVisibilityProperties(b);
     }
+
+
 
     private final DoubleProperty
             dynamicAreaWidth = new SimpleDoubleProperty();

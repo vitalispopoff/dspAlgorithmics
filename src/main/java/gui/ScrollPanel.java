@@ -119,7 +119,8 @@ public class ScrollPanel extends StackPane {
 
 							   @Override
 							   protected double computeValue() {
-								   	return - Math.log(FileCache.getCurrentFileSignalLength()) / Math.log(2.) / 2.;
+							   		return - Math.log(FileCache.getCurrentFileSignalLength()) * 1.4426950408889634;
+//								   	return - Math.log(FileCache.getCurrentFileSignalLength()) / Math.log(2.) / 2.;
 							   }
 						   }).otherwise(0.))
 					: (Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))

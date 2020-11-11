@@ -8,4 +8,7 @@ public class Strip extends ArrayList<Integer> {
 
         super.removeRange(fromIndex, toIndex);
     }
+
+
+
 }

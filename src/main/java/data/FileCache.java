@@ -10,6 +10,8 @@ import static data.structure.FileContentStructure.*;
 
 public abstract class FileCache {
 
+	public static CurrentFilePreview currentFilePreview;
+
 	public static void addToCache(WaveFile waveFile) {
 
 		getFileCache().add(waveFile);
@@ -44,6 +46,8 @@ public abstract class FileCache {
 		fileCache.clear();
 //		updateCurrentIndex();
 	}
+
+
 
 
 

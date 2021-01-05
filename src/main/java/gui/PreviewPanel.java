@@ -1,7 +1,9 @@
 package gui;
 
 import data.*;
+import data.structure.Strip;
 import javafx.scene.canvas.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 
 import static javafx.scene.paint.Color.*;
@@ -68,6 +70,7 @@ public class PreviewPanel extends Canvas {
 			clean();
 			drawAmplitudeGrid();
 			drawFrame();
+			drawWaveForm();
 			drawTimeGrid();
 
 			theFlag = true;
@@ -80,6 +83,8 @@ public class PreviewPanel extends Canvas {
 	private void setHorizontalScale() {
 
 		horizontalScale = Math.pow(2., root.getHorizontalScrollPanel().getScaleValue());
+
+		System.out.println("guiPreviewPanel.setHorizontalScale() : " + root.getHorizontalScrollPanel().getScaleValue());
 	}
 
 	private void drawAmplitudeGrid() {
@@ -197,14 +202,12 @@ public class PreviewPanel extends Canvas {
 		context.strokeRect(margin + 1, 1, getWidth() - 2 - margin, getHeight() + 1 - margin);    // frame
 	}
 
-}
 
-/*	private boolean indexIsInRange(double index) {
+	private boolean indexIsInRange(double index) {
 
-			return index >= 0 && index < FileCache.getCurrentFileSignalLength();
-		}*/ // indexInRange()
+		return index >= 0 && index < FileCache.getCurrentFileSignalLength();
+	} // indexInRange()
 
-/*
 	private void drawWaveForm() {
 
 		context.setTextAlign(CENTER);
@@ -305,11 +308,13 @@ public class PreviewPanel extends Canvas {
 						context.setStroke(new Color(0, 0, 0, Double.min((horizontalScale - 1.) / 2., 1.)));
 						context.strokeOval(x2Start - 0.5, y2Start - 0.5, 1, 1);
 
-					}	// drawing sample points at zoom in
+					}    // drawing sample points at zoom in
 				}
 
 			} while (index2End < fileLength && x2End < width + margin);
 
 		} // print right side
 	}
-*/	// drawWaveForm()
+	// drawWaveForm()
+
+}

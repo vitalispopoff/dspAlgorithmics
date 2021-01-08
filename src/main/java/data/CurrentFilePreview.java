@@ -18,7 +18,7 @@ public class CurrentFilePreview {
 
 		copyMipMap();
 
-		System.out.println(currentMipMap.size());
+		System.out.println("	data.CurrentFilePreview.loadCurrentFileSignal : mipmap size = " + currentMipMap.size());
 	}
 
 	private static void copyMipMap(){
@@ -34,12 +34,9 @@ public class CurrentFilePreview {
 				stripSource = currentMipMap.get(mipMapLastIndex),
 				newStrip = new Strip();
 
+			for (int i = 0; i < lastMipMapSize ; i += 2) newStrip.add(stripSource.get(i));
+
 			currentMipMap.add(newStrip);
-
-			for (int i = 0; i < lastMipMapSize ; i += 2){
-
-				newStrip.add(stripSource.get(i));
-			}
 			copyMipMap();
 		}
 	}

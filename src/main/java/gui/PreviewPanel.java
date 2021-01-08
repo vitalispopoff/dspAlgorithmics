@@ -39,6 +39,8 @@ public class PreviewPanel extends Canvas {
 
 			if (FileCache.getFileCacheIsNotEmpty()) {
 
+				data.CurrentFilePreview.loadCurrentFileSignal();
+
 				drawEverything();
 				root.previewRefreshTrigger.scrollPanelStateProperty().addListener((observable1) -> {
 
@@ -84,7 +86,7 @@ public class PreviewPanel extends Canvas {
 
 		horizontalScale = Math.pow(2., root.getHorizontalScrollPanel().getScaleValue());
 
-		System.out.println("guiPreviewPanel.setHorizontalScale() : " + root.getHorizontalScrollPanel().getScaleValue());
+//		System.out.println("guiPreviewPanel.setHorizontalScale() : " + root.getHorizontalScrollPanel().getScaleValue());
 	}
 
 	private void drawAmplitudeGrid() {
@@ -215,11 +217,20 @@ public class PreviewPanel extends Canvas {
 		context.setLineWidth(0.75);
 		context.setStroke(RED);
 
-		data.CurrentFilePreview.loadCurrentFileSignal();
+
+
+/*		double
+			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue();*/
+
+		int
+			mipMapIndex = root.getHorizontalScrollPanel().getScaleValue() < 0. ? (int) -root.getHorizontalScrollPanel().getScaleValue() : 0;
+
+		System.out.println(mipMapIndex);
+
 
 		Strip
 //			strip = FileCache.getFile().getSignal().getStrip(0);
-			strip = CurrentFilePreview.currentMipMap.get(0);
+			strip = CurrentFilePreview.currentMipMap.get(mipMapIndex);
 
 		double
 			dupa = strip.size(),
@@ -241,7 +252,7 @@ public class PreviewPanel extends Canvas {
 			x0 = width / 2.,
 //			hScaleParam = Math.max(0.9 * getWidth() / dupa, horizontalScale);	// ! 1. / 128. to be replaced with signal length
 
-			hScaleParam = horizontalScale;
+			hScaleParam = ((horizontalScale -  ((int) horizontalScale)) * Math.pow(2, mipMapIndex));
 
 		{
 			double
@@ -250,19 +261,29 @@ public class PreviewPanel extends Canvas {
 				y1Start,
 
 				index1End = horizontalScroll + 1,
-				x1End = x0 + hScaleParam,
+				x1End = x0 + 1 + hScaleParam,
 				y1End = y0;
 
 			do {
 				index1Start--;
 				index1End--;
 
-				x1Start -= hScaleParam;
-				x1End -= hScaleParam;
 
-				if (indexIsInRange(index1End)) y1End = y0 - strip.get((int) index1End) / vScale;
+				if (mipMapIndex == 0) {
+					x1Start -= horizontalScale;
+					x1End -= horizontalScale;
+				}
+				else {
+					x1Start -= hScaleParam;
+					x1End -= hScaleParam;
+				}
 
-				if (indexIsInRange(index1Start)) {
+
+				if (indexIsInRange(index1End) && index1End < strip.size()) {
+					y1End = y0 - strip.get((int) index1End) / vScale;
+				}
+
+				if (indexIsInRange(index1Start) && index1Start < strip.size()) {
 
 					y1Start = y0 - strip.get((int) index1Start) / vScale;
 					context.setStroke(RED);
@@ -277,14 +298,14 @@ public class PreviewPanel extends Canvas {
 
 				}
 
-			} while (index1End >= 0 && x1End > margin);
+			} while (index1End >= 0 && x1End > margin && index1End < strip.size());
 
 		} // print left side
 
 		{
 			double
 				index2Start = horizontalScroll - 1,
-				x2Start = x0 - hScaleParam,
+				x2Start = x0 - 1 - horizontalScale,
 				y2Start = y0,
 
 				index2End = horizontalScroll,
@@ -295,13 +316,21 @@ public class PreviewPanel extends Canvas {
 				index2Start++;
 				index2End++;
 
-				x2Start += hScaleParam;
-				x2End += hScaleParam;
+				if (mipMapIndex == 0) {
+					x2Start += horizontalScale;
+					x2End += horizontalScale;
+				}
+				else {
+					x2Start += hScaleParam;
+					x2End += hScaleParam ;
+				}
 
-				if (indexIsInRange(index2Start))
+
+				if (indexIsInRange(index2Start) && index2Start < strip.size()) {
 					y2Start = y0 - strip.get((int) index2Start) / vScale;
+				}
 
-				if (indexIsInRange(index2End)) {
+				if (indexIsInRange(index2End) && index2End < strip.size()) {
 
 					y2End = y0 - strip.get((int) index2End) / vScale;
 					context.setStroke(RED);
@@ -314,7 +343,7 @@ public class PreviewPanel extends Canvas {
 					}    // drawing sample points at zoom in
 				}
 
-			} while (index2End < fileLength && x2End < width + margin);
+			} while (index2End < fileLength && index2End < strip.size() && x2End < width + margin);
 
 		} // print right side
 	}

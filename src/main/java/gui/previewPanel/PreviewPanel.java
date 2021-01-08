@@ -24,10 +24,5 @@ public class PreviewPanel extends StackPane {
 	public PreviewPanel(Root r) {
 
 		root = r;
-
-
 	}
-
-
-
 }

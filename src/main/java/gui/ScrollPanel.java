@@ -114,12 +114,21 @@ public class ScrollPanel extends StackPane {
 						   .then(new DoubleBinding() {
 
 							   {
-								   super.bind(FileCache.currentFileSignalLengthBinding());
+								   super.bind(
+								   		FileCache.currentFileSignalLengthBinding()
+									   , root.dynamicAreaWidthProperty()
+								   );
 							   }
 
 							   @Override
 							   protected double computeValue() {
-							   		return - Math.log(FileCache.getCurrentFileSignalLength()) * 1.4426950408889634;
+
+							   	double
+									logMinWidth = (int) Math.log(root.getDynamicAreaWidth())/* * 1.4426950408889634*/;
+
+								   System.out.println("gui.ScrollPanel.bindScrollBarRangeProperties() > minScroll " + root.getDynamicAreaWidth() + " ; " + logMinWidth);
+
+								return (logMinWidth - Math.log(FileCache.getCurrentFileSignalLength())) * 1.4426950408889634;
 //								   	return - Math.log(FileCache.getCurrentFileSignalLength()) / Math.log(2.) / 2.;
 							   }
 						   }).otherwise(0.))

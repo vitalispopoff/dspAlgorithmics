@@ -52,6 +52,7 @@ public class PreviewPanel extends Canvas {
 			else {
 				root.previewRefreshTrigger.scrollPanelStateProperty().removeListener(((observable1) -> {}));
 				clean();
+				data.CurrentFilePreview.cleanCurrentFileSignal();
 			}
 		});
 	}

@@ -12,13 +12,17 @@ public class CurrentFilePreview {
 	private static double
 		mipMapCopyNumber;
 
+	public static void cleanCurrentFileSignal(){
+		currentMipMap.clear();
+	}
+
 	public static void loadCurrentFileSignal(){
 
 		currentMipMap.add(FileCache.getFile().getSignal().getStrip(0));
 
 		copyMipMap();
 
-		System.out.println("	data.CurrentFilePreview.loadCurrentFileSignal : mipmap size = " + currentMipMap.size());
+//		System.out.println("	data.CurrentFilePreview.loadCurrentFileSignal : mipmap size = " + currentMipMap.size());
 	}
 
 	private static void copyMipMap(){

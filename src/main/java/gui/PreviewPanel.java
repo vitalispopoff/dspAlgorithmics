@@ -218,16 +218,8 @@ public class PreviewPanel extends Canvas {
 		context.setLineWidth(0.75);
 		context.setStroke(RED);
 
-
-
-/*		double
-			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue();*/
-
 		int
 			mipMapIndex = root.getHorizontalScrollPanel().getScaleValue() < 0. ? (int) -root.getHorizontalScrollPanel().getScaleValue() : 0;
-
-		System.out.println(mipMapIndex);
-
 
 		Strip
 //			strip = FileCache.getFile().getSignal().getStrip(0);
@@ -253,16 +245,16 @@ public class PreviewPanel extends Canvas {
 			x0 = width / 2.,
 //			hScaleParam = Math.max(0.9 * getWidth() / dupa, horizontalScale);	// ! 1. / 128. to be replaced with signal length
 
-			hScaleParam = ((horizontalScale -  ((int) horizontalScale)) * Math.pow(2, mipMapIndex));
+			hScaleParam = ((horizontalScale - ((int) horizontalScale)) * Math.pow(2, mipMapIndex));
 
 		{
 			double
-				index1Start = horizontalScroll,
+				index1Start = horizontalScroll / Math.pow(2., mipMapIndex),
 				x1Start = x0,
 				y1Start,
 
-				index1End = horizontalScroll + 1,
-				x1End = x0 + 1 + hScaleParam,
+				index1End = horizontalScroll / Math.pow(2., mipMapIndex) + 1,
+				x1End = x0 + 1 * horizontalScale,
 				y1End = y0;
 
 			do {
@@ -290,12 +282,12 @@ public class PreviewPanel extends Canvas {
 					context.setStroke(RED);
 					context.strokeLine(x1Start, y1Start, x1End, y1End);
 
-					if (horizontalScale > 1.) {
+					/*if (horizontalScale > 1.) {
 
 						context.setStroke(new Color(0, 0, 0, Double.min((horizontalScale - 1.) / 2., 1.)));
 						context.strokeOval(x1Start - 0.5, y1Start - 0.5, 1, 1);
 
-					} // drawing sample points at zoom in
+					}*/ // drawing sample points at zoom in
 
 				}
 
@@ -305,11 +297,11 @@ public class PreviewPanel extends Canvas {
 
 		{
 			double
-				index2Start = horizontalScroll - 1,
+				index2Start = horizontalScroll / Math.pow(2., mipMapIndex) - 1,
 				x2Start = x0 - 1 - horizontalScale,
 				y2Start = y0,
 
-				index2End = horizontalScroll,
+				index2End = horizontalScroll / Math.pow(2., mipMapIndex),
 				x2End = x0,
 				y2End;
 
@@ -323,7 +315,7 @@ public class PreviewPanel extends Canvas {
 				}
 				else {
 					x2Start += hScaleParam;
-					x2End += hScaleParam ;
+					x2End += hScaleParam;
 				}
 
 
@@ -337,11 +329,11 @@ public class PreviewPanel extends Canvas {
 					context.setStroke(RED);
 					context.strokeLine(x2Start, y2Start, x2End, y2End);
 
-					if (horizontalScale > 1.) {
+					/*if (horizontalScale > 1.) {
 						context.setStroke(new Color(0, 0, 0, Double.min((horizontalScale - 1.) / 2., 1.)));
 						context.strokeOval(x2Start - 0.5, y2Start - 0.5, 1, 1);
 
-					}    // drawing sample points at zoom in
+					}*/    // drawing sample points at zoom in
 				}
 
 			} while (index2End < fileLength && index2End < strip.size() && x2End < width + margin);

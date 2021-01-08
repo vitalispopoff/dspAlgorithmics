@@ -215,8 +215,11 @@ public class PreviewPanel extends Canvas {
 		context.setLineWidth(0.75);
 		context.setStroke(RED);
 
+		data.CurrentFilePreview.loadCurrentFileSignal();
+
 		Strip
-			strip = FileCache.getFile().getSignal().getStrip(0);
+//			strip = FileCache.getFile().getSignal().getStrip(0);
+			strip = CurrentFilePreview.currentMipMap.get(0);
 
 		double
 			dupa = strip.size(),

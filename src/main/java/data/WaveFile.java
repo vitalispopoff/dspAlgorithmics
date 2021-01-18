@@ -1,6 +1,7 @@
 package data;
 
 import data.structure.*;
+import data.structure.signal.Signal;
 
 import java.io.File;
 import java.util.Arrays;

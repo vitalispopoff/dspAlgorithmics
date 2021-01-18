@@ -1,4 +1,4 @@
-package data.structure;
+package data.structure.signal;
 
 import algorithms.metaProcessors.FileContentConverter;
 
@@ -53,20 +53,19 @@ public class Signal extends ArrayList<Integer>{
 
 
 
-	public void addSilence(int channel, int fromIndex, int length){
+	/*	public void addSilence(int channel, int fromIndex, int length){
 
 		if(coordinatesInRange(channel, fromIndex)){
 
 			strips.get(channel).addAll(fromIndex, Arrays.asList(new Integer[length]));
 		}
-	}
+	}*/	// add silence - disable
 
-	public void removeSamples(int channel, int fromIndex, int toIndex){
+	/*public void removeSamples(int channel, int fromIndex, int toIndex){
 
 		if(coordinatesInRange(channel, fromIndex) && coordinatesInRange(channel, toIndex + 1))
-
 			strips.get(channel).removeSamples(fromIndex, toIndex + 1);
-	}
+	}*/	// remove samples - disabled
 
 
 
@@ -85,7 +84,7 @@ public class Signal extends ArrayList<Integer>{
 
 		for (Integer i : input)
 
-			strips.get(index++ % channels).add(i);
+			strips.get(index++ % channels).add(new Sample(i));
 	}
 
 
@@ -129,7 +128,7 @@ public class Signal extends ArrayList<Integer>{
 				channelIndex = i % channels,
 				sampleIndex = (i - channelIndex) / channels;
 
-			result[i] = strips.get(channelIndex).get(sampleIndex);
+			result[i] = strips.get(channelIndex).get(sampleIndex).value;
 		}
 
 		return result;
@@ -181,7 +180,7 @@ public class Signal extends ArrayList<Integer>{
 
 		if(coordinatesInRange(channel, index))
 
-			return strips.get(channel).get(index);
+			return strips.get(channel).get(index).value;
 
 		return 0;
 	}
@@ -190,7 +189,7 @@ public class Signal extends ArrayList<Integer>{
 
 		if(coordinatesInRange(channel, index))
 
-		strips.get(channel).set(index, value);
+		strips.get(channel).set(index, new Sample(value));
 	}
 
 

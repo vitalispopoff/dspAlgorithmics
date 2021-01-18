@@ -1,6 +1,6 @@
 package data;
 
-import data.structure.Strip;
+import data.structure.signal.Strip;
 
 import java.util.ArrayList;
 
@@ -39,6 +39,20 @@ public class CurrentFilePreview {
 				newStrip = new Strip();
 
 			for (int i = 0; i < lastMipMapSize ; i += 2) newStrip.add(stripSource.get(i));
+
+/*			for (int i = 0; i < lastMipMapSize; i += 4){
+
+				int
+					a = stripSource.get(i),
+					b = stripSource.get(i+1),
+					c = stripSource.get(i+2),
+					d = stripSource.get(i+3),
+					min1 = Math.min(a, b),
+					min2 = Math.min(c, d),
+					min = Math.min(min1, min2),
+					max = Math.max(a == min1 ? b : a, c == min2 ? d : c);
+
+			}*/
 
 			currentMipMap.add(newStrip);
 			copyMipMap();

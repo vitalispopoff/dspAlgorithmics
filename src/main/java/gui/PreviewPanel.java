@@ -1,7 +1,7 @@
 package gui;
 
 import data.*;
-import data.structure.Strip;
+import data.structure.signal.Strip;
 import javafx.scene.canvas.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
@@ -222,7 +222,6 @@ public class PreviewPanel extends Canvas {
 			mipMapIndex = root.getHorizontalScrollPanel().getScaleValue() < 0. ? (int) -root.getHorizontalScrollPanel().getScaleValue() : 0;
 
 		Strip
-//			strip = FileCache.getFile().getSignal().getStrip(0);
 			strip = CurrentFilePreview.currentMipMap.get(mipMapIndex);
 
 		double
@@ -243,7 +242,6 @@ public class PreviewPanel extends Canvas {
 			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
 
 			x0 = width / 2.,
-//			hScaleParam = Math.max(0.9 * getWidth() / dupa, horizontalScale);	// ! 1. / 128. to be replaced with signal length
 
 			hScaleParam = ((horizontalScale - ((int) horizontalScale)) * Math.pow(2, mipMapIndex));
 
@@ -258,36 +256,35 @@ public class PreviewPanel extends Canvas {
 				y1End = y0;
 
 			do {
+
 				index1Start--;
 				index1End--;
 
-
 				if (mipMapIndex == 0) {
+
 					x1Start -= horizontalScale;
 					x1End -= horizontalScale;
 				}
 				else {
+
 					x1Start -= hScaleParam;
 					x1End -= hScaleParam;
 				}
 
-
-				if (indexIsInRange(index1End) && index1End < strip.size()) {
-					y1End = y0 - strip.get((int) index1End) / vScale;
-				}
+				if (indexIsInRange(index1End) && index1End < strip.size()) y1End = y0 - strip.get((int) index1End).value / vScale;
 
 				if (indexIsInRange(index1Start) && index1Start < strip.size()) {
 
-					y1Start = y0 - strip.get((int) index1Start) / vScale;
+					y1Start = y0 - strip.get((int) index1Start).value / vScale;
 					context.setStroke(RED);
 					context.strokeLine(x1Start, y1Start, x1End, y1End);
 
-					/*if (horizontalScale > 1.) {
+					if (horizontalScale > 1.) {
 
 						context.setStroke(new Color(0, 0, 0, Double.min((horizontalScale - 1.) / 2., 1.)));
 						context.strokeOval(x1Start - 0.5, y1Start - 0.5, 1, 1);
 
-					}*/ // drawing sample points at zoom in
+					} // drawing sample points at zoom in
 
 				}
 
@@ -318,22 +315,21 @@ public class PreviewPanel extends Canvas {
 					x2End += hScaleParam;
 				}
 
+				if (indexIsInRange(index2Start) && index2Start < strip.size()) y2Start = y0 - strip.get((int) index2Start).value / vScale;
 
-				if (indexIsInRange(index2Start) && index2Start < strip.size()) {
-					y2Start = y0 - strip.get((int) index2Start) / vScale;
-				}
 
 				if (indexIsInRange(index2End) && index2End < strip.size()) {
 
-					y2End = y0 - strip.get((int) index2End) / vScale;
+					y2End = y0 - strip.get((int) index2End).value / vScale;
 					context.setStroke(RED);
 					context.strokeLine(x2Start, y2Start, x2End, y2End);
 
-					/*if (horizontalScale > 1.) {
+					if (horizontalScale > 1.) {
+
 						context.setStroke(new Color(0, 0, 0, Double.min((horizontalScale - 1.) / 2., 1.)));
 						context.strokeOval(x2Start - 0.5, y2Start - 0.5, 1, 1);
 
-					}*/    // drawing sample points at zoom in
+					}    // drawing sample points at zoom in
 				}
 
 			} while (index2End < fileLength && index2End < strip.size() && x2End < width + margin);
@@ -341,5 +337,4 @@ public class PreviewPanel extends Canvas {
 		} // print right side
 	}
 	// drawWaveForm()
-
 }

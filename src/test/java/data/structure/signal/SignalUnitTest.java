@@ -1,5 +1,7 @@
-package data.structure;
+package data.structure.signal;
 
+import data.structure.signal.Signal;
+import data.structure.signal.Strip;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -101,9 +103,9 @@ public class SignalUnitTest {
 			strip_2 = {1, 4, 7},
 			strip_3 = {2, 5, 8};
 
-		for (Integer i : strip_1) input_0.strips.get(0).add(i);
-		for (Integer i : strip_2) input_0.strips.get(1).add(i);
-		for (Integer i : strip_3) input_0.strips.get(2).add(i);
+		for (Integer i : strip_1) input_0.strips.get(0).add(new Sample(i));
+		for (Integer i : strip_2) input_0.strips.get(1).add(new Sample(i));
+		for (Integer i : strip_3) input_0.strips.get(2).add(new Sample(i));
 
 		Integer[]
 			correct = {0, 1, 2, 3, 4, 5, 6, 7, 8},
@@ -131,9 +133,9 @@ public class SignalUnitTest {
 			strip_2 = {1, 4, 7},
 			strip_3 = {2, 5, 8};
 
-		for (Integer i : strip_1) correct.strips.get(0).add(i);
-		for (Integer i : strip_2) correct.strips.get(1).add(i);
-		for (Integer i : strip_3) correct.strips.get(2).add(i);
+		for (Integer i : strip_1) correct.strips.get(0).add(new Sample(i));
+		for (Integer i : strip_2) correct.strips.get(1).add(new Sample(i));
+		for (Integer i : strip_3) correct.strips.get(2).add(new Sample(i));
 
 		Signal
 			returned = new Signal(3);
@@ -162,9 +164,9 @@ public class SignalUnitTest {
 			strip_2 = {1, 4, 7},
 			strip_3 = {2, 5, 8};
 
-		for (Integer i : strip_1) input_0.strips.get(0).add(i);
-		for (Integer i : strip_2) input_0.strips.get(1).add(i);
-		for (Integer i : strip_3) input_0.strips.get(2).add(i);
+		for (Integer i : strip_1) input_0.strips.get(0).add(new Sample(i));
+		for (Integer i : strip_2) input_0.strips.get(1).add(new Sample(i));
+		for (Integer i : strip_3) input_0.strips.get(2).add(new Sample(i));
 
 		int
 			input_1 = 24;

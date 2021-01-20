@@ -30,7 +30,6 @@ public class Sample implements Sampling {
 	}
 
 
-
 /*	public static Sample min(Sample sample1, Sample sample2){
 
 		return sample2.value - sample1.value > 0 ? sample1 : sample2;

@@ -8,7 +8,7 @@ import static algorithms.metaProcessors.FileContentConverter.writeDataSample;
 
 public class Signal extends ArrayList<Integer>{
 
-	public ArrayList<Strip>
+	public ArrayList<Stripable>
 		strips;
 
 
@@ -67,7 +67,7 @@ public class Signal extends ArrayList<Integer>{
 
 		for (Integer i : input)
 
-			strips.get(index++ % channels).add(new Sample(i));
+			strips.get(index++ % channels).addSample(new Sample(i));
 	}
 
 
@@ -111,7 +111,7 @@ public class Signal extends ArrayList<Integer>{
 				channelIndex = i % channels,
 				sampleIndex = (i - channelIndex) / channels;
 
-			result[i] = strips.get(channelIndex).get(sampleIndex).va;
+			result[i] = strips.get(channelIndex).get(sampleIndex).getValue();
 		}
 
 		return result;
@@ -155,7 +155,7 @@ public class Signal extends ArrayList<Integer>{
 
 	public Strip getStrip(int index){
 
-		return strips.get(index);
+		return (Strip) strips.get(index);
 	}
 
 

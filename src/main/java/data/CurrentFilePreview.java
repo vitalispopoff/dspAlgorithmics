@@ -47,17 +47,17 @@ public class CurrentFilePreview {
 				int
 					j = i << 2;
 
-				Sample
+				Sampling
 					a = stripSource.get(j),
 					b = stripSource.get(j+1),
 					c = stripSource.get(j+2),
 					d = stripSource.get(j+3),
-					min1 = a.value - b.value > 0 ? b : a,
-					min2 = c.value - d.value > 0 ? d : c,
+					min1 = a.getValue() - b.getValue() > 0 ? b : a,
+					min2 = c.getValue() - d.getValue() > 0 ? d : c,
 					max1 = min1 == a ? b : a,
 					max2 = min2 == c ? d : c,
-					min = min2.value - min1.value > 0 ? min1 : min2,
-					max = max2.value - max1.value > 0 ? max2 : max1;
+					min = min2.getValue() - min1.getValue() > 0 ? min1 : min2,
+					max = max2.getValue() - max1.getValue() > 0 ? max2 : max1;
 
 				if (min == a || max == a) newStrip.add(a);
 				if (min == b || max == b) newStrip.add(b);

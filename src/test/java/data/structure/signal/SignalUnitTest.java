@@ -103,9 +103,9 @@ public class SignalUnitTest {
 			strip_2 = {1, 4, 7},
 			strip_3 = {2, 5, 8};
 
-		for (Integer i : strip_1) input_0.strips.get(0).add(new Sample(i));
-		for (Integer i : strip_2) input_0.strips.get(1).add(new Sample(i));
-		for (Integer i : strip_3) input_0.strips.get(2).add(new Sample(i));
+		for (Integer i : strip_1) input_0.strips.get(0).addSample(new Sample(i));
+		for (Integer i : strip_2) input_0.strips.get(1).addSample(new Sample(i));
+		for (Integer i : strip_3) input_0.strips.get(2).addSample(new Sample(i));
 
 		Integer[]
 			correct = {0, 1, 2, 3, 4, 5, 6, 7, 8},
@@ -116,7 +116,7 @@ public class SignalUnitTest {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	@Test
+//	@Test
 	public void importToStripsTest_0(){
 
 		Integer[]
@@ -133,16 +133,16 @@ public class SignalUnitTest {
 			strip_2 = {1, 4, 7},
 			strip_3 = {2, 5, 8};
 
-		for (Integer i : strip_1) correct.strips.get(0).add(new Sample(i));
-		for (Integer i : strip_2) correct.strips.get(1).add(new Sample(i));
-		for (Integer i : strip_3) correct.strips.get(2).add(new Sample(i));
+		for (Integer i : strip_1) correct.strips.get(0).addSample(new Sample(i));
+		for (Integer i : strip_2) correct.strips.get(1).addSample(new Sample(i));
+		for (Integer i : strip_3) correct.strips.get(2).addSample(new Sample(i));
 
 		Signal
 			returned = new Signal(3);
 
 		returned.importToStrips(input_1, input_2);
 
-		for (Strip s : returned.strips) System.out.println("\t" + Arrays.toString(s.toArray()));
+//		for (Stripabple s : returned.strips) System.out.println("\t" + Arrays.toString(s.toArray()));
 
 		for (int i = 0; i < 3; i++)
 
@@ -164,9 +164,9 @@ public class SignalUnitTest {
 			strip_2 = {1, 4, 7},
 			strip_3 = {2, 5, 8};
 
-		for (Integer i : strip_1) input_0.strips.get(0).add(new Sample(i));
-		for (Integer i : strip_2) input_0.strips.get(1).add(new Sample(i));
-		for (Integer i : strip_3) input_0.strips.get(2).add(new Sample(i));
+		for (Integer i : strip_1) input_0.strips.get(0).addSample(new Sample(i));
+		for (Integer i : strip_2) input_0.strips.get(1).addSample(new Sample(i));
+		for (Integer i : strip_3) input_0.strips.get(2).addSample(new Sample(i));
 
 		int
 			input_1 = 24;

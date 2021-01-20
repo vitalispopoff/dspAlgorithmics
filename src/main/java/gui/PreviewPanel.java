@@ -271,11 +271,11 @@ public class PreviewPanel extends Canvas {
 					x1End -= hScaleParam;
 				}
 
-				if (indexIsInRange(index1End) && index1End < strip.size()) y1End = y0 - strip.get((int) index1End).value / vScale;
+				if (indexIsInRange(index1End) && index1End < strip.size()) y1End = y0 - strip.get((int) index1End).getValue() / vScale;
 
 				if (indexIsInRange(index1Start) && index1Start < strip.size()) {
 
-					y1Start = y0 - strip.get((int) index1Start).value / vScale;
+					y1Start = y0 - strip.get((int) index1Start).getValue() / vScale;
 					context.setStroke(RED);
 					context.strokeLine(x1Start, y1Start, x1End, y1End);
 
@@ -315,12 +315,13 @@ public class PreviewPanel extends Canvas {
 					x2End += hScaleParam;
 				}
 
-				if (indexIsInRange(index2Start) && index2Start < strip.size()) y2Start = y0 - strip.get((int) index2Start).value / vScale;
+				if (indexIsInRange(index2Start) && index2Start < strip.size())
+					y2Start = y0 - strip.get((int) index2Start).getValue() / vScale;
 
 
 				if (indexIsInRange(index2End) && index2End < strip.size()) {
 
-					y2End = y0 - strip.get((int) index2End).value / vScale;
+					y2End = y0 - strip.get((int) index2End).getValue() / vScale;
 					context.setStroke(RED);
 					context.strokeLine(x2Start, y2Start, x2End, y2End);
 

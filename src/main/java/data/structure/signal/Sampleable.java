@@ -1,8 +1,8 @@
 package data.structure.signal;
 
-public interface Sampling {
+public interface Sampleable {
 
-	static Sampling instanceOf(int i){
+	static Sampleable instanceOf(int i){
 
 		return new Sample(i);
 	}
@@ -10,16 +10,16 @@ public interface Sampling {
 	int getValue();
 	void setValue(int v);
 
-	void setNext(Sampling s);
-	Sampling getNext();
+	void setNext(Sampleable s);
+	Sampleable getNext();
 
 
-	static Sampling min(Sampling s1, Sampling s2){
+	static Sampleable min(Sampleable s1, Sampleable s2){
 
 		return (s2.getValue() - s1.getValue() > 0 ? s1 : s2 );
 	}
 
-	static Sampling max(Sampling s1, Sampling s2){
+	static Sampleable max(Sampleable s1, Sampleable s2){
 
 		return (s2.getValue() - s1.getValue() > 0 ? s2 : s1 );
 	}

@@ -37,7 +37,7 @@ public class Signal extends ArrayList<Integer>{
 
 	public void addChannel(){
 
-		strips.add(new Strip());
+		strips.add(Stripable.instanceOf());
 	}
 
 	/*public void removeChannel(){
@@ -58,24 +58,20 @@ public class Signal extends ArrayList<Integer>{
 
 			strips.clear();
 
-		for (int i = 0; i < channels; i++)
-
-			strips.add(new Strip());
+		for (int i = 0; i < channels; i++) strips.add(Stripable.instanceOf());
 
 		int
 			index = 0;
 
-		for (Integer i : input)
-
-			strips.get(index++ % channels).addSample(new Sample(i));
+		for (Integer i : input) strips.get(index++ % channels).addSample(Sampleable.instanceOf(i));
 	}
 
 
 
 	Integer[] bytesToIntegers(byte[] source, int sampleLength){
 
-		Strip
-			strip = new Strip();
+		Stripable
+			strip = Stripable.instanceOf();
 
 		int
 			stripLength = source.length / (sampleLength);
@@ -99,8 +95,8 @@ public class Signal extends ArrayList<Integer>{
 			numberOfSamples = strips.get(0).size(),
 			resultLength = channels * numberOfSamples;
 
-		Strip
-			sum = new Strip();
+		Stripable
+			sum = Stripable.instanceOf();
 
 		Integer[]
 			result = new Integer[resultLength];
@@ -153,7 +149,7 @@ public class Signal extends ArrayList<Integer>{
 
 
 
-	public Strip getStrip(int index){
+	public Stripable getStrip(int index){
 
 		return (Strip) strips.get(index);
 	}

@@ -2,6 +2,7 @@ package gui;
 
 import data.*;
 import data.structure.signal.Strip;
+import data.structure.signal.Stripable;
 import javafx.scene.canvas.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
@@ -221,11 +222,10 @@ public class PreviewPanel extends Canvas {
 		int
 			mipMapIndex = root.getHorizontalScrollPanel().getScaleValue() < 0. ? (int) -root.getHorizontalScrollPanel().getScaleValue() : 0;
 
-		Strip
+		Stripable
 			strip = CurrentFilePreview.currentMipMap.get(mipMapIndex);
 
 		double
-			dupa = strip.size(),
 			bitsPerSample = FileCache.getCurrentFileBitsPerSample(),
 			height = getHeight() - margin,
 			verticalScroll = root.getVerticalScrollPanel().getScrollValue(),
@@ -271,7 +271,8 @@ public class PreviewPanel extends Canvas {
 					x1End -= hScaleParam;
 				}
 
-				if (indexIsInRange(index1End) && index1End < strip.size()) y1End = y0 - strip.get((int) index1End).getValue() / vScale;
+				if (indexIsInRange(index1End) && index1End < strip.size())
+					y1End = y0 - strip.get((int) index1End).getValue() / vScale;
 
 				if (indexIsInRange(index1Start) && index1Start < strip.size()) {
 

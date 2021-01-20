@@ -1,11 +1,11 @@
 package data.structure.signal;
 
-public class Sample implements Sampling {
+public class Sample implements Sampleable {
 
 	public int
 		value;
 
-	public Sampling
+	public Sampleable
 		next;
 
 	public Sample(int v){
@@ -21,11 +21,11 @@ public class Sample implements Sampling {
 		value = v;
 	}
 
-	public Sampling getNext(){
+	public Sampleable getNext(){
 		return next;
 	}
 
-	public void setNext(Sampling s){
+	public void setNext(Sampleable s){
 		next = s;
 	}
 

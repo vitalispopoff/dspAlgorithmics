@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class CurrentFilePreview {
 
-	public static ArrayList<Strip>
+	public static ArrayList<Stripable>
 		currentMipMap = new ArrayList<>();
 
 	private static double
@@ -32,7 +32,7 @@ public class CurrentFilePreview {
 			mipMapLastIndex = currentMipMap.size() - 1,
 			lastMipMapSize = currentMipMap.get(mipMapLastIndex).size();
 
-		Strip
+		Stripable
 			stripSource,
 			newStrip;
 
@@ -47,7 +47,7 @@ public class CurrentFilePreview {
 				int
 					j = i << 2;
 
-				Sampling
+				Sampleable
 					a = stripSource.get(j),
 					b = stripSource.get(j+1),
 					c = stripSource.get(j+2),
@@ -59,10 +59,10 @@ public class CurrentFilePreview {
 					min = min2.getValue() - min1.getValue() > 0 ? min1 : min2,
 					max = max2.getValue() - max1.getValue() > 0 ? max2 : max1;
 
-				if (min == a || max == a) newStrip.add(a);
-				if (min == b || max == b) newStrip.add(b);
-				if (min == c || max == c) newStrip.add(c);
-				if (min == d || max == d) newStrip.add(d);
+				if (min == a || max == a) newStrip.addSample(a);
+				if (min == b || max == b) newStrip.addSample(b);
+				if (min == c || max == c) newStrip.addSample(c);
+				if (min == d || max == d) newStrip.addSample(d);
 			}
 
 //			for (int i = 0; i < lastMipMapSize ; i += 2) newStrip.add(stripSource.get(i));

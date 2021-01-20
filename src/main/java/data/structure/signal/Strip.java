@@ -2,7 +2,7 @@ package data.structure.signal;
 
 import java.util.ArrayList;
 
-public class Strip extends ArrayList<Sampling> implements Stripable {
+public class Strip extends ArrayList<Sampleable> implements Stripable {
 
     public void removeSamples(int fromIndex, int toIndex) {
 
@@ -14,13 +14,13 @@ public class Strip extends ArrayList<Sampling> implements Stripable {
         return super.size();
     }
 
-    public Sampling get(int i){
+    public Sampleable get(int i){
 
-        return (Sampling) super.get(i);
+        return (Sampleable) super.get(i);
     }
 
 
-    public void addSample(Sampling s){
+    public void addSample(Sampleable s){
 
         super.add(s);
     }

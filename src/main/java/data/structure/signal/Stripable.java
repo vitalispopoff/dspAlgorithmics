@@ -2,10 +2,15 @@ package data.structure.signal;
 
 public interface Stripable {
 
+	static Stripable instanceOf(){
+
+		return new Strip();
+	}
+
 	int size();
 
-	Sampling get(int i);
+	Sampleable get(int i);
 
-	void addSample(Sampling s);
+	void addSample(Sampleable s);
 
 }

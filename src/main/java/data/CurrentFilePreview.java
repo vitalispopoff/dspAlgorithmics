@@ -1,6 +1,7 @@
 package data;
 
-import data.structure.signal.Strip;
+import data.structure.signal.*;
+//import data.structure.signal.Strip;
 
 import java.util.ArrayList;
 
@@ -31,28 +32,40 @@ public class CurrentFilePreview {
 			mipMapLastIndex = currentMipMap.size() - 1,
 			lastMipMapSize = currentMipMap.get(mipMapLastIndex).size();
 
-		if (lastMipMapSize > 512)	// 512 - twice the nearest power of 2 less than app window min. width
-			{
+		Strip
+			stripSource,
+			newStrip;
 
-			Strip
-				stripSource = currentMipMap.get(mipMapLastIndex),
-				newStrip = new Strip();
+			// 512 - twice the nearest power of 2 less than app window min. width
+		if (lastMipMapSize > 512) {
 
-			for (int i = 0; i < lastMipMapSize ; i += 2) newStrip.add(stripSource.get(i));
+			stripSource = currentMipMap.get(mipMapLastIndex);
+			newStrip = new Strip();
 
-/*			for (int i = 0; i < lastMipMapSize; i += 4){
+			for (int i = 0; i < (lastMipMapSize >> 2); i++){
 
 				int
-					a = stripSource.get(i),
-					b = stripSource.get(i+1),
-					c = stripSource.get(i+2),
-					d = stripSource.get(i+3),
-					min1 = Math.min(a, b),
-					min2 = Math.min(c, d),
-					min = Math.min(min1, min2),
-					max = Math.max(a == min1 ? b : a, c == min2 ? d : c);
+					j = i << 2;
 
-			}*/
+				Sample
+					a = stripSource.get(j),
+					b = stripSource.get(j+1),
+					c = stripSource.get(j+2),
+					d = stripSource.get(j+3),
+					min1 = a.value - b.value > 0 ? b : a,
+					min2 = c.value - d.value > 0 ? d : c,
+					max1 = min1 == a ? b : a,
+					max2 = min2 == c ? d : c,
+					min = min2.value - min1.value > 0 ? min1 : min2,
+					max = max2.value - max1.value > 0 ? max2 : max1;
+
+				if (min == a || max == a) newStrip.add(a);
+				if (min == b || max == b) newStrip.add(b);
+				if (min == c || max == c) newStrip.add(c);
+				if (min == d || max == d) newStrip.add(d);
+			}
+
+//			for (int i = 0; i < lastMipMapSize ; i += 2) newStrip.add(stripSource.get(i));
 
 			currentMipMap.add(newStrip);
 			copyMipMap();

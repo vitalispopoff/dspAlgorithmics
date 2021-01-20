@@ -12,7 +12,6 @@ public class Signal extends ArrayList<Integer>{
 		strips;
 
 
-
 	public Signal(){
 
 		strips = new ArrayList<>();
@@ -41,31 +40,15 @@ public class Signal extends ArrayList<Integer>{
 		strips.add(new Strip());
 	}
 
-	public void removeChannel(){
+	/*public void removeChannel(){
 
 		removeChannel(strips.size() - 1);
-	}
+	}*/	// remove channel
 
-	public void removeChannel(int index){
+	/*public void removeChannel(int index){
 
 		strips.remove(index);
-	}
-
-
-
-	/*	public void addSilence(int channel, int fromIndex, int length){
-
-		if(coordinatesInRange(channel, fromIndex)){
-
-			strips.get(channel).addAll(fromIndex, Arrays.asList(new Integer[length]));
-		}
-	}*/	// add silence - disable
-
-	/*public void removeSamples(int channel, int fromIndex, int toIndex){
-
-		if(coordinatesInRange(channel, fromIndex) && coordinatesInRange(channel, toIndex + 1))
-			strips.get(channel).removeSamples(fromIndex, toIndex + 1);
-	}*/	// remove samples - disabled
+	}*/	// remove channel
 
 
 
@@ -128,7 +111,7 @@ public class Signal extends ArrayList<Integer>{
 				channelIndex = i % channels,
 				sampleIndex = (i - channelIndex) / channels;
 
-			result[i] = strips.get(channelIndex).get(sampleIndex).value;
+			result[i] = strips.get(channelIndex).get(sampleIndex).va;
 		}
 
 		return result;
@@ -158,7 +141,7 @@ public class Signal extends ArrayList<Integer>{
 
 
 
-	private boolean coordinatesInRange(int channel, int index){
+	/*private boolean coordinatesInRange(int channel, int index){
 
 		if (channel < strips.size()) {
 
@@ -166,7 +149,7 @@ public class Signal extends ArrayList<Integer>{
 		}
 
 		return false;
-	}
+	}*/	// coordinates are in range
 
 
 
@@ -176,21 +159,21 @@ public class Signal extends ArrayList<Integer>{
 	}
 
 
-	public int getSample(int channel, int index){
+	/*public int getSample(int channel, int index){
 
 		if(coordinatesInRange(channel, index))
 
 			return strips.get(channel).get(index).value;
 
 		return 0;
-	}
+	}*/	// get sample
 
-	public void setSample(int channel, int index, int value){
+	/*	public void setSample(int channel, int index, int value){
 
 		if(coordinatesInRange(channel, index))
 
 		strips.get(channel).set(index, new Sample(value));
-	}
+	}*/	// set sample
 
 
 

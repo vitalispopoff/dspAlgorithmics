@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class CurrentFilePreview {
 
-	public static ArrayList<Stripable>
+	public static ArrayList<Channeling>
 		currentMipMap = new ArrayList<>();
 
 	private static double
@@ -32,7 +32,7 @@ public class CurrentFilePreview {
 			mipMapLastIndex = currentMipMap.size() - 1,
 			lastMipMapSize = currentMipMap.get(mipMapLastIndex).size();
 
-		Stripable
+		Channeling
 			stripSource,
 			newStrip;
 
@@ -40,7 +40,7 @@ public class CurrentFilePreview {
 		if (lastMipMapSize > 512) {
 
 			stripSource = currentMipMap.get(mipMapLastIndex);
-			newStrip = new Strip();
+			newStrip = new Channel();
 
 			for (int i = 0; i < (lastMipMapSize >> 2); i++){
 

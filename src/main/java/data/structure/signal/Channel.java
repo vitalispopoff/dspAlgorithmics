@@ -2,17 +2,20 @@ package data.structure.signal;
 
 import java.util.ArrayList;
 
-public class Strip extends ArrayList<Sampleable> implements Stripable {
+public class Channel extends ArrayList<Sampleable> implements Channeling {
+
 
     public void removeSamples(int fromIndex, int toIndex) {
 
         super.removeRange(fromIndex, toIndex);
     }
 
+
     public int size(){
 
         return super.size();
     }
+
 
     public Sampleable get(int i){
 

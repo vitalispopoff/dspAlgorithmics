@@ -1,5 +1,6 @@
-package gui;
+package gui.previewPanel;
 
+import gui.Root;
 import javafx.beans.property.*;
 
 import java.util.concurrent.atomic.AtomicReference;

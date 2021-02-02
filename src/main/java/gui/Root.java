@@ -1,6 +1,8 @@
 package gui;
 
 import gui.Menus.MainMenuController;
+import gui.previewPanel.PreviewPanel;
+import gui.previewPanel.PreviewRefreshTrigger;
 import javafx.beans.property.*;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.*;

@@ -3,6 +3,8 @@ package data.structure.signal;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static algorithms.metaProcessors.FileContentConverter.integersToBytes;
+
 public class SignalUnitTest {
 
 	static Signal
@@ -60,7 +62,7 @@ public class SignalUnitTest {
 				(byte) 0x00, (byte) 0x80, (byte) 0xFF, (byte) 0xFF,
 				(byte) 0xFF, (byte) 0xFF, (byte) 0x7F, (byte) 0x00,
 			},
-			returned = dummy.integersToBytes(input_1, input_2);
+			returned = integersToBytes(input_1, input_2);
 
 		Assert.assertArrayEquals(correct, returned);
 	}
@@ -81,7 +83,7 @@ public class SignalUnitTest {
 			(byte) 0x00, (byte) 0x80, (byte) 0xFF,
 			(byte) 0xFF, (byte) 0xFF, (byte) 0x7F,
 		},
-			returned = dummy.integersToBytes(input_1, input_2);
+			returned = integersToBytes(input_1, input_2);
 
 		Assert.assertArrayEquals(correct, returned);
 	}

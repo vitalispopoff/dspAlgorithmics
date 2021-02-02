@@ -77,4 +77,28 @@ public interface FileContentConverter {
 			System.arraycopy(bytes, 0, source, location[0], location[1]);
 		}
 	}
+
+
+
+	static byte[] integersToBytes(Integer[] signal, int bitsPerSample){
+
+		int
+			sampleLength = bitsPerSample >>> 3;
+
+		byte[]
+			result = new byte[signal.length * sampleLength],
+			sample;
+
+		for(int i = 0 ; i < signal.length; i++) {
+
+			int
+				resultIndex = i * sampleLength;
+
+			sample = writeDataSample(signal[i], sampleLength);
+
+			System.arraycopy(sample, 0, result, resultIndex, sampleLength);
+		}
+
+		return result;
+	}
 }

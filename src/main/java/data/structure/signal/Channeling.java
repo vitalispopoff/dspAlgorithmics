@@ -1,10 +1,10 @@
 package data.structure.signal;
 
-public interface Stripable {
+public interface Channeling {
 
-	static Stripable instanceOf(){
+	static Channeling instanceOf(){
 
-		return new Strip();
+		return new Channel();
 	}
 
 	int size();

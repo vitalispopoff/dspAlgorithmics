@@ -2,6 +2,7 @@ package data;
 
 import data.structure.*;
 import data.structure.signal.Signal;
+import data.structure.signal.Signalable;
 
 import java.io.File;
 import java.util.Arrays;
@@ -20,7 +21,7 @@ public class WaveFile {
 	public WaveHeader
 		header;
 
-	Signal
+	Signalable
 		signal;
 
 
@@ -64,7 +65,7 @@ public class WaveFile {
 		return header;
 	}
 
-	public Signal getSignal(){
+	public Signalable getSignal(){
 
 		return signal;
 	}
@@ -76,7 +77,7 @@ public class WaveFile {
 
 		byte[]
 			headerSource = header.getSource(),
-			signalSource = signal.getSource(header.getField(BITS_PER_SAMPLE)),
+			signalSource =  signal.getSource(header.getField(BITS_PER_SAMPLE)),
 			result = new byte[lengths[2]];
 
 		System.arraycopy(headerSource, 0, result, 0, lengths[0]);
@@ -89,7 +90,7 @@ public class WaveFile {
 
 		int
 			headerLength = header.getSource().length,
-			signalLength = signal.getSource(header.getField(BITS_PER_SAMPLE)).length,
+			signalLength =  signal.getSource(header.getField(BITS_PER_SAMPLE)).length,
 			currentLength = headerLength + signalLength;
 
 		header.setField(currentLength - 8, FILE_SIZE);

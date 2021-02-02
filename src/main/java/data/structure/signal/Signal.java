@@ -4,12 +4,14 @@ import algorithms.metaProcessors.FileContentConverter;
 
 import java.util.*;
 
-import static algorithms.metaProcessors.FileContentConverter.writeDataSample;
+//import static algorithms.metaProcessors.FileContentConverter.writeDataSample;
 
-public class Signal extends ArrayList<Integer>{
+public class Signal extends ArrayList<Integer> implements Signalable{
 
-	public ArrayList<Stripable>
+
+	public ArrayList<Channeling>
 		strips;
+
 
 
 	public Signal(){
@@ -34,21 +36,8 @@ public class Signal extends ArrayList<Integer>{
 	}
 
 
-
-	public void addChannel(){
-
-		strips.add(Stripable.instanceOf());
-	}
-
-	/*public void removeChannel(){
-
-		removeChannel(strips.size() - 1);
-	}*/	// remove channel
-
-	/*public void removeChannel(int index){
-
-		strips.remove(index);
-	}*/	// remove channel
+	private void addChannel(){ strips.add(Channeling.instanceOf()); }
+	private void removeChannel(int index){ strips.remove(index); }
 
 
 
@@ -58,7 +47,7 @@ public class Signal extends ArrayList<Integer>{
 
 			strips.clear();
 
-		for (int i = 0; i < channels; i++) strips.add(Stripable.instanceOf());
+		for (int i = 0; i < channels; i++) strips.add(Channeling.instanceOf());
 
 		int
 			index = 0;
@@ -70,8 +59,8 @@ public class Signal extends ArrayList<Integer>{
 
 	Integer[] bytesToIntegers(byte[] source, int sampleLength){
 
-		Stripable
-			strip = Stripable.instanceOf();
+		Channeling
+			strip = Channeling.instanceOf();
 
 		int
 			stripLength = source.length / (sampleLength);
@@ -95,8 +84,8 @@ public class Signal extends ArrayList<Integer>{
 			numberOfSamples = strips.get(0).size(),
 			resultLength = channels * numberOfSamples;
 
-		Stripable
-			sum = Stripable.instanceOf();
+		Channeling
+			sum = Channeling.instanceOf();
 
 		Integer[]
 			result = new Integer[resultLength];
@@ -113,7 +102,7 @@ public class Signal extends ArrayList<Integer>{
 		return result;
 	}
 
-	byte[] integersToBytes(Integer[] signal, int bitsPerSample){
+	/*	byte[] integersToBytes(Integer[] signal, int bitsPerSample){
 
 		int
 			sampleLength = bitsPerSample >>> 3;
@@ -133,7 +122,7 @@ public class Signal extends ArrayList<Integer>{
 		}
 
 		return result;
-	}
+	}*/	// ! moved to metaProcessors.FileContentConverter
 
 
 
@@ -149,9 +138,9 @@ public class Signal extends ArrayList<Integer>{
 
 
 
-	public Stripable getStrip(int index){
+	public Channeling getStrip(int index){
 
-		return (Strip) strips.get(index);
+		return strips.get(index);
 	}
 
 
@@ -173,9 +162,12 @@ public class Signal extends ArrayList<Integer>{
 
 
 
+		@Override
 	public byte[] getSource(int bitsPerSample){
 
-		return integersToBytes(consolidateChannels(), bitsPerSample);
+//		return integersToBytes(consolidateChannels(), bitsPerSample);
+
+		return FileContentConverter.integersToBytes(consolidateChannels(), bitsPerSample);
 	}
 
 }

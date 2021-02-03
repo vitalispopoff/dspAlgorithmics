@@ -7,6 +7,7 @@ import javafx.scene.canvas.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 
+import static data.structure.Previewing.*;
 import static javafx.scene.paint.Color.*;
 import static javafx.scene.text.TextAlignment.*;
 
@@ -40,7 +41,7 @@ public class PreviewPanel extends Canvas {
 
 			if (FileCache.getFileCacheIsNotEmpty()) {
 
-				data.CurrentFilePreview.loadCurrentFileSignal();
+				/*data.CurrentFilePreview.*/loadCurrentFileSignal();
 
 				drawEverything();
 				root.previewRefreshTrigger.scrollPanelStateProperty().addListener((observable1) -> {
@@ -53,7 +54,7 @@ public class PreviewPanel extends Canvas {
 			else {
 				root.previewRefreshTrigger.scrollPanelStateProperty().removeListener(((observable1) -> {}));
 				clean();
-				data.CurrentFilePreview.cleanCurrentFileSignal();
+				/*data.CurrentFilePreview.*/cleanCurrentFileSignal();
 			}
 		});
 	}
@@ -272,11 +273,11 @@ public class PreviewPanel extends Canvas {
 				}
 
 				if (indexIsInRange(index1End) && index1End < strip.size())
-					y1End = y0 - strip.get((int) index1End).getValue() / vScale;
+					y1End = y0 - strip.getSampling((int) index1End).getValue() / vScale;
 
 				if (indexIsInRange(index1Start) && index1Start < strip.size()) {
 
-					y1Start = y0 - strip.get((int) index1Start).getValue() / vScale;
+					y1Start = y0 - strip.getSampling((int) index1Start).getValue() / vScale;
 					context.setStroke(RED);
 					context.strokeLine(x1Start, y1Start, x1End, y1End);
 
@@ -317,12 +318,12 @@ public class PreviewPanel extends Canvas {
 				}
 
 				if (indexIsInRange(index2Start) && index2Start < strip.size())
-					y2Start = y0 - strip.get((int) index2Start).getValue() / vScale;
+					y2Start = y0 - strip.getSampling((int) index2Start).getValue() / vScale;
 
 
 				if (indexIsInRange(index2End) && index2End < strip.size()) {
 
-					y2End = y0 - strip.get((int) index2End).getValue() / vScale;
+					y2End = y0 - strip.getSampling((int) index2End).getValue() / vScale;
 					context.setStroke(RED);
 					context.strokeLine(x2Start, y2Start, x2End, y2End);
 

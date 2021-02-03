@@ -2,7 +2,7 @@ package data.structure.signal;
 
 import java.util.ArrayList;
 
-public class Channel extends ArrayList<Sampleable> implements Channeling {
+public class Channel extends ArrayList<Sampling> implements Channeling {
 
 
     public void removeSamples(int fromIndex, int toIndex) {
@@ -17,13 +17,13 @@ public class Channel extends ArrayList<Sampleable> implements Channeling {
     }
 
 
-    public Sampleable get(int i){
+    public Sampling getSampling(int i){
 
-        return (Sampleable) super.get(i);
+        return super.get(i);
     }
 
 
-    public void addSample(Sampleable s){
+    public void addSampling(Sampling s){
 
         super.add(s);
     }

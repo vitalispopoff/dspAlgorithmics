@@ -101,4 +101,19 @@ public interface FileContentConverter {
 
 		return result;
 	}
+
+	static Integer[] bytesToIntegers(byte[] source, int sampleLength){
+
+		int
+			stripLength = source.length / (sampleLength);
+
+		Integer[]
+			result = new Integer[stripLength];
+
+		for (int i = 0; i < stripLength; i++)
+
+			result[i] =  FileContentConverter.readDataSample(source, i * sampleLength, sampleLength);
+
+		return result;
+	}
 }

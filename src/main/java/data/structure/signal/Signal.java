@@ -1,91 +1,74 @@
 package data.structure.signal;
 
-import algorithms.metaProcessors.FileContentConverter;
-
 import java.util.*;
 
-//import static algorithms.metaProcessors.FileContentConverter.writeDataSample;
+import static algorithms.metaProcessors.FileContentConverter.*;
 
-public class Signal extends ArrayList<Integer> implements Signalable{
+public class Signal extends ArrayList<Integer> implements Signaling {
 
 
 	public ArrayList<Channeling>
-		strips;
+		channels;
 
 
+	Signal(){
 
-	public Signal(){
-
-		strips = new ArrayList<>();
+		channels = new ArrayList<>();
 	}
 
-	public Signal(int channels){
+
+	public Signal(int numberOfChannels){
 
 		this();
 
-		for (int i = 0; i < channels; i++)
-
-			addChannel();
+		for (int i = 0; i < numberOfChannels; i++) addChannel();
 	}
 
-	public Signal(byte[] source, int blockAlign, int channels){
+	private void addChannel(){ channels.add(Channeling.newInstance()); }
 
-		this(channels);
 
-		importToStrips(bytesToIntegers(source, blockAlign / channels), channels);
+
+	public static Signaling instanceOf(byte[] source, int blockAlign, int numberOfChannels){
+
+		return new Signal(source, blockAlign, numberOfChannels);
 	}
 
+	private Signal(byte[] source, int blockAlign, int numberOfChannels){
 
-	private void addChannel(){ strips.add(Channeling.instanceOf()); }
-	private void removeChannel(int index){ strips.remove(index); }
+		this(numberOfChannels);
 
+		importToChannels(bytesToIntegers(source, blockAlign / numberOfChannels), numberOfChannels);
+	}
 
+	private void importToChannels(Integer[] input, int numberOfChannels){
 
-	void importToStrips(Integer[] input, int channels){
+		if (channels != null && this.channels.size() > 0)
+			channels.clear();
 
-		if (strips != null && strips.size() > 0)
-
-			strips.clear();
-
-		for (int i = 0; i < channels; i++) strips.add(Channeling.instanceOf());
+		for (int i = 0; i < numberOfChannels; i++)
+			channels.add(Channeling.newInstance());
 
 		int
 			index = 0;
 
-		for (Integer i : input) strips.get(index++ % channels).addSample(Sampleable.instanceOf(i));
+		for (Integer i : input)
+			channels.get(index++ % numberOfChannels).addSampling(i);
 	}
 
 
 
-	Integer[] bytesToIntegers(byte[] source, int sampleLength){
+	@Override
+	public byte[] getSource(int bitsPerSample){
 
-		Channeling
-			strip = Channeling.instanceOf();
-
-		int
-			stripLength = source.length / (sampleLength);
-
-		Integer[]
-			result = new Integer[stripLength];
-
-		for (int i = 0; i < stripLength; i++)
-
-			result[i] =  FileContentConverter.readDataSample(source, i * sampleLength, sampleLength);
-
-		return result;
+		return integersToBytes(consolidateChannels(), bitsPerSample);
 	}
 
-
-
-	Integer[] consolidateChannels(){
+	private Integer[] consolidateChannels(){
 
 		int
-			channels = strips.size(),
-			numberOfSamples = strips.get(0).size(),
-			resultLength = channels * numberOfSamples;
-
-		Channeling
-			sum = Channeling.instanceOf();
+			numberOfChannels = channels.size(),
+			numberOfSamples = channels.get(0).size(),
+			resultLength = numberOfChannels * numberOfSamples;
 
 		Integer[]
 			result = new Integer[resultLength];
@@ -93,81 +76,22 @@ public class Signal extends ArrayList<Integer> implements Signalable{
 		for (int i = 0; i < resultLength; i++) {
 
 			int
-				channelIndex = i % channels,
-				sampleIndex = (i - channelIndex) / channels;
+				channelIndex = i % numberOfChannels,
+				sampleIndex = (i - channelIndex) / numberOfChannels;
 
-			result[i] = strips.get(channelIndex).get(sampleIndex).getValue();
+			result[i] = this.channels.get(channelIndex).getSampling(sampleIndex).getValue();
 		}
 
 		return result;
 	}
 
-	/*	byte[] integersToBytes(Integer[] signal, int bitsPerSample){
-
-		int
-			sampleLength = bitsPerSample >>> 3;
-
-		byte[]
-			result = new byte[signal.length * sampleLength],
-			sample;
-
-		for(int i = 0 ; i < signal.length; i++) {
-
-			int
-				resultIndex = i * sampleLength;
-
-			sample = writeDataSample(signal[i], sampleLength);
-
-			System.arraycopy(sample, 0, result, resultIndex, sampleLength);
-		}
-
-		return result;
-	}*/	// ! moved to metaProcessors.FileContentConverter
 
 
+	public Channeling getChannel(int index){
 
-	/*private boolean coordinatesInRange(int channel, int index){
-
-		if (channel < strips.size()) {
-
-			return index < strips.get(channel).size();
-		}
-
-		return false;
-	}*/	// coordinates are in range
-
-
-
-	public Channeling getStrip(int index){
-
-		return strips.get(index);
-	}
-
-
-	/*public int getSample(int channel, int index){
-
-		if(coordinatesInRange(channel, index))
-
-			return strips.get(channel).get(index).value;
-
-		return 0;
-	}*/	// get sample
-
-	/*	public void setSample(int channel, int index, int value){
-
-		if(coordinatesInRange(channel, index))
-
-		strips.get(channel).set(index, new Sample(value));
-	}*/	// set sample
-
-
-
-		@Override
-	public byte[] getSource(int bitsPerSample){
-
-//		return integersToBytes(consolidateChannels(), bitsPerSample);
-
-		return FileContentConverter.integersToBytes(consolidateChannels(), bitsPerSample);
+		return channels.get(index);
 	}
 
 }
+
+/*private void removeChannel(int index){ channels.remove(index); }*/	// remove channels not used at all

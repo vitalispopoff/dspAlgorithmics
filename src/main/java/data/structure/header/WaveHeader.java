@@ -1,4 +1,6 @@
-package data.structure;
+package data.structure.header;
+
+import data.structure.FileContentStructure;
 
 import java.util.Arrays;
 import static algorithms.metaProcessors.FileContentConverter.*;

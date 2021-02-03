@@ -1,19 +1,19 @@
 package data;
 
-import data.structure.*;
-import data.structure.signal.Signal;
-import data.structure.signal.Signalable;
-
 import java.io.File;
 import java.util.Arrays;
 
-import static data.FileCache.addToCache;
-import static data.structure.FileContentStructure.*;
-import static data.structure.WaveHeader.instanceOf;
+import data.structure.*;
+import data.structure.header.WaveHeader;
+import data.structure.signal.Signaling;
 
 import static algorithms.metaProcessors.FileManager.*;
+import static data.FileCache.addToCache;
+import static data.structure.FileContentStructure.*;
+import static data.structure.header.WaveHeader.instanceOf;
 
 public class WaveFile {
+
 
 	public FileAddress
 		fileAddress;
@@ -21,12 +21,9 @@ public class WaveFile {
 	public WaveHeader
 		header;
 
-	Signalable
+	Signaling
 		signal;
 
-
-
-	private WaveFile( ){ }
 
 	public WaveFile(File file){
 
@@ -37,11 +34,12 @@ public class WaveFile {
 
 		int
 			start = 44,
-			end = 44 + header.getField(DATA_SIZE);
+			end = start + header.getField(DATA_SIZE);
+
 		byte[]
 			signalSource = Arrays.copyOfRange(fileContent, start, end);
 
-		signal = new Signal(signalSource, header.getField(BLOCK_ALIGN), header.getField(CHANNELS));
+		signal = Signaling.newInstance(signalSource, header.getField(BLOCK_ALIGN), header.getField(CHANNELS));
 
 		setFileAddress(file.getPath());
 
@@ -55,6 +53,7 @@ public class WaveFile {
 		this.fileAddress = FileAddress.readFileAddress(fileAddress);
 	}
 
+
 	public FileAddress getFileAddress( ){
 
 		return fileAddress;
@@ -65,7 +64,8 @@ public class WaveFile {
 		return header;
 	}
 
-	public Signalable getSignal(){
+
+	public Signaling getSignal(){
 
 		return signal;
 	}
@@ -86,6 +86,7 @@ public class WaveFile {
 		return result;
 	}
 
+
 	int[] updateFileSize(){
 
 		int
@@ -97,4 +98,5 @@ public class WaveFile {
 
 		return new int[] {headerLength, signalLength, currentLength};
 	}
+
 }

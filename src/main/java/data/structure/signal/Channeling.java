@@ -2,15 +2,23 @@ package data.structure.signal;
 
 public interface Channeling {
 
-	static Channeling instanceOf(){
+
+	static Channeling newInstance(){
 
 		return new Channel();
 	}
 
 	int size();
 
-	Sampleable get(int i);
 
-	void addSample(Sampleable s);
+	Sampling getSampling(int i);
+
+
+	void addSampling(Sampling s);
+
+	default void addSampling(Integer v){
+
+		addSampling(Sampling.newInstance(v));
+	}
 
 }

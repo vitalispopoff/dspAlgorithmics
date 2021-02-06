@@ -2,7 +2,7 @@ package data.structure.signal;
 
 import java.util.ArrayList;
 
-public class Channel extends ArrayList<Sampling> implements Channeling {
+public class SignalKnot_0 extends ArrayList<Sampling> implements SignalTree {
 
 
     public void removeSamples(int fromIndex, int toIndex) {

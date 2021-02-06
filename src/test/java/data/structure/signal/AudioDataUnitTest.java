@@ -2,7 +2,7 @@ package data.structure.signal;
 
 import org.junit.*;
 
-public class SignalUnitTest {
+public class AudioDataUnitTest {
 
 
 /*	@Test
@@ -32,17 +32,17 @@ public class SignalUnitTest {
 	@Test
 	public void getSourceTest_0() {
 
-		Signal
-			input_0 = new Signal(3);
+		AudioData
+			input_0 = new AudioData(3);
 
 		Integer[]
 			strip_1 = {0, 3, 6},
 			strip_2 = {1, 4, 7},
 			strip_3 = {2, 5, 8};
 
-		for (Integer i : strip_1) input_0.channels.get(0).addSampling(Sampling.newInstance(i));
-		for (Integer i : strip_2) input_0.channels.get(1).addSampling(Sampling.newInstance(i));
-		for (Integer i : strip_3) input_0.channels.get(2).addSampling(Sampling.newInstance(i));
+		for (Integer i : strip_1) input_0._channelList.get(0).addSampling(Sampling.newInstance(i));
+		for (Integer i : strip_2) input_0._channelList.get(1).addSampling(Sampling.newInstance(i));
+		for (Integer i : strip_3) input_0._channelList.get(2).addSampling(Sampling.newInstance(i));
 
 		int
 			input_1 = 24;

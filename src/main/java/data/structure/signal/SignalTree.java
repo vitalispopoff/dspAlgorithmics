@@ -1,11 +1,11 @@
 package data.structure.signal;
 
-public interface Channeling {
+public interface SignalTree {
 
 
-	static Channeling newInstance(){
+	static SignalTree newInstance(){
 
-		return new Channel();
+		return new SignalKnot_0();
 	}
 
 	int size();

@@ -105,7 +105,7 @@ public interface FileContentConverter {
 	static Integer[] bytesToIntegers(byte[] source, int sampleLength){
 
 		int
-			stripLength = source.length / (sampleLength);
+			stripLength = source.length / sampleLength;
 
 		Integer[]
 			result = new Integer[stripLength];

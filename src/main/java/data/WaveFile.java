@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import data.structure.*;
 import data.structure.header.WaveHeader;
-import data.structure.signal.Signaling;
+import data.structure.signal.Audio;
 
 import static algorithms.metaProcessors.FileManager.*;
 import static data.FileCache.addToCache;
@@ -21,8 +21,8 @@ public class WaveFile {
 	public WaveHeader
 		header;
 
-	Signaling
-		signal;
+	Audio
+		audioData;
 
 
 	public WaveFile(File file){
@@ -39,7 +39,7 @@ public class WaveFile {
 		byte[]
 			signalSource = Arrays.copyOfRange(fileContent, start, end);
 
-		signal = Signaling.newInstance(signalSource, header.getField(BLOCK_ALIGN), header.getField(CHANNELS));
+		audioData = Audio.newInstance(signalSource, header.getField(BLOCK_ALIGN), header.getField(CHANNELS));
 
 		setFileAddress(file.getPath());
 
@@ -65,9 +65,9 @@ public class WaveFile {
 	}
 
 
-	public Signaling getSignal(){
+	public Audio getAudioData(){
 
-		return signal;
+		return audioData;
 	}
 
 	public byte[] getSource(){
@@ -77,7 +77,7 @@ public class WaveFile {
 
 		byte[]
 			headerSource = header.getSource(),
-			signalSource =  signal.getSource(header.getField(BITS_PER_SAMPLE)),
+			signalSource =  audioData.getSource(header.getField(BITS_PER_SAMPLE)),
 			result = new byte[lengths[2]];
 
 		System.arraycopy(headerSource, 0, result, 0, lengths[0]);
@@ -91,7 +91,7 @@ public class WaveFile {
 
 		int
 			headerLength = header.getSource().length,
-			signalLength =  signal.getSource(header.getField(BITS_PER_SAMPLE)).length,
+			signalLength =  audioData.getSource(header.getField(BITS_PER_SAMPLE)).length,
 			currentLength = headerLength + signalLength;
 
 		header.setField(currentLength - 8, FILE_SIZE);

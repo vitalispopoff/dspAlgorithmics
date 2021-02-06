@@ -126,8 +126,6 @@ public class ScrollPanel extends StackPane {
 							   	double
 									logMinWidth = (int) Math.log(root.getDynamicAreaWidth())/* * 1.4426950408889634*/;
 
-								   System.out.println("gui.ScrollPanel.bindScrollBarRangeProperties() > minScroll " + root.getDynamicAreaWidth() + " ; " + logMinWidth);
-
 								return (logMinWidth - Math.log(FileCache.getCurrentFileSignalLength())) * 1.4426950408889634;
 //								   	return - Math.log(FileCache.getCurrentFileSignalLength()) / Math.log(2.) / 2.;
 							   }

@@ -98,7 +98,7 @@ public abstract class FileCache {
 
 			return
 				getFileCacheIsNotEmpty()
-				? getFile().getSignal().getChannel(0).size()
+				? getFile().getAudioData().getChannel(0).size()
 				: 0;
 		}
 	};

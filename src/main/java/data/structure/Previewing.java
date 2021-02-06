@@ -4,46 +4,47 @@ import java.util.*;
 
 import data.CurrentFilePreview;
 import data.FileCache;
-import data.structure.signal.Channeling;
+import data.structure.signal.SignalTree;
 import data.structure.signal.Sampling;
 
 public interface Previewing {
 
 
-	static List<Channeling> getCurrentMipMap(){
+	static List<SignalTree> getCurrentChan(){
 
-		return CurrentFilePreview.currentMipMap;
+		return CurrentFilePreview.getCurrentChan();
 	}
 
 	static void cleanCurrentFileSignal(){
 
-		getCurrentMipMap().clear();
+		getCurrentChan().clear();
 	}
 
-	static void loadCurrentFileSignal(){
+	static void loadCurrentChan(){
 
-		getCurrentMipMap().add(FileCache.getFile().getSignal().getChannel(0));
 
-		copyMipMap();
+		getCurrentChan().add(FileCache.getFile().getAudioData().getChannel(0));
+
+		constructChanStructure();
 	}
 
-	static void copyMipMap(){
+	static void constructChanStructure(){
 
 		int
-			mipMapLastIndex = getCurrentMipMap().size() - 1,
-			lastMipMapSize = getCurrentMipMap().get(mipMapLastIndex).size();
+			chanLastLevel = getCurrentChan().size() - 1,
+			chanLastLevelSize = getCurrentChan().get(chanLastLevel).size();
 
-		Channeling
+		SignalTree
 			channelSource,
 			newChannel;
 
 		// 512 - twice the nearest power of 2 less than app window min. width
-		if (lastMipMapSize > 512) {
+		if (chanLastLevelSize > 512) {
 
-			channelSource = getCurrentMipMap().get(mipMapLastIndex);
-			newChannel = Channeling.newInstance();
+			channelSource = getCurrentChan().get(chanLastLevel);
+			newChannel = SignalTree.newInstance();
 
-			for (int i = 0; i < (lastMipMapSize >> 2); i++){
+			for (int i = 0; i < (chanLastLevelSize >> 2); i++){
 
 				int
 					j = i << 2;
@@ -68,8 +69,8 @@ public interface Previewing {
 
 //			for (int i = 0; i < lastMipMapSize ; i += 2) newStrip.add(stripSource.get(i));
 
-			getCurrentMipMap().add(newChannel);
-			copyMipMap();
+			getCurrentChan().add(newChannel);
+			constructChanStructure();
 		}
 	}
 

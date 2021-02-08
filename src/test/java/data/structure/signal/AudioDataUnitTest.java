@@ -2,67 +2,102 @@ package data.structure.signal;
 
 import org.junit.*;
 
+import static data.structure.signal.AudioData.*;
+
 public class AudioDataUnitTest {
 
-
-/*	@Test
-	public void consolidateChannelsTest_0() {
-
-		Signal
-			input_0 = new Signal(3);
-
-		Integer[]
-			strip_1 = {0, 3, 6},
-			strip_2 = {1, 4, 7},
-			strip_3 = {2, 5, 8};
-
-		for (Integer i : strip_1) input_0.channels.get(0).addSample(Sampling.instanceOf(i));
-		for (Integer i : strip_2) input_0.channels.get(1).addSample(Sampling.instanceOf(i));
-		for (Integer i : strip_3) input_0.channels.get(2).addSample(Sampling.instanceOf(i));
-
-		Integer[]
-			correct = {0, 1, 2, 3, 4, 5, 6, 7, 8},
-			returned = input_0.consolidateChannels();
-
-		Assert.assertArrayEquals(correct, returned);
-	}*/		// ? priv consolidateChannels() test. not needed anymore ?
-
-//	--------------------------------------------------------------------------------------------------------------------
-
 	@Test
-	public void getSourceTest_0() {
-
-		AudioData
-			input_0 = new AudioData(3);
-
-		Integer[]
-			strip_1 = {0, 3, 6},
-			strip_2 = {1, 4, 7},
-			strip_3 = {2, 5, 8};
-
-		for (Integer i : strip_1) input_0._channelList.get(0).addSampling(Sampling.newInstance(i));
-		for (Integer i : strip_2) input_0._channelList.get(1).addSampling(Sampling.newInstance(i));
-		for (Integer i : strip_3) input_0._channelList.get(2).addSampling(Sampling.newInstance(i));
+	public void newInstanceTest_0() {
 
 		int
-			input_1 = 24;
+			input = 1,
+			result = newInstance(input).getValue();
+
+		Assert.assertEquals(input, result);
+	}
+
+
+	@Test
+	public void setFromSourceTest_0() {
 
 		byte[]
-			correct = {
-				(byte) 0x00, (byte) 0x00, (byte) 0x00,
-				(byte) 0x01, (byte) 0x00, (byte) 0x00,
-				(byte) 0x02, (byte) 0x00, (byte) 0x00,
+			input = {(byte) 0x00};
 
-				(byte) 0x03, (byte) 0x00, (byte) 0x00,
-				(byte) 0x04, (byte) 0x00, (byte) 0x00,
-				(byte) 0x05, (byte) 0x00, (byte) 0x00,
+		int
+			sampleRate = 1;
 
-				(byte) 0x06, (byte) 0x00, (byte) 0x00,
-				(byte) 0x07, (byte) 0x00, (byte) 0x00,
-				(byte) 0x08, (byte) 0x00, (byte) 0x00,
-			},
-			returned = input_0.getSource(input_1);
+		Assert.assertTrue(setFromSource(input, sampleRate) instanceof AudioData);
+	}
 
-		Assert.assertArrayEquals(correct, returned);
+	@Test
+	public void setFromSourceTest_1() {
+
+		byte[]
+			input = {(byte) 0x00};
+
+		int
+			sR = 1;
+
+		AudioData
+			result = setFromSource(input, sR).getNext();
+
+		Assert.assertEquals(result.getNext(), result);
+	}
+
+	@Test
+	public void setFromSourceTest_2() {
+
+		byte[]
+			input = {(byte) 0x01};
+
+		int
+			sR = 1;
+
+		AudioData
+			result = setFromSource(input, sR);
+
+		Assert.assertEquals((int) input[0], result.getValue());
+
+	}
+
+	@Test
+	public void setFromSourceTest_3() {
+
+		byte[]
+			input = {(byte) 0x10, (byte) 0x00, (byte) 0x00, (byte) 0x80};
+
+		int
+			sR = 2;
+
+		AudioData
+			r = setFromSource(input, sR);
+
+		int
+			result_1 = r.getValue(),
+			result_2 = r.getNext().getValue(),
+			proper_1 = 16,
+			proper_2 = -32768;
+
+		Assert.assertEquals(proper_1, result_1);
+		Assert.assertEquals(proper_2, result_2);
+	}
+
+	@Test
+	public void setFromSourceTest_4() {
+
+		byte[]
+			input = {(byte) 0x10, (byte) 0x00, (byte) 0x00, (byte) 0x80};
+		int
+			sR = 2,
+			proper = 2,
+			result = 1;
+
+		AudioData
+			anchor = setFromSource(input, sR),
+			temp = anchor;
+
+		for (; !(temp.getNext().equals(temp)); result++) temp = temp.getNext();
+
+		Assert.assertEquals(proper, result);
 	}
 }

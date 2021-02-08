@@ -4,13 +4,13 @@ import java.util.*;
 
 import data.CurrentFilePreview;
 import data.FileCache;
-import data.structure.signal.SignalTree;
-import data.structure.signal.Sampling;
+import data.structure.signal.DataPreviewStructure;
+import data.structure.signal.AudioData;
 
 public interface Previewing {
 
 
-	static List<SignalTree> getCurrentChan(){
+	static List<DataPreviewStructure> getCurrentChan(){
 
 		return CurrentFilePreview.getCurrentChan();
 	}
@@ -23,7 +23,7 @@ public interface Previewing {
 	static void loadCurrentChan(){
 
 
-		getCurrentChan().add(FileCache.getFile().getAudioData().getChannel(0));
+		getCurrentChan().add(FileCache.getFile().getChannelingData().getChannel(0));
 
 		constructChanStructure();
 	}
@@ -34,7 +34,7 @@ public interface Previewing {
 			chanLastLevel = getCurrentChan().size() - 1,
 			chanLastLevelSize = getCurrentChan().get(chanLastLevel).size();
 
-		SignalTree
+		DataPreviewStructure
 			channelSource,
 			newChannel;
 
@@ -42,14 +42,14 @@ public interface Previewing {
 		if (chanLastLevelSize > 512) {
 
 			channelSource = getCurrentChan().get(chanLastLevel);
-			newChannel = SignalTree.newInstance();
+			newChannel = DataPreviewStructure.newInstance();
 
 			for (int i = 0; i < (chanLastLevelSize >> 2); i++){
 
 				int
 					j = i << 2;
 
-				Sampling
+				AudioData
 					a = channelSource.getSampling(j),
 					b = channelSource.getSampling(j+1),
 					c = channelSource.getSampling(j+2),

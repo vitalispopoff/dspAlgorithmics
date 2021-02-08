@@ -1,25 +1,27 @@
 package algorithms.metaProcessors;
 
-import data.structure.FileContentStructure;
-
 import java.nio.*;
-import static data.structure.FileContentStructure.*;
+
+import data.structure.WaveFileContentStructure;
+
+import static data.structure.WaveFileContentStructure.*;
 
 public interface FileContentConverter {
 
-	static int readDataSample(byte[] source, int startIndex, int sampleSize){
+
+	static int readDataSample(byte[] source, int startIndex, int blockAlign){
 
 		byte[]
 			bytes = new byte[4];
 
-		System.arraycopy(source, startIndex, bytes, 0, sampleSize);
+		System.arraycopy(source, startIndex, bytes, 0, blockAlign);
 
 		boolean
-			sampleIsNegative = bytes[sampleSize - 1] < 0;
+			sampleIsNegative = bytes[blockAlign - 1] < 0;
 
 		if (sampleIsNegative) {
 
-			for (int i = 3 ; i >= sampleSize ; i--)
+			for (int i = 3 ; i >= blockAlign ; i--)
 
 				bytes[i] |= 0xFF;
 
@@ -52,7 +54,7 @@ public interface FileContentConverter {
 
 
 
-	static int readDataField(byte[] source, FileContentStructure field){
+	static int readDataField(byte[] source, WaveFileContentStructure field){
 
 		int[]
 			location = field.getLocation();
@@ -64,7 +66,7 @@ public interface FileContentConverter {
 		return readDataSample(source, location[0], location[1]);
 	}
 
-	static void writeDataField(byte[] source, int input, FileContentStructure field){
+	static void writeDataField(byte[] source, int input, WaveFileContentStructure field){
 
 		int[]
 			location = field.getLocation();

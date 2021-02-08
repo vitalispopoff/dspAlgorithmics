@@ -5,11 +5,12 @@ import java.util.Arrays;
 
 import data.structure.*;
 import data.structure.header.WaveHeader;
-import data.structure.signal.Audio;
+import data.structure.signal.AudioData;
+import data.structure.signal.Channeling;
 
 import static algorithms.metaProcessors.FileManager.*;
 import static data.FileCache.addToCache;
-import static data.structure.FileContentStructure.*;
+import static data.structure.WaveFileContentStructure.*;
 import static data.structure.header.WaveHeader.instanceOf;
 
 public class WaveFile {
@@ -21,8 +22,12 @@ public class WaveFile {
 	public WaveHeader
 		header;
 
-	Audio
+	AudioData
 		audioData;
+
+	Channeling
+		channelingData;
+
 
 
 	public WaveFile(File file){
@@ -33,13 +38,16 @@ public class WaveFile {
 		header = instanceOf(fileContent);
 
 		int
-			start = 44,
+			start = WaveFileContentStructure.SIGNAL.getLocation()[0],
 			end = start + header.getField(DATA_SIZE);
 
 		byte[]
 			signalSource = Arrays.copyOfRange(fileContent, start, end);
 
-		audioData = Audio.newInstance(signalSource, header.getField(BLOCK_ALIGN), header.getField(CHANNELS));
+		audioData = AudioData.setFromSource(signalSource, header.getField(BLOCK_ALIGN));
+
+
+		channelingData = Channeling.newInstance(signalSource, header.getField(BLOCK_ALIGN), header.getField(CHANNELS));
 
 		setFileAddress(file.getPath());
 
@@ -65,9 +73,9 @@ public class WaveFile {
 	}
 
 
-	public Audio getAudioData(){
+	public Channeling getChannelingData(){
 
-		return audioData;
+		return channelingData;
 	}
 
 	public byte[] getSource(){
@@ -77,7 +85,7 @@ public class WaveFile {
 
 		byte[]
 			headerSource = header.getSource(),
-			signalSource =  audioData.getSource(header.getField(BITS_PER_SAMPLE)),
+			signalSource =  channelingData.getSource(header.getField(BITS_PER_SAMPLE)),
 			result = new byte[lengths[2]];
 
 		System.arraycopy(headerSource, 0, result, 0, lengths[0]);
@@ -91,7 +99,7 @@ public class WaveFile {
 
 		int
 			headerLength = header.getSource().length,
-			signalLength =  audioData.getSource(header.getField(BITS_PER_SAMPLE)).length,
+			signalLength =  channelingData.getSource(header.getField(BITS_PER_SAMPLE)).length,
 			currentLength = headerLength + signalLength;
 
 		header.setField(currentLength - 8, FILE_SIZE);

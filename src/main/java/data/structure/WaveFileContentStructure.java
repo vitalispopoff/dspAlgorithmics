@@ -1,6 +1,6 @@
 package data.structure;
 
-public enum FileContentStructure {
+public enum WaveFileContentStructure {
 
 	FILE_ID {
 

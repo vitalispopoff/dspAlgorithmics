@@ -6,7 +6,7 @@ import javafx.collections.FXCollections;
 
 import java.util.List;
 
-import static data.structure.FileContentStructure.*;
+import static data.structure.WaveFileContentStructure.*;
 
 public abstract class FileCache {
 
@@ -98,7 +98,7 @@ public abstract class FileCache {
 
 			return
 				getFileCacheIsNotEmpty()
-				? getFile().getAudioData().getChannel(0).size()
+				? getFile().getChannelingData().getChannel(0).size()
 				: 0;
 		}
 	};

@@ -9,10 +9,10 @@ import java.util.List;
 
 public abstract class CurrentFilePreview implements Previewing {
 
-	static ArrayList<SignalTree>
+	static ArrayList<DataPreviewStructure>
 		currentChan = new ArrayList<>();
 
-	public static List<SignalTree> getCurrentChan(){
+	public static List<DataPreviewStructure> getCurrentChan(){
 
 		return currentChan;
 	}

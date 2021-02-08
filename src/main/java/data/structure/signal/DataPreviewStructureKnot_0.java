@@ -2,7 +2,7 @@ package data.structure.signal;
 
 import java.util.ArrayList;
 
-public class SignalKnot_0 extends ArrayList<Sampling> implements SignalTree {
+public class DataPreviewStructureKnot_0 extends ArrayList<AudioData> implements DataPreviewStructure {
 
 
     public void removeSamples(int fromIndex, int toIndex) {
@@ -17,13 +17,13 @@ public class SignalKnot_0 extends ArrayList<Sampling> implements SignalTree {
     }
 
 
-    public Sampling getSampling(int i){
+    public AudioData getSampling(int i){
 
         return super.get(i);
     }
 
 
-    public void addSampling(Sampling s){
+    public void addSampling(AudioData s){
 
         super.add(s);
     }

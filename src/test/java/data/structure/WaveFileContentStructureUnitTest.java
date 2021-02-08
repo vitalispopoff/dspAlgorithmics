@@ -2,9 +2,9 @@ package data.structure;
 
 import org.junit.*;
 
-import static data.structure.FileContentStructure.*;
+import static data.structure.WaveFileContentStructure.*;
 
-public class FileContentStructureUnitTest {
+public class WaveFileContentStructureUnitTest {
 
 	@Test
 	public void getLocationTest_0(){

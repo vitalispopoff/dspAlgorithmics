@@ -1,16 +1,16 @@
 package data.structure.signal;
 
-public class Sample implements Sampling {
+public class AudioDataSample implements AudioData {
 
 
 	int
 		value = 0;
 
-	Sampling
+	AudioData
 		next = this;
 
 
-	public Sample(int v){
+	public AudioDataSample(int v){
 
 		value = v;
 	}
@@ -32,13 +32,13 @@ public class Sample implements Sampling {
 
 
 	@Override
-	public Sampling getNext(){
+	public AudioData getNext(){
 
 		return next;
 	}
 
 	@Override
-	public void setNext(Sampling s){
+	public void setNext(AudioData s){
 
 		next = s;
 	}

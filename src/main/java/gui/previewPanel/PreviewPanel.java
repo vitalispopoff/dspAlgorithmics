@@ -1,7 +1,7 @@
 package gui.previewPanel;
 
 import data.*;
-import data.structure.signal.SignalTree;
+import data.structure.signal.DataPreviewStructure;
 import gui.Root;
 import javafx.scene.canvas.*;
 import javafx.scene.paint.Color;
@@ -231,7 +231,7 @@ public class PreviewPanel extends Canvas {
 							   ? (int) -root.getHorizontalScrollPanel().getScaleValue()
 							   : 0;
 
-		SignalTree
+		DataPreviewStructure
 			channel = CurrentFilePreview.getCurrentChan().get(channelIndex);
 
 		double

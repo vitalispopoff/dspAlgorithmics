@@ -3,16 +3,16 @@ package data.structure.signal;
 public class DataPreviewStructureKnot implements DataPreviewStructure {
 
 
-
-
 	AudioData
 		sample;
 
 	private DataPreviewStructureKnot
 		nextKnot = this,
+//		above = this,
 		below = this;
 
-
+	byte
+		level = 0;
 
 	private DataPreviewStructureKnot(AudioData s){
 
@@ -63,10 +63,6 @@ public class DataPreviewStructureKnot implements DataPreviewStructure {
 	}
 
 
-	public AudioData getSampling(int i) {
-
-		return null;
-	}
 
 	public void addSampling(AudioData s) {
 

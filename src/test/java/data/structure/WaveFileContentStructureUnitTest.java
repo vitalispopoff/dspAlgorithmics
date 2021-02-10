@@ -2,7 +2,7 @@ package data.structure;
 
 import org.junit.*;
 
-import static data.structure.WaveFileContentStructure.*;
+import static data.structure.header.WaveFileContentStructure.*;
 
 public class WaveFileContentStructureUnitTest {
 

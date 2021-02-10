@@ -13,7 +13,10 @@ public interface DataPreviewStructure {
 	int size();
 
 
-	AudioData getSampling(int i);
+	default AudioData getSampling(int i){
+
+		return null;
+	}
 
 
 	void addSampling(AudioData s);

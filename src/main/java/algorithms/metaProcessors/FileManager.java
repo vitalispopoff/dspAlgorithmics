@@ -187,6 +187,8 @@ public interface FileManager {
 		return fileIsRIFF && (fileIsWAVE || fileIsAIFF);
 	}
 
+
+
 //	-------------------------------------------------------------------------------------------
 
 	abstract class FileManagerSettings {

@@ -1,7 +1,5 @@
 package data.structure.header;
 
-import data.structure.WaveFileContentStructure;
-
 import java.util.Arrays;
 import static algorithms.metaProcessors.FileContentConverter.*;
 

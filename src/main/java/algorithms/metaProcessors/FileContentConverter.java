@@ -2,9 +2,9 @@ package algorithms.metaProcessors;
 
 import java.nio.*;
 
-import data.structure.WaveFileContentStructure;
+import data.structure.header.WaveFileContentStructure;
 
-import static data.structure.WaveFileContentStructure.*;
+import static data.structure.header.WaveFileContentStructure.*;
 
 public interface FileContentConverter {
 

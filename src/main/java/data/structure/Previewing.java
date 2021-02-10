@@ -20,10 +20,10 @@ public interface Previewing {
 		getCurrentChan().clear();
 	}
 
-	static void loadCurrentChan(){
+/*	static void loadCurrentChan(){
 
 
-		getCurrentChan().add(FileCache.getFile().getChannelingData().getChannel(0));
+		getCurrentChan().add(FileCache.getFile().getChannelAnchor().getChannel(0));
 
 		constructChanStructure();
 	}
@@ -72,7 +72,7 @@ public interface Previewing {
 			getCurrentChan().add(newChannel);
 			constructChanStructure();
 		}
-	}
+	}*/
 
 
 }

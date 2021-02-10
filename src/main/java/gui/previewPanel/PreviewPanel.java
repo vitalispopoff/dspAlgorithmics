@@ -7,6 +7,7 @@ import javafx.scene.canvas.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 
+import static data.CurrentFilePreview.loadCurrentChan;
 import static data.structure.Previewing.*;
 import static javafx.scene.paint.Color.*;
 import static javafx.scene.text.TextAlignment.*;

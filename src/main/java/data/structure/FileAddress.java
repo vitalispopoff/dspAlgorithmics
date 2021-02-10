@@ -4,7 +4,7 @@ import java.util.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static data.structure.WaveFileContentStructure.WAVE_ID;
+import static data.structure.header.WaveFileContentStructure.WAVE_ID;
 
 public class FileAddress {
 

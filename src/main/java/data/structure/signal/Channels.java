@@ -35,6 +35,7 @@ public class Channels implements Channeling {
 		}
 	}
 
+
 	public Channels(int numberOfChannels) {
 
 		this(numberOfChannels, 0);
@@ -55,6 +56,8 @@ public class Channels implements Channeling {
 		}    // ! TODO to be removed
 
 	}
+
+
 
 	Channels(byte[] source, int blockAlign, int numberOfChannels) {
 
@@ -82,15 +85,7 @@ public class Channels implements Channeling {
 	}    // ! TODO to be moved elsewhere
 
 
-/*	public static Audio newInstance(byte[] source, int blockAlign, int numberOfChannels) {
-
-		return new AudioData(source, blockAlign, numberOfChannels);
-
-	}    // ! TODO to be rewritten*/
-
-
-
-	private void addChannel() {
+	/*private void addChannel() {
 
 		_channelList.add(DataPreviewStructure.newInstance());    // ! TODO to be removed
 
@@ -102,14 +97,14 @@ public class Channels implements Channeling {
 
 		temp.nextChannel = new Channels(temp.nextChannel, temp.channelIndex + 1);
 
-	}
+	}*/
 
-	private Channels(Channels n, int i) {
+	/*private Channels(Channels n, int i) {
 
 		this();
 		nextChannel = n;
 		channelIndex = i;
-	}
+	}*/
 
 
 	@Override

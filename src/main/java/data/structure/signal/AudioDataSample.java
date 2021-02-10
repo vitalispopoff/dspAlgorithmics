@@ -4,10 +4,12 @@ public class AudioDataSample implements AudioData {
 
 
 	int
-		value = 0;
+		value;
 
 	AudioData
-		next = this;
+		next = this,
+		tail = this;
+
 
 
 	public AudioDataSample(int v){
@@ -41,6 +43,17 @@ public class AudioDataSample implements AudioData {
 	public void setNext(AudioData s){
 
 		next = s;
+	}
+
+
+	public AudioData getTail(){
+
+		return tail;
+	}
+
+	public void setTail(AudioData s){
+
+		tail = s;
 	}
 
 }

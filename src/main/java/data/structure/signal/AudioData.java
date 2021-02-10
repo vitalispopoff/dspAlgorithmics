@@ -5,9 +5,9 @@ import algorithms.metaProcessors.FileContentConverter;
 public interface AudioData {
 
 
-	static AudioData newInstance(int i) {
+	static AudioData newInstance(int v) {
 
-		return new AudioDataSample(i);
+		return new AudioDataSample(v);
 	}
 
 	static AudioData setFromSource(byte[] source, int blockAlign) {

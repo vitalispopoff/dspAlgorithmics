@@ -4,13 +4,14 @@ import java.io.File;
 import java.util.Arrays;
 
 import data.structure.*;
+import data.structure.header.WaveFileContentStructure;
 import data.structure.header.WaveHeader;
 import data.structure.signal.AudioData;
 import data.structure.signal.Channeling;
 
 import static algorithms.metaProcessors.FileManager.*;
 import static data.FileCache.addToCache;
-import static data.structure.WaveFileContentStructure.*;
+import static data.structure.header.WaveFileContentStructure.*;
 import static data.structure.header.WaveHeader.instanceOf;
 
 public class WaveFile {
@@ -26,7 +27,7 @@ public class WaveFile {
 		audioData;
 
 	Channeling
-		channelingData;
+		channelAnchor;
 
 
 
@@ -47,7 +48,7 @@ public class WaveFile {
 		audioData = AudioData.setFromSource(signalSource, header.getField(BLOCK_ALIGN));
 
 
-		channelingData = Channeling.newInstance(signalSource, header.getField(BLOCK_ALIGN), header.getField(CHANNELS));
+		channelAnchor = Channeling.newInstance(signalSource, header.getField(BLOCK_ALIGN), header.getField(CHANNELS));
 
 		setFileAddress(file.getPath());
 
@@ -73,9 +74,9 @@ public class WaveFile {
 	}
 
 
-	public Channeling getChannelingData(){
+	public Channeling getChannelAnchor(){
 
-		return channelingData;
+		return channelAnchor;
 	}
 
 	public byte[] getSource(){
@@ -85,7 +86,7 @@ public class WaveFile {
 
 		byte[]
 			headerSource = header.getSource(),
-			signalSource =  channelingData.getSource(header.getField(BITS_PER_SAMPLE)),
+			signalSource =  channelAnchor.getSource(header.getField(BITS_PER_SAMPLE)),
 			result = new byte[lengths[2]];
 
 		System.arraycopy(headerSource, 0, result, 0, lengths[0]);
@@ -99,12 +100,13 @@ public class WaveFile {
 
 		int
 			headerLength = header.getSource().length,
-			signalLength =  channelingData.getSource(header.getField(BITS_PER_SAMPLE)).length,
+			signalLength =  channelAnchor.getSource(header.getField(BITS_PER_SAMPLE)).length,
 			currentLength = headerLength + signalLength;
 
 		header.setField(currentLength - 8, FILE_SIZE);
 
 		return new int[] {headerLength, signalLength, currentLength};
 	}
+
 
 }

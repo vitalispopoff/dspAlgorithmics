@@ -41,7 +41,7 @@ public class PreviewPanel extends Canvas {
 
 		FileCache.fileCacheProperty().sizeProperty().addListener((observable) -> {
 
-			if (FileCache.getFileCacheIsNotEmpty()) {
+			if (FileCache.getFileCache().size()>0) {
 
 				loadCurrentChan();
 				drawEverything();

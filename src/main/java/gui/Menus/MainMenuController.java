@@ -34,7 +34,8 @@ public class MainMenuController {
 
 	public void openFile(ActionEvent event) {
 
-		if (FileCache.getFileCacheIsNotEmpty()) FileCache.purgeCache();
+//		if (FileCache.getFileCacheIsNotEmpty()) FileCache.purgeCache(); // temporarily disabled
+		if (FileCache.getFileCache().size()>0) FileCache.purgeCache();
 
 		FileChooser
 			browser = new FileChooser();

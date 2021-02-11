@@ -9,7 +9,7 @@ public class Channels implements Channeling {
 	//	!--- TODO to be removed	--------------------------------
 
 	static final boolean
-		_switcher = true;
+		_switcher = false;
 
 	public ArrayList<SamplePyramid>
 		_channelList = new ArrayList<>();

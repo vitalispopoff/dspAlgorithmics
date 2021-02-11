@@ -11,7 +11,6 @@ import static data.structure.header.WaveFileContentStructure.*;
 
 public abstract class FileCache {
 
-//	public static CurrentFilePreview currentFilePreview;
 
 	public static void addToCache(WaveFile waveFile) {
 
@@ -38,8 +37,9 @@ public abstract class FileCache {
 
 	public static WaveFile getFile(){
 
-		if (getFileCacheIsNotEmpty()) return getFileCache().get(getFileCache().size() - 1);
-		else return null;
+		try {return getFileCache().get(getFileCache().size() - 1);}
+
+		catch (Exception e) { return null; }
 	}
 
 	public static void purgeCache() {
@@ -98,6 +98,7 @@ public abstract class FileCache {
 		protected int computeValue() {
 
 			try {
+
 				WaveHeader
 					header = getFile().getHeader();
 
@@ -106,17 +107,9 @@ public abstract class FileCache {
 					blockAlign = header.getField(BLOCK_ALIGN),
 					dataSize = header.getField(DATA_SIZE);
 
-				System.out.println(dataSize / (blockAlign * channels));
-				return
-					getFileCacheIsNotEmpty()
-//						? getFile().getChannelAnchor().getChannel(0).size()
-				? dataSize / (blockAlign * channels)
-						: 0;
-
+				return dataSize / (blockAlign * channels);
 			}
 			catch (Exception e) {return 0;}
-
-
 		}
 	};
 
@@ -143,10 +136,10 @@ public abstract class FileCache {
 		@Override
 		protected int computeValue() {
 
-			return
-				getFileCacheIsNotEmpty()
-				? getFile().getHeader().getField(BITS_PER_SAMPLE)
-				: 0;
+			try{
+				return getFile().getHeader().getField(BITS_PER_SAMPLE);
+			}
+			catch (Exception e) {return 0;}
 		}
 	};
 
@@ -172,10 +165,8 @@ public abstract class FileCache {
 		@Override
 		protected int computeValue() {
 
-			return
-				getFileCacheIsNotEmpty()
-				? getFile().getHeader().getField(SAMPLE_PER_SEC)
-				: 0;
+			try{ return getFile().getHeader().getField(SAMPLE_PER_SEC);}
+			catch (Exception e){ return 0;}
 		}
 	};
 

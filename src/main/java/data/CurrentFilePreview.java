@@ -8,10 +8,10 @@ import java.util.List;
 
 public abstract class CurrentFilePreview implements Previewing {
 
-	static ArrayList<DataPreviewStructure>
+	static ArrayList<SamplePyramid>
 		currentChan = new ArrayList<>();
 
-	public static List<DataPreviewStructure> getCurrentChan(){
+	public static List<SamplePyramid> getCurrentChan(){
 
 		return currentChan;
 	}
@@ -30,7 +30,7 @@ public abstract class CurrentFilePreview implements Previewing {
 			chanLastLevel = getCurrentChan().size() - 1,
 			chanLastLevelSize = getCurrentChan().get(chanLastLevel).size();
 
-		DataPreviewStructure
+		SamplePyramid
 			channelSource,
 			newChannel;
 
@@ -38,7 +38,7 @@ public abstract class CurrentFilePreview implements Previewing {
 		if (chanLastLevelSize > 512) {
 
 			channelSource = getCurrentChan().get(chanLastLevel);
-			newChannel = DataPreviewStructure.newInstance();
+			newChannel = SamplePyramid.newInstance();
 
 			for (int i = 0; i < (chanLastLevelSize >> 2); i++){
 

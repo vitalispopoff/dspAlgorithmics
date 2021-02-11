@@ -1,12 +1,12 @@
 package data.structure.signal;
 
-public class DataPreviewStructureKnot implements DataPreviewStructure {
+public class SampleBlock implements SamplePyramid {
 
 
 	AudioData
 		sample;
 
-	private DataPreviewStructureKnot
+	private SampleBlock
 		nextKnot = this,
 //		above = this,
 		below = this;
@@ -14,12 +14,12 @@ public class DataPreviewStructureKnot implements DataPreviewStructure {
 	byte
 		level = 0;
 
-	private DataPreviewStructureKnot(AudioData s){
+	private SampleBlock(AudioData s){
 
 		sample = s;
 	}
 
-	public DataPreviewStructureKnot(AudioData s, DataPreviewStructureKnot n, DataPreviewStructureKnot b){
+	public SampleBlock(AudioData s, SampleBlock n, SampleBlock b){
 
 		this(s);
 		nextKnot = n;
@@ -40,24 +40,24 @@ public class DataPreviewStructureKnot implements DataPreviewStructure {
 
 
 
-	public DataPreviewStructureKnot getNextKnot() {
+	public SampleBlock getNextKnot() {
 
 		return nextKnot;
 	}
 
-	public void setNextKnot(DataPreviewStructureKnot n) {
+	public void setNextKnot(SampleBlock n) {
 
 		nextKnot = n;
 	}
 
 
 
-	public DataPreviewStructureKnot getBelow() {
+	public SampleBlock getBelow() {
 
 		return below;
 	}
 
-	public void setBelow(DataPreviewStructureKnot b) {
+	public void setBelow(SampleBlock b) {
 
 		below = b;
 	}
@@ -66,8 +66,8 @@ public class DataPreviewStructureKnot implements DataPreviewStructure {
 
 	public void addSampling(AudioData s) {
 
-		DataPreviewStructureKnot
-			knot = new DataPreviewStructureKnot(s);
+		SampleBlock
+			knot = new SampleBlock(s);
 
 		if (nextKnot == this) nextKnot = knot;
 

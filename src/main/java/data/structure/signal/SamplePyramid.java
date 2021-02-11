@@ -1,13 +1,13 @@
 package data.structure.signal;
 
-public interface DataPreviewStructure {
+public interface SamplePyramid {
 
 
 
 
-	static DataPreviewStructure newInstance(){
+	static SamplePyramid newInstance(){
 
-		return new DataPreviewStructureKnot_0();
+		return new SamplePyramidKnot_0();
 	}
 
 	int size();

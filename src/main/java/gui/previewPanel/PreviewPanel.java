@@ -1,7 +1,8 @@
 package gui.previewPanel;
 
 import data.*;
-import data.structure.signal.DataPreviewStructure;
+import data.structure.Previewing;
+import data.structure.signal.SamplePyramid;
 import gui.Root;
 import javafx.scene.canvas.*;
 import javafx.scene.paint.Color;
@@ -42,21 +43,19 @@ public class PreviewPanel extends Canvas {
 
 			if (FileCache.getFileCacheIsNotEmpty()) {
 
-				/*data.CurrentFilePreview.*/
 				loadCurrentChan();
-
 				drawEverything();
+
 				root.previewRefreshTrigger.scrollPanelStateProperty().addListener((observable1) -> {
 
 					setHorizontalScale();
 					drawEverything();
 				});
 			}
-
 			else {
 				root.previewRefreshTrigger.scrollPanelStateProperty().removeListener(((observable1) -> {}));
 				clean();
-				/*data.CurrentFilePreview.*/cleanCurrentFileSignal();
+				cleanCurrentFileSignal();
 			}
 		});
 	}
@@ -232,8 +231,8 @@ public class PreviewPanel extends Canvas {
 							   ? (int) -root.getHorizontalScrollPanel().getScaleValue()
 							   : 0;
 
-		DataPreviewStructure
-			channel = CurrentFilePreview.getCurrentChan().get(channelIndex);
+		SamplePyramid
+			channel = Previewing.getCurrentChannel(channelIndex);
 
 		double
 			bitsPerSample = FileCache.getCurrentFileBitsPerSample(),

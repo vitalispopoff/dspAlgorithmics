@@ -29,7 +29,8 @@ public class ChannelsUnitTest {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	@Test
+
+/*	@Test
 	public void getSourceTest_0() {
 
 		Channels
@@ -64,5 +65,5 @@ public class ChannelsUnitTest {
 			returned = input_0.getSource(input_1);
 
 		Assert.assertArrayEquals(correct, returned);
-	}
+	}*/	// ? the test redundant (vide: FileContentConverter.integersToBytes )
 }

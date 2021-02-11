@@ -2,7 +2,7 @@ package data.structure.signal;
 
 import java.util.ArrayList;
 
-public class DataPreviewStructureKnot_0 extends ArrayList<AudioData> implements DataPreviewStructure {
+public class SamplePyramidKnot_0 extends ArrayList<AudioData> implements SamplePyramid {
 
 
     public void removeSamples(int fromIndex, int toIndex) {

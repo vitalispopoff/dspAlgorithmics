@@ -17,8 +17,13 @@ public interface Channeling {
 
 
 
-	DataPreviewStructure getChannel(int index);
+	SamplePyramid getChannel(int index);
 
 	byte[] getSource(int bitsPerSample);
+
+	default int size(){
+
+		return 1;
+	}
 
 }

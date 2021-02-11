@@ -1,5 +1,6 @@
 package data;
 
+import data.structure.header.WaveHeader;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -96,10 +97,26 @@ public abstract class FileCache {
 		@Override
 		protected int computeValue() {
 
-			return
-				getFileCacheIsNotEmpty()
-				? getFile().getChannelAnchor().getChannel(0).size()
-				: 0;
+			try {
+				WaveHeader
+					header = getFile().getHeader();
+
+				int
+					channels = header.getField(CHANNELS),
+					blockAlign = header.getField(BLOCK_ALIGN),
+					dataSize = header.getField(DATA_SIZE);
+
+				System.out.println(dataSize / (blockAlign * channels));
+				return
+					getFileCacheIsNotEmpty()
+//						? getFile().getChannelAnchor().getChannel(0).size()
+				? dataSize / (blockAlign * channels)
+						: 0;
+
+			}
+			catch (Exception e) {return 0;}
+
+
 		}
 	};
 

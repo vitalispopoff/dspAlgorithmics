@@ -3,21 +3,24 @@ package data.structure;
 import java.util.*;
 
 import data.CurrentFilePreview;
-import data.FileCache;
-import data.structure.signal.DataPreviewStructure;
-import data.structure.signal.AudioData;
+import data.structure.signal.SamplePyramid;
 
 public interface Previewing {
 
 
-	static List<DataPreviewStructure> getCurrentChan(){
+	static List<SamplePyramid> currentChan(){
 
 		return CurrentFilePreview.getCurrentChan();
 	}
 
 	static void cleanCurrentFileSignal(){
 
-		getCurrentChan().clear();
+		CurrentFilePreview.getCurrentChan().clear();
+	}
+
+	static SamplePyramid getCurrentChannel(int index){
+
+		return CurrentFilePreview.getCurrentChan().get(index);
 	}
 
 /*	static void loadCurrentChan(){
@@ -72,7 +75,7 @@ public interface Previewing {
 			getCurrentChan().add(newChannel);
 			constructChanStructure();
 		}
-	}*/
+	}*/	// ? probably disposable
 
 
 }

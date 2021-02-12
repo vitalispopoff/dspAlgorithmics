@@ -2,7 +2,7 @@ package gui.Menus;
 
 import algorithms.metaProcessors.FileManager;
 import data.*;
-import data.structure.AudioFile;
+import data.AudioFile;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.scene.control.CheckMenuItem;

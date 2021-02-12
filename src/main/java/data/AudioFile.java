@@ -1,8 +1,8 @@
-package data.structure;
+package data;
 
-import data.structure.header.WaveHeader;
-import data.structure.signal.AudioData;
-import data.structure.signal.Channeling;
+import data.structure.FileAddress;
+import data.structure.header.FileHeader;
+import data.structure.signal.*;
 
 public interface AudioFile {
 
@@ -13,13 +13,11 @@ public interface AudioFile {
 	FileAddress getFileAddress();
 
 
-	WaveHeader getHeader();
+	FileHeader getHeader();
 
 	AudioData getAudioAnchor();
 
 	Channeling getChannelAnchor();
 
 	byte[] releaseSource();
-
-
 }

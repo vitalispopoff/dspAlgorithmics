@@ -4,23 +4,22 @@ import java.io.File;
 import java.util.Arrays;
 
 import data.structure.*;
-import data.structure.header.WaveFileContentStructure;
-import data.structure.header.WaveHeader;
-import data.structure.signal.AudioData;
-import data.structure.signal.Channeling;
+import data.structure.header.*;
+import data.structure.signal.*;
+
 
 import static algorithms.metaProcessors.FileManager.*;
 import static data.FileCache.addToCache;
 import static data.structure.header.WaveFileContentStructure.*;
-import static data.structure.header.WaveHeader.instanceOf;
 
-public class WaveFile implements data.structure.AudioFile {
+
+public class WaveFile implements AudioFile {
 
 
 	public FileAddress
 		fileAddress;
 
-	public WaveHeader
+	public FileHeader
 		header;
 
 	AudioData
@@ -36,7 +35,7 @@ public class WaveFile implements data.structure.AudioFile {
 		byte[]
 			fileContent = loadFile(file);
 
-		header = instanceOf(fileContent);
+		header = FileHeader.instanceOf(fileContent);
 
 		int
 			start = WaveFileContentStructure.SIGNAL.getLocation()[0],
@@ -69,7 +68,7 @@ public class WaveFile implements data.structure.AudioFile {
 
 
 
-	public WaveHeader getHeader( ){
+	public FileHeader getHeader( ){
 
 		return header;
 	}
@@ -109,7 +108,7 @@ public class WaveFile implements data.structure.AudioFile {
 			signalLength =  channelAnchor.getSource(header.getField(BITS_PER_SAMPLE)).length,
 			currentLength = headerLength + signalLength;
 
-		header.setField(currentLength - 8, FILE_SIZE);
+		header.setField(FILE_SIZE, currentLength - 8);
 
 		return new int[] {headerLength, signalLength, currentLength};
 	}

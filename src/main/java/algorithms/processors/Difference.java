@@ -1,6 +1,6 @@
 package algorithms.processors;
 
-import data.structure.AudioFile;
+import data.AudioFile;
 
 public interface Difference {
 

@@ -3,7 +3,8 @@ package data.structure.header;
 import java.util.Arrays;
 import static algorithms.metaProcessors.FileContentConverter.*;
 
-public class WaveHeader {
+public class WaveHeader implements FileHeader{
+
 
 	private byte[]
 		source;
@@ -29,27 +30,30 @@ public class WaveHeader {
 	}
 
 
+
+	@Override
 	public int getField(WaveFileContentStructure field){
 
-		if (field.getLength() > 0)
-
-			return readDataField(source, field);
-
-		return 0;
+		return field.getLength() > 0
+			? readDataField(source, field)
+			: 0;
 	}
 
-	public void setField(int value, WaveFileContentStructure field){
+	@Override
+	public void setField(WaveFileContentStructure field, int value){
 
 		if (field.getLength() > 0)
 
 			writeDataField(source, value, field);
 	}
 
+	@Override
 	public byte[] getSource(){
 
 		return source;
 	}
 
+	@Override
 	public String toString() {
 
 		StringBuilder

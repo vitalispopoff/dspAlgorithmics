@@ -1,7 +1,7 @@
 package algorithms.metaProcessors;
 
 import data.FileCache;
-import data.structure.AudioFile;
+import data.AudioFile;
 import data.structure.FileAddress;
 import javafx.beans.property.*;
 

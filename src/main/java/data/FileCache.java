@@ -1,7 +1,6 @@
 package data;
 
-import data.structure.AudioFile;
-import data.structure.header.WaveHeader;
+import data.structure.header.FileHeader;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -87,7 +86,7 @@ public abstract class FileCache {
 
 			try {
 
-				WaveHeader
+				FileHeader
 					header = getFile().getHeader();
 
 				int

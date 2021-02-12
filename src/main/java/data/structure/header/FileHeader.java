@@ -10,8 +10,8 @@ public interface FileHeader {
 		String
 			s = new String(Arrays.copyOfRange(fileContent,8, 12));
 
-		FileTypes
-			type = FileTypes.valueOf(s);
+		WAVE_IDs
+			type = WAVE_IDs.valueOf(s);
 
 		return type.getInstance(fileContent);
 	}
@@ -27,19 +27,3 @@ public interface FileHeader {
 
 
 
-enum FileTypes {
-
-	WAVE{
-		@Override
-		FileHeader getInstance(byte[] fileContent){
-
-			return WaveHeader.instanceOf(fileContent);
-		}
-	},
-	AIFF;
-
-	FileHeader getInstance(byte[] fileContent){
-
-		return FileHeader.instanceOf(fileContent);
-	}
-}

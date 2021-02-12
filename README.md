@@ -15,3 +15,13 @@ Although in the picture above the the peaks are presented as a quasi-sinusoidal 
 <img src = "https://github.com/vitalispopoff/dspAlgorithmics/blob/gui/readme-resources/dirty-signal-02.PNG">
 
 The main goal of the project is development of a Java based application to get rid of those peaks from the broken samples.      
+
+## Versions.
+
+### 0.0.2
++ rebuilding file data structure and preview algorithms
++ fixing recognized issues
+
+### 0.0.1
++ basic gui and preview functions
++ load, read, and save files (wave)

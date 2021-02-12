@@ -2,6 +2,7 @@ package gui.Menus;
 
 import algorithms.metaProcessors.FileManager;
 import data.*;
+import data.structure.AudioFile;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.scene.control.CheckMenuItem;
@@ -20,10 +21,12 @@ public class MainMenuController {
 	private static Stage
 		stage;
 
+
 	public MainMenuController() {
 
 		cacheIsEmptyProperty().bind(FileCache.fileCacheIsEmptyStaticProperty());
 	}
+
 
 //	-------------------------------------------------------------------------------------------
 
@@ -50,8 +53,8 @@ public class MainMenuController {
 
 		if (file != null) {
 
-			WaveFile
-				waveFile = new WaveFile(file);
+			AudioFile
+				audioFile = new WaveFile(file);
 
 			String
 //				path = waveFile.getFileAddress().getPath();
@@ -65,8 +68,8 @@ public class MainMenuController {
 
 		if (FileManager.FileManagerSettings.getAutoSave()) {
 
-			WaveFile
-				waveFile = FileCache.getFile();
+			AudioFile
+				audioFile = FileCache.getFile();
 
 			FileManager.autoSaveFile();
 		}
@@ -103,6 +106,7 @@ public class MainMenuController {
 
 		FileManager.FileManagerSettings.setAutoSave(checkBoxIsSelected);
 	}
+
 
 //	-------------------------------------------------------------------------------------------
 

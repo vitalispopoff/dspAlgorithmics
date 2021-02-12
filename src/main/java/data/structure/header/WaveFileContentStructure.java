@@ -44,6 +44,11 @@ public enum WaveFileContentStructure {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
+	public int[] getLocation(){
+
+		return slotLocations[this.ordinal()];
+	}
+
 	public int getStart(){
 
 		return slotLocations[this.ordinal()][0];
@@ -52,11 +57,6 @@ public enum WaveFileContentStructure {
 	public int getLength(){
 
 		return slotLocations[this.ordinal()][1];
-	}
-
-	public int[] getLocation(){
-
-		return slotLocations[this.ordinal()];
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------

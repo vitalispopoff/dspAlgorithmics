@@ -8,7 +8,6 @@ public class WaveHeader {
 	private byte[]
 		source;
 
-
 	
 	private WaveHeader(){ }
 	
@@ -16,13 +15,9 @@ public class WaveHeader {
 
 		this();
 
-		if (fileContent != null){
-
-			source = Arrays.copyOfRange(fileContent, 0, 44);
-		}
+		if (fileContent != null) source = Arrays.copyOfRange(fileContent, 0, 44);
 	}
 	
-
 
 	public static WaveHeader instanceOf(byte[] fileContent){
 
@@ -32,7 +27,6 @@ public class WaveHeader {
 
 		else return new WaveHeader();
 	}
-
 
 
 	public int getField(WaveFileContentStructure field){

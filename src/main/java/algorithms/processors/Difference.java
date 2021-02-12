@@ -1,12 +1,10 @@
-//	@formatter:off
-
 package algorithms.processors;
 
-import data.WaveFile;
+import data.structure.AudioFile;
 
 public interface Difference {
 
-	static int[][] getDifference(WaveFile waveFile){
+	static int[][] getDifference(AudioFile waveFile){
 
 /*		int[][]
 			input = wave.getChannelSignals();
@@ -35,8 +33,5 @@ public interface Difference {
 		}
 
 		return output;*/	return null;	// TODO
-
 	}
 }
-
-//	@formatter:on

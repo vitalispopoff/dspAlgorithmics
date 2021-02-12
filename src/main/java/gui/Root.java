@@ -140,9 +140,12 @@ public class Root extends GridPane {
     }
 
 
+    // ----- properties ------------------------------------------------------------------------
 
     private final DoubleProperty
-            dynamicAreaWidth = new SimpleDoubleProperty();
+        dynamicAreaWidth = new SimpleDoubleProperty(),
+        dynamicAreaHeight = new SimpleDoubleProperty();
+
 
     public double getDynamicAreaWidth(){
 
@@ -156,9 +159,6 @@ public class Root extends GridPane {
 
 
 
-    private final DoubleProperty
-            dynamicAreaHeight = new SimpleDoubleProperty();
-
     public double getDynamicAreaHeight(){
 
         return dynamicAreaHeight.get();
@@ -168,5 +168,4 @@ public class Root extends GridPane {
 
         return dynamicAreaHeight;
     }
-
 }

@@ -40,5 +40,4 @@ public interface AudioData {
 	void setNext(AudioData s);
 
 	AudioData getNext();
-
 }

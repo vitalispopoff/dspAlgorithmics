@@ -1,5 +1,6 @@
 package data;
 
+import data.structure.AudioFile;
 import data.structure.header.WaveHeader;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.*;
@@ -12,9 +13,9 @@ import static data.structure.header.WaveFileContentStructure.*;
 public abstract class FileCache {
 
 
-	public static void addToCache(WaveFile waveFile) {
+	public static void addToCache(AudioFile audioFile) {
 
-		getFileCache().add(waveFile);
+		getFileCache().add(audioFile);
 	}
 
 	/*	public static WaveFile getFile(int index) {
@@ -28,7 +29,7 @@ public abstract class FileCache {
 		return null;
 	}*/	// ? unused - disposable ?
 
-	public static WaveFile getFile(){
+	public static AudioFile getFile() {
 
 		try {return getFileCache().get(getFileCache().size() - 1);}
 
@@ -40,25 +41,28 @@ public abstract class FileCache {
 		fileCache.clear();
 	}
 
+
+
 	// ----- properties ------------------------------------------------------------------------
 
-	private static final SimpleListProperty<WaveFile>
+	private static final SimpleListProperty<AudioFile>
 		fileCache = new SimpleListProperty<>(FXCollections.observableArrayList());
-
-	public static List<WaveFile> getFileCache() {
-
-		return fileCache;
-	}
-
-	public static SimpleListProperty<WaveFile> fileCacheProperty() {
-
-		return fileCache;
-	}
-
-
 
 	private static final BooleanProperty
 		fileCacheIsEmpty = new SimpleBooleanProperty();
+
+
+	public static List<AudioFile> getFileCache() {
+
+		return fileCache;
+	}
+
+	public static SimpleListProperty<AudioFile> fileCacheProperty() {
+
+		return fileCache;
+	}
+
+
 
 	public static BooleanProperty fileCacheIsEmptyStaticProperty() {
 
@@ -68,6 +72,8 @@ public abstract class FileCache {
 	static {
 		fileCacheIsEmpty.bind(fileCache.sizeProperty().isEqualTo(0));
 	}
+
+
 
 	// ----- bindings --------------------------------------------------------------------------
 
@@ -93,21 +99,8 @@ public abstract class FileCache {
 			}
 			catch (Exception e) {return 0;}
 		}
-	};
+	},
 
-	public static int getCurrentFileSignalLength(){
-
-		return currentFileSignalLength.get();
-	}
-
-	public static IntegerBinding currentFileSignalLengthBinding(){
-
-		return currentFileSignalLength;
-	}
-
-
-
-	private static final IntegerBinding
 		currentFileBitsPerSample = new IntegerBinding() {
 
 		{
@@ -123,21 +116,8 @@ public abstract class FileCache {
 			}
 			catch (Exception e) {return 0;}
 		}
-	};
+	},
 
-	public static int getCurrentFileBitsPerSample(){
-
-		return currentFileBitsPerSample.get();
-	}
-
-	public static IntegerBinding currentFileBitsPerSampleBinding(){
-
-		return currentFileBitsPerSample;
-	}
-
-
-
-	private static final IntegerBinding
 		currentFileSamplesPerSecond = new IntegerBinding(){
 
 		{
@@ -151,6 +131,32 @@ public abstract class FileCache {
 			catch (Exception e){ return 0;}
 		}
 	};
+
+
+
+	public static int getCurrentFileSignalLength(){
+
+		return currentFileSignalLength.get();
+	}
+
+	public static IntegerBinding currentFileSignalLengthBinding(){
+
+		return currentFileSignalLength;
+	}
+
+
+
+	public static int getCurrentFileBitsPerSample(){
+
+		return currentFileBitsPerSample.get();
+	}
+
+	public static IntegerBinding currentFileBitsPerSampleBinding(){
+
+		return currentFileBitsPerSample;
+	}
+
+
 
 	public static int getCurrentFileSamplesPerSecond(){
 

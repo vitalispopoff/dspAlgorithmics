@@ -11,12 +11,10 @@ public class AudioDataSample implements AudioData {
 		tail = this;
 
 
-
 	public AudioDataSample(int v){
 
 		value = v;
 	}
-
 
 
 	@Override
@@ -30,7 +28,6 @@ public class AudioDataSample implements AudioData {
 
 		value = v;
 	}
-
 
 
 	@Override
@@ -55,5 +52,4 @@ public class AudioDataSample implements AudioData {
 
 		tail = s;
 	}
-
 }

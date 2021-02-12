@@ -7,24 +7,24 @@ import data.structure.signal.SamplePyramid;
 public interface Previewing {
 
 
-	static List<SamplePyramid> currentChan(){
+	static List<SamplePyramid> currentChannel(){
 
-		return CurrentFilePreview.getCurrentChan();
+		return CurrentFilePreview.getCurrentChannel();
 	}
 
 	static void cleanCurrentFileSignal(){
 
-		CurrentFilePreview.getCurrentChan().clear();
+		CurrentFilePreview.getCurrentChannel().clear();
 	}
 
-	static SamplePyramid getCurrentChannel(int index){
+	static SamplePyramid getCurrentSamplePyramid(int index){
 
-		return CurrentFilePreview.getCurrentChan().get(index);
+		return CurrentFilePreview.getCurrentChannel().get(index);
 	}
 
 	static void loadCurrentChan(){
 
-		CurrentFilePreview.addLevelToCurrentChanPyramid();
+		CurrentFilePreview.addLevelToCurrentSamplePyramid();
 	}
 
 /*	static void loadCurrentChan(){

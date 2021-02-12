@@ -3,15 +3,17 @@ package data.structure.signal;
 public interface SamplePyramid {
 
 
-
-
 	static SamplePyramid newInstance(){
 
 		return new SamplePyramidKnot_0();
 	}
 
-	int size();
 
+
+	default void addSampling(Integer v){
+
+		addSampling(AudioData.newInstance(v));
+	}
 
 	default AudioData getSampling(int i){
 
@@ -19,11 +21,8 @@ public interface SamplePyramid {
 	}
 
 
+
 	void addSampling(AudioData s);
 
-	default void addSampling(Integer v){
-
-		addSampling(AudioData.newInstance(v));
-	}
-
+	int size();
 }

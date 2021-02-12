@@ -26,6 +26,7 @@ public class Channels implements Channeling {
 		samplePyramid;
 
 
+
 	public Channels(int numberOfChannels) {
 
 		this(numberOfChannels, 0);
@@ -49,7 +50,6 @@ public class Channels implements Channeling {
 
 	}
 
-
 	private Channels(int numberOfChannels, int index) {
 
 		if (numberOfChannels > 0) {
@@ -59,6 +59,7 @@ public class Channels implements Channeling {
 
 		if (numberOfChannels == 0) nextChannel = this;
 	}
+
 
 
 	Channels(byte[] source, int blockAlign, int numberOfChannels) {
@@ -74,6 +75,7 @@ public class Channels implements Channeling {
 
 
 	}
+
 
 
 	@Override
@@ -142,10 +144,6 @@ public class Channels implements Channeling {
 	}
 
 	//	!--- TODO ----------------------------------------------
-
-
-
-
 }
 
 /*private void removeChannel(int index){ channels.remove(index); }*/    // remove channels not used at all

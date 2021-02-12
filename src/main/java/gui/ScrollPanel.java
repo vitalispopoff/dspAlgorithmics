@@ -59,10 +59,20 @@ public class ScrollPanel extends StackPane {
 		scaleValueProperty().bind(scale.valueProperty());
 
 		bindScrollBarSizeProperties();
-
 		bindScrollBarRangeProperties();
 	}
 
+	private boolean isHorizontal() {
+
+		return orientation == HORIZONTAL;
+	}
+
+
+
+	public void bindScrollBarVisibilityProperties(BooleanProperty b) {
+
+		scale.visibleProperty().bind(b);
+	}
 
 	private void bindScrollBarRangeProperties() {
 
@@ -131,7 +141,6 @@ public class ScrollPanel extends StackPane {
 									logMinWidth = (int) Math.log(root.getDynamicAreaWidth())/* * 1.4426950408889634*/;
 
 								return (logMinWidth - Math.log(FileCache.getCurrentFileSignalLength())) * 1.4426950408889634;
-//								   	return - Math.log(FileCache.getCurrentFileSignalLength()) / Math.log(2.) / 2.;
 							   }
 						   }).otherwise(0.))
 					: (Bindings.when(FileCache.currentFileBitsPerSampleBinding().greaterThan(0))
@@ -160,11 +169,6 @@ public class ScrollPanel extends StackPane {
 			.bind(scrollPanelSizeProperty());
 	}
 
-	public void bindScrollBarVisibilityProperties(BooleanProperty b) {
-
-		scale.visibleProperty().bind(b);
-	}
-
 	private void bindScrollBarSizeProperties() {
 
 		scrollPanelSizeProperty().bind(
@@ -176,14 +180,13 @@ public class ScrollPanel extends StackPane {
 		);
 	}
 
-	private boolean isHorizontal() {
-
-		return orientation == HORIZONTAL;
-	}
-
+	// ----- properties ------------------------------------------------------------------------
 
 	private final DoubleProperty
-		scrollPanelSize = new SimpleDoubleProperty();
+		scrollPanelSize = new SimpleDoubleProperty(),
+		scrollValue = new SimpleDoubleProperty(),
+		scaleValue = new SimpleDoubleProperty();
+
 
 	public double getScrollPanelSize() {
 
@@ -196,8 +199,6 @@ public class ScrollPanel extends StackPane {
 	}
 
 
-	private final DoubleProperty
-		scrollValue = new SimpleDoubleProperty();
 
 	public double getScrollValue() {
 
@@ -210,8 +211,6 @@ public class ScrollPanel extends StackPane {
 	}
 
 
-	private final DoubleProperty
-		scaleValue = new SimpleDoubleProperty();
 
 	public double getScaleValue() {
 

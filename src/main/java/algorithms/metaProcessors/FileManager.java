@@ -1,7 +1,7 @@
 package algorithms.metaProcessors;
 
 import data.FileCache;
-import data.WaveFile;
+import data.structure.AudioFile;
 import data.structure.FileAddress;
 import javafx.beans.property.*;
 
@@ -16,11 +16,11 @@ public interface FileManager {
 
 	static void saveFile(File file){
 
-		WaveFile
-			waveFile = FileCache.getFile();
+		AudioFile
+			audioFile = FileCache.getFile();
 
 		byte[]
-			source = waveFile.getSource();
+			source = audioFile.releaseSource();
 
 		try {
 
@@ -29,17 +29,18 @@ public interface FileManager {
 
 		catch (IOException e) {
 
+			System.out.println("error in FileManager.saveFile() :\n");
 			e.printStackTrace();
 		}
 	}
 
 	static void autoSaveFile(){
 
-		WaveFile
-			waveFile = FileCache.getFile();
+		AudioFile
+			audioFile = FileCache.getFile();
 
 		FileAddress
-			address = new FileAddress(waveFile.getFileAddress().getPath(), "", "wav");
+			address = new FileAddress(audioFile.getFileAddress().getPath(), "", "wav");
 
 		address.setNameToDefault();
 

@@ -27,5 +27,4 @@ public class SamplePyramidKnot_0 extends ArrayList<AudioData> implements SampleP
 
         super.add(s);
     }
-
 }

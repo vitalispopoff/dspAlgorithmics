@@ -31,6 +31,10 @@ public class PreviewPanel extends Canvas {
 	private boolean
 		theFlag = true;
 
+	double
+		horizontalScale;
+
+
 
 	public PreviewPanel(Root root) {
 
@@ -62,6 +66,7 @@ public class PreviewPanel extends Canvas {
 	}
 
 
+
 	void clean() {
 
 		context.clearRect(0, 0, getWidth(), getHeight());
@@ -84,20 +89,6 @@ public class PreviewPanel extends Canvas {
 		}
 	}
 
-	double
-		horizontalScale;
-
-	private void setHorizontalScale() {
-
-		horizontalScale = Math.pow(2., root.getHorizontalScrollPanel().getScaleValue());
-
-		System.out.println(
-			"guiPreviewPanel.setHorizontalScale() : getScaleValue() = "
-			+ (int) Math.abs(root.getHorizontalScrollPanel().getScaleValue())
-			+ "; hScale = "
-			+ horizontalScale
-		);
-	}
 
 	private void drawAmplitudeGrid() {
 
@@ -215,6 +206,19 @@ public class PreviewPanel extends Canvas {
 	}
 
 
+
+	private void setHorizontalScale() {
+
+		horizontalScale = Math.pow(2., root.getHorizontalScrollPanel().getScaleValue());
+
+		System.out.println(
+			"guiPreviewPanel.setHorizontalScale() : getScaleValue() = "
+				+ (int) Math.abs(root.getHorizontalScrollPanel().getScaleValue())
+				+ "; hScale = "
+				+ horizontalScale
+		);
+	}
+
 	private boolean indexIsInRange(double index) {
 
 		return index >= 0 && index < getCurrentFileSignalLength();
@@ -233,7 +237,7 @@ public class PreviewPanel extends Canvas {
 							   : 0;
 
 		SamplePyramid
-			channel = Previewing.getCurrentChannel(channelIndex);
+			channel = Previewing.getCurrentSamplePyramid(channelIndex);
 
 		double
 			bitsPerSample = getCurrentFileBitsPerSample(),
@@ -301,7 +305,7 @@ public class PreviewPanel extends Canvas {
 
 			} while (index1End >= 0 && x1End > margin && index1End < channel.size());
 
-		} // print left side
+		} // * print left side
 
 		{
 			double
@@ -346,7 +350,6 @@ public class PreviewPanel extends Canvas {
 
 			} while (index2End < fileLength && index2End < channel.size() && x2End < width + margin);
 
-		} // print right side
+		} // * print right side
 	}
-	// drawWaveForm()
 }

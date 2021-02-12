@@ -14,7 +14,7 @@ import static data.FileCache.addToCache;
 import static data.structure.header.WaveFileContentStructure.*;
 import static data.structure.header.WaveHeader.instanceOf;
 
-public class WaveFile {
+public class WaveFile implements data.structure.AudioFile {
 
 
 	public FileAddress
@@ -24,7 +24,7 @@ public class WaveFile {
 		header;
 
 	AudioData
-		audioData;
+		audioAnchor;
 
 	Channeling
 		channelAnchor;
@@ -45,7 +45,7 @@ public class WaveFile {
 		byte[]
 			signalSource = Arrays.copyOfRange(fileContent, start, end);
 
-		audioData = AudioData.setFromSource(signalSource, header.getField(BLOCK_ALIGN));
+		audioAnchor = AudioData.setFromSource(signalSource, header.getField(BLOCK_ALIGN));
 
 
 		channelAnchor = Channeling.newInstance(signalSource, header.getField(BLOCK_ALIGN), header.getField(CHANNELS));
@@ -62,24 +62,29 @@ public class WaveFile {
 		this.fileAddress = FileAddress.readFileAddress(fileAddress);
 	}
 
-
 	public FileAddress getFileAddress( ){
 
 		return fileAddress;
 	}
+
+
 
 	public WaveHeader getHeader( ){
 
 		return header;
 	}
 
+	public AudioData getAudioAnchor(){
+
+		return audioAnchor;
+	}
 
 	public Channeling getChannelAnchor(){
 
 		return channelAnchor;
 	}
 
-	public byte[] getSource(){
+	public byte[] releaseSource(){
 
 		int[]
 			lengths = updateFileSize();
@@ -96,6 +101,7 @@ public class WaveFile {
 	}
 
 
+
 	int[] updateFileSize(){
 
 		int
@@ -107,6 +113,4 @@ public class WaveFile {
 
 		return new int[] {headerLength, signalLength, currentLength};
 	}
-
-
 }

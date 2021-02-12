@@ -12,7 +12,6 @@ abstract class _DeserializationReader {
 
 
 
-
 	static byte readSource() {
 
 		if (byteIndex == blockAlign) byteIndex = 0;
@@ -62,7 +61,6 @@ abstract class _DeserializationReader {
 
 		return t;
 	}
-
 
 
 	//	----------------------------------------------------------------------------------------------------------------

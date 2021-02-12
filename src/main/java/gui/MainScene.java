@@ -25,8 +25,15 @@ public class MainScene extends Scene {
 
 
 
+    // ----- properties ------------------------------------------------------------------------
+
     private static final IntegerProperty
         changeNotifier = new SimpleIntegerProperty(1);
+
+    private final BooleanProperty
+        keyIsPressed = new SimpleBooleanProperty(),
+        ctrlKeyIsDown = new SimpleBooleanProperty(false);
+
 
     public static Integer getChangeNotifier(){
 
@@ -40,9 +47,6 @@ public class MainScene extends Scene {
 
 
 
-    private final BooleanProperty
-            keyIsPressed = new SimpleBooleanProperty();
-
     public BooleanProperty getKeyIsPressedProperty() {
 
         return keyIsPressed;
@@ -50,8 +54,11 @@ public class MainScene extends Scene {
 
 
 
-    private final BooleanProperty
-            ctrlKeyIsDown = new SimpleBooleanProperty(false);
+    public BooleanProperty ctrlKeyIsDownProperty() {
+
+        return ctrlKeyIsDown;
+    }
+
 
     public boolean getCtrlKeyIsDown() {
 
@@ -70,11 +77,6 @@ public class MainScene extends Scene {
         if (event.getCode() == KeyCode.CONTROL) ctrlKeyIsDown.set(event.isControlDown());
 
         if (event.getEventType() == KeyEvent.KEY_TYPED) ctrlKeyIsDown.set(false);
-    }
-
-    public BooleanProperty ctrlKeyIsDownProperty() {
-
-        return ctrlKeyIsDown;
     }
 
 }

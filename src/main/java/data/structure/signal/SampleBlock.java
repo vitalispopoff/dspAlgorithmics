@@ -8,11 +8,11 @@ public class SampleBlock implements SamplePyramid {
 
 	private SampleBlock
 		nextKnot = this,
-//		above = this,
 		below = this;
 
 	byte
 		level = 0;
+
 
 	private SampleBlock(AudioData s){
 
@@ -91,5 +91,4 @@ public class SampleBlock implements SamplePyramid {
 
 		return 0;
 	}
-
 }

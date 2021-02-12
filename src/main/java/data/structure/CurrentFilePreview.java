@@ -9,25 +9,26 @@ import java.util.List;
 public abstract class CurrentFilePreview implements Previewing {
 
 	static ArrayList<SamplePyramid>
-		currentChan = new ArrayList<>();
+		currentSamplePyramid = new ArrayList<>();
 
-	public static List<SamplePyramid> getCurrentChan(){
 
-		return currentChan;
+	public static List<SamplePyramid> getCurrentChannel(){
+
+		return currentSamplePyramid;
 	}
 
-	public static void addLevelToCurrentChanPyramid(){
+	public static void addLevelToCurrentSamplePyramid(){
 
-		currentChan.add(FileCache.getFile().getChannelAnchor().getChannel(0));
+		currentSamplePyramid.add(FileCache.getFile().getChannelAnchor().getChannel(0));
 
-		populateChan();
+		populateSamplePyramid();
 	}
 
-	private static void populateChan(){
+	private static void populateSamplePyramid(){
 
 		int
-			chanLastLevel = getCurrentChan().size() - 1,
-			chanLastLevelSize = getCurrentChan().get(chanLastLevel).size();
+			chanLastLevel = getCurrentChannel().size() - 1,
+			chanLastLevelSize = getCurrentChannel().get(chanLastLevel).size();
 
 		SamplePyramid
 			channelSource,
@@ -36,7 +37,7 @@ public abstract class CurrentFilePreview implements Previewing {
 		// 512 - twice the nearest power of 2 less than app window min. width
 		if (chanLastLevelSize > 512) {
 
-			channelSource = getCurrentChan().get(chanLastLevel);
+			channelSource = getCurrentChannel().get(chanLastLevel);
 			newChannel = SamplePyramid.newInstance();
 
 			for (int i = 0; i < (chanLastLevelSize >> 2); i++){
@@ -62,8 +63,8 @@ public abstract class CurrentFilePreview implements Previewing {
 				if (min == d || max == d) newChannel.addSampling(d);
 			}
 
-			getCurrentChan().add(newChannel);
-			populateChan();
+			getCurrentChannel().add(newChannel);
+			populateSamplePyramid();
 		}
 	}
 

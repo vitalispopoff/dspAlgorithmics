@@ -2,7 +2,6 @@ package data.structure;
 
 import java.util.*;
 
-import data.CurrentFilePreview;
 import data.structure.signal.SamplePyramid;
 
 public interface Previewing {
@@ -21,6 +20,11 @@ public interface Previewing {
 	static SamplePyramid getCurrentChannel(int index){
 
 		return CurrentFilePreview.getCurrentChan().get(index);
+	}
+
+	static void loadCurrentChan(){
+
+		CurrentFilePreview.addLevelToCurrentChanPyramid();
 	}
 
 /*	static void loadCurrentChan(){
@@ -76,6 +80,5 @@ public interface Previewing {
 			constructChanStructure();
 		}
 	}*/	// ? probably disposable
-
 
 }

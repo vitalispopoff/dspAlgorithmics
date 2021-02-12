@@ -31,14 +31,18 @@ public class ScrollPanel extends StackPane {
 
 		root = r;
 		orientation = o;
-		scroll = new ScrollBar();
-		scale = new ScrollBar();
 
-		scroll.setValue(0.);
-		scale.setValue(isHorizontal() ? 0. : 1.);
+		(scroll = new ScrollBar()).setValue(0.);
+		(scale = new ScrollBar()).setValue(isHorizontal() ? 0. : 1.);
+
+//		scroll.setValue(0.);
+//		scale.setValue(isHorizontal() ? 0. : 1.);
+
+//	! LIKE SERIOUSLY THIS THING ABOVE... ¯\_(ツ)_/¯
 
 		setupScrollBars();
 		getChildren().addAll(scroll, scale);
+
 		visibleProperty().bind(FileCache.fileCacheIsEmptyStaticProperty().not());
 	}
 

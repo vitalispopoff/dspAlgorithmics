@@ -1,17 +1,18 @@
 package gui.previewPanel;
 
-import data.*;
-import data.structure.Previewing;
-import data.structure.signal.SamplePyramid;
-import gui.Root;
 import javafx.scene.canvas.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 
-import static data.CurrentFilePreview.loadCurrentChan;
-import static data.structure.Previewing.*;
+import data.structure.Previewing;
+import data.structure.signal.SamplePyramid;
+import gui.Root;
+
 import static javafx.scene.paint.Color.*;
 import static javafx.scene.text.TextAlignment.*;
+
+import static data.FileCache.*;
+import static data.structure.Previewing.*;
 
 public class PreviewPanel extends Canvas {
 
@@ -39,11 +40,11 @@ public class PreviewPanel extends Canvas {
 		widthProperty().bind(root.dynamicAreaWidthProperty());
 		heightProperty().bind(root.dynamicAreaHeightProperty());
 
-		FileCache.fileCacheProperty().sizeProperty().addListener((observable) -> {
+		fileCacheProperty().sizeProperty().addListener((observable) -> {
 
-			if (FileCache.getFileCache().size()>0) {
+			if (getFileCache().size()>0) {
 
-				loadCurrentChan();
+				Previewing.loadCurrentChan();
 				drawEverything();
 
 				root.previewRefreshTrigger.scrollPanelStateProperty().addListener((observable1) -> {
@@ -161,9 +162,9 @@ public class PreviewPanel extends Canvas {
 		context.setLineWidth(0.6);
 
 		double
-			samplesPerSecond = FileCache.getCurrentFileSamplesPerSecond(),
-			bitsPerSample = FileCache.getCurrentFileBitsPerSample(),
-			fileLength = FileCache.getCurrentFileSignalLength(),
+			samplesPerSecond = getCurrentFileSamplesPerSecond(),
+			bitsPerSample = getCurrentFileBitsPerSample(),
+			fileLength = getCurrentFileSignalLength(),
 
 			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
 			hScale = root.getHorizontalScrollPanel().getScaleValue(),
@@ -216,7 +217,7 @@ public class PreviewPanel extends Canvas {
 
 	private boolean indexIsInRange(double index) {
 
-		return index >= 0 && index < FileCache.getCurrentFileSignalLength();
+		return index >= 0 && index < getCurrentFileSignalLength();
 	} // indexInRange()
 
 	private void drawWaveForm() {
@@ -235,7 +236,7 @@ public class PreviewPanel extends Canvas {
 			channel = Previewing.getCurrentChannel(channelIndex);
 
 		double
-			bitsPerSample = FileCache.getCurrentFileBitsPerSample(),
+			bitsPerSample = getCurrentFileBitsPerSample(),
 			height = getHeight() - margin,
 			verticalScroll = root.getVerticalScrollPanel().getScrollValue(),
 			verticalScale = root.getVerticalScrollPanel().getScaleValue(),
@@ -246,7 +247,7 @@ public class PreviewPanel extends Canvas {
 			vScale = (Math.pow(2., bitsPerSample) / height) / Math.pow(2., verticalScale - 1.),
 			y0 = (height / 2.) - vOffset,
 
-			fileLength = FileCache.getCurrentFileSignalLength(),
+			fileLength = getCurrentFileSignalLength(),
 			width = getWidth() - margin,
 			horizontalScroll = root.getHorizontalScrollPanel().getScrollValue(),
 

@@ -15,25 +15,18 @@ public abstract class FileCache {
 	public static void addToCache(WaveFile waveFile) {
 
 		getFileCache().add(waveFile);
-//		if (getFileCache().size() == 1) setCurrentIndex(0);
 	}
 
-	public static WaveFile getFile(int index) {
+	/*	public static WaveFile getFile(int index) {
 
-		try {
-
-/*			if (index != getCurrentIndex())
-				setCurrentIndex(index);*/
-			return getFileCache().get(index);
-		}
+		try { return getFileCache().get(index); }
 
 		catch (ArrayIndexOutOfBoundsException e) {
 
 			System.out.println("FileCache> getFile : no file to load");
 		}
-
-		return null;    // dummy return i hope.
-	}
+		return null;
+	}*/	// ? unused - disposable ?
 
 	public static WaveFile getFile(){
 
@@ -45,12 +38,9 @@ public abstract class FileCache {
 	public static void purgeCache() {
 
 		fileCache.clear();
-//		updateCurrentIndex();
 	}
 
-
-
-
+	// ----- properties ------------------------------------------------------------------------
 
 	private static final SimpleListProperty<WaveFile>
 		fileCache = new SimpleListProperty<>(FXCollections.observableArrayList());
@@ -70,11 +60,6 @@ public abstract class FileCache {
 	private static final BooleanProperty
 		fileCacheIsEmpty = new SimpleBooleanProperty();
 
-	public static boolean getFileCacheIsNotEmpty() {
-
-		return !fileCacheIsEmpty.get();
-	}
-
 	public static BooleanProperty fileCacheIsEmptyStaticProperty() {
 
 		return fileCacheIsEmpty;
@@ -84,15 +69,12 @@ public abstract class FileCache {
 		fileCacheIsEmpty.bind(fileCache.sizeProperty().isEqualTo(0));
 	}
 
-
+	// ----- bindings --------------------------------------------------------------------------
 
 	private static final IntegerBinding
 		currentFileSignalLength = new IntegerBinding(){
 
-		{
-			super.bind(fileCache.sizeProperty());
-
-		}
+		{super.bind(fileCache.sizeProperty());}
 
 		@Override
 		protected int computeValue() {
@@ -181,26 +163,3 @@ public abstract class FileCache {
 	}
 
 }
-
-/*	private static final IntegerProperty
-		currentIndex = new SimpleIntegerProperty(-1);
-
-	public static int getCurrentIndex() {
-
-		return currentIndex.get();
-	}
-
-	public static void setCurrentIndex(int value) {
-
-		currentIndex.set(value);
-	}
-
-	private static void updateCurrentIndex() {
-
-		setCurrentIndex(getFileCache().size() - 1);
-	}
-
-	public static IntegerProperty currentIndexProperty() {
-
-		return currentIndex;
-	}*/	// TODO - current index property to be fixed

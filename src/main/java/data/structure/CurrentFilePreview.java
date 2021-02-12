@@ -1,6 +1,6 @@
-package data;
+package data.structure;
 
-import data.structure.Previewing;
+import data.FileCache;
 import data.structure.signal.*;
 
 import java.util.ArrayList;
@@ -16,15 +16,14 @@ public abstract class CurrentFilePreview implements Previewing {
 		return currentChan;
 	}
 
-	public static void loadCurrentChan(){
+	public static void addLevelToCurrentChanPyramid(){
 
+		currentChan.add(FileCache.getFile().getChannelAnchor().getChannel(0));
 
-		getCurrentChan().add(FileCache.getFile().getChannelAnchor().getChannel(0));
-
-		constructChanStructure();
+		populateChan();
 	}
 
-	private static void constructChanStructure(){
+	private static void populateChan(){
 
 		int
 			chanLastLevel = getCurrentChan().size() - 1,
@@ -63,10 +62,8 @@ public abstract class CurrentFilePreview implements Previewing {
 				if (min == d || max == d) newChannel.addSampling(d);
 			}
 
-//			for (int i = 0; i < lastMipMapSize ; i += 2) newStrip.add(stripSource.get(i));
-
 			getCurrentChan().add(newChannel);
-			constructChanStructure();
+			populateChan();
 		}
 	}
 

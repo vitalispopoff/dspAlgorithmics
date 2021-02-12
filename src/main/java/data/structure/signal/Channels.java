@@ -8,7 +8,7 @@ public class Channels implements Channeling {
 
 	//	!--- TODO to be removed	--------------------------------
 
-	static final boolean
+	public static final boolean
 		_switcher = false;
 
 	public ArrayList<SamplePyramid>

@@ -6,11 +6,9 @@ import static algorithms.metaProcessors.FileContentConverter.*;
 
 public class Channels implements Channeling {
 
-	//	!--- TODO to be removed	--------------------------------
 
-	public ArrayList<SamplePyramid> _oldSamplePyramid = new ArrayList<>();
+	public ArrayList<SamplePyramid> _oldSamplePyramid = new ArrayList<>();	//	!--- TODO to be removed
 
-	//	!--- TODO ----------------------------------------------
 
 	int
 		channelIndex;
@@ -21,34 +19,22 @@ public class Channels implements Channeling {
 	SamplePyramid
 		samplePyramid;
 
-	Previewing
-		currentPreview;
-
 
 	public Channels(int numberOfChannels) {
 
 		this(numberOfChannels, 0);
 
-		Channels
-			temp = this;
+		if (_switcher0) {
 
-		while (temp.nextChannel != temp) temp = temp.nextChannel;
+			Channels
+				temp = this;
 
-		temp.nextChannel = this;
+			while (temp.nextChannel != temp) temp = temp.nextChannel;
 
-		//	!--- TODO to be removed	--------------------------------
-
-		if (!_switcher0) {
-
-//			for (int i = 0; i < 3; i++) _oldSamplePyramid.add(SamplePyramid.newInstance());
-
-			_oldSamplePyramid = Previewing.getCurrentSamples();
-
-
+			temp.nextChannel = this;
 		}
 
-		//	!--- TODO ----------------------------------------------
-
+		if (!_switcher0) _oldSamplePyramid = Previewing.getCurrentSamples();    //	!--- TODO to be removed
 	}
 
 	private Channels(int numberOfChannels, int index) {
@@ -69,7 +55,32 @@ public class Channels implements Channeling {
 		importToChannels(bytesToIntegers(source, blockAlign / numberOfChannels), numberOfChannels);
 	}
 
+	Channels(AudioData audioData, int numberOfChannels){
 
+		this(numberOfChannels);
+
+		importToChannels(audioData, numberOfChannels);
+	}
+
+	private void importToChannels(AudioData audioAnchor, int numberOfChannels){
+
+		if (_oldSamplePyramid != null && this._oldSamplePyramid.size() > 0) {
+			_oldSamplePyramid.clear();
+		}
+
+		for (int i = 0; i < numberOfChannels; i++)
+			_oldSamplePyramid.add(SamplePyramid.newInstance());
+
+		AudioData
+			currentSample = audioAnchor;
+
+		while (currentSample.getNext() != currentSample) {
+
+			_oldSamplePyramid.get(currentSample.getIndex()).addSampling(audioAnchor);
+			currentSample = currentSample.getNext();
+		}
+
+	}
 
 	@Override
 	public SamplePyramid getChannel(int index) {
@@ -85,7 +96,7 @@ public class Channels implements Channeling {
 			return result.samplePyramid;
 		}
 
-		return _oldSamplePyramid.get(index);    // ! TODO line to be removed
+		return _oldSamplePyramid.get(index);    //	!--- TODO to be removed
 	}
 
 

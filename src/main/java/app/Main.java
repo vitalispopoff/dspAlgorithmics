@@ -34,7 +34,7 @@ public class Main extends Application {
 			adr1 = "H:\\_LIBS\\User Lib\\Samples\\Own shots\\6425-klik\\001.wav",
 			adr2 = "H:\\_LIBS\\User Lib\\Samples\\Full Loops\\fsol-papua-ethnic.wav";
 
-		/*if (!data.structure.signal.Channels._switcher)*/ new WaveFile(new File(adr0));
+		new WaveFile(new File(adr0));
 
 		// ! --------------------------------------------------
 

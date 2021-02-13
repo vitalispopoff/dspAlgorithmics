@@ -18,6 +18,11 @@ public interface Channeling {
 		return new Channels(source, blockAlign, numberOfChannels);
 	}
 
+	static Channeling newInstance(AudioData audioAnchor, int numberOfChannels){
+
+		return new Channels(audioAnchor, numberOfChannels);
+	}
+
 
 
 	default int size(){
@@ -29,7 +34,4 @@ public interface Channeling {
 	SamplePyramid getChannel(int index);
 
 	byte[] releaseSource(int bitsPerSample);
-
-
-
 }

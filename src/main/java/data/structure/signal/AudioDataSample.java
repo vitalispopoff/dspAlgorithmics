@@ -20,18 +20,6 @@ public class AudioDataSample implements AudioData {
 
 
 
-	public AudioData getTail(){
-
-		return tail;
-	}
-
-	public void setTail(AudioData s){
-
-		tail = s;
-	}
-
-
-
 	@Override
 	public int getChannel(){
 
@@ -85,8 +73,29 @@ public class AudioDataSample implements AudioData {
 
 
 	@Override
+	public AudioData getTail(){
+
+		return tail;
+	}
+
+	@Override
+	public void setTail(AudioData s){
+
+		if(index == 0) tail = s;
+	}
+
+
+	@Override
 	public byte[] getAll(int blockAlign){
 
 		return new byte[0];
 	} // ! TODO
+
+	@Override
+	public int size(){
+
+		return (index == 0 && tail != this)
+				   ? tail.getIndex() + 1
+				   : -1;
+	}
 }

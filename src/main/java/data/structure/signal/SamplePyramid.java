@@ -8,7 +8,7 @@ public interface SamplePyramid {
 		_switcher2 = false;	// * run new implementation ?
 
 	temporal t = new temporal();
-	class temporal{ static{ System.out.println("SamplePyramid > new implementation = " + _switcher2); }}
+	class temporal{ static{ System.out.println("SamplePyramid > new ver = " + _switcher2); }}
 
 	//	!--- TODO ----------------------------------------------
 

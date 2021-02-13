@@ -10,7 +10,7 @@ public interface Previewing {
 		_switcher1 = false;	// * run new implementation ?
 
 	temporal t = new temporal();
-	class temporal{ static{ System.out.println("Previewing > new implementation = " + Previewing._switcher1); }}
+	class temporal{ static{ System.out.println("Previewing > new ver = " + Previewing._switcher1); }}
 
 	//	!--- TODO ----------------------------------------------
 

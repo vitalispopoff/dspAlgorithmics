@@ -8,7 +8,7 @@ public interface Channeling {
 		_switcher0 = false; // * run new implementation ?
 
 	temporal t = new temporal();
-	class temporal{ static{ System.out.println("Channeling > new implementation = " + Channeling._switcher0); }}
+	class temporal{ static{ System.out.println("Channeling > new ver = " + Channeling._switcher0); }}
 
 	//	!--- TODO ----------------------------------------------
 

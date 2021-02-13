@@ -10,7 +10,7 @@ public interface AudioData {
 		_switcher3 = false;	// * run new implementation ?
 
 	temporal t = new temporal();
-	class temporal{ static{ System.out.println("SamplePyramid > new implementation = " + _switcher3); }}
+	class temporal{ static{ System.out.println("AudioData > new ver = " + _switcher3); }}
 
 	//	!--- TODO ----------------------------------------------
 

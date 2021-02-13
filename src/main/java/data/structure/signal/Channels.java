@@ -1,7 +1,5 @@
 package data.structure.signal;
 
-import data.structure.Previewing;
-
 import java.util.*;
 
 import static algorithms.metaProcessors.FileContentConverter.*;

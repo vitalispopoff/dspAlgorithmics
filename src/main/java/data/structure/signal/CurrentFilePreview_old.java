@@ -1,12 +1,10 @@
-package data.structure;
+package data.structure.signal;
 
 import data.FileCache;
-import data.structure.signal.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public abstract class CurrentFilePreview_0 implements Previewing {
+public abstract class CurrentFilePreview_old implements Previewing {
 
 	public static ArrayList<SamplePyramid>
 		currentSamplePyramid = new ArrayList<>();

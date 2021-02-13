@@ -13,19 +13,19 @@ public class SampleBlock implements SamplePyramid {
 	byte
 		level = 0;
 
+	SampleBlock() {}
 
-	private SampleBlock(AudioData s){
+	private SampleBlock(AudioData s) {
 
 		sample = s;
 	}
 
-	public SampleBlock(AudioData s, SampleBlock n, SampleBlock b){
+	public SampleBlock(AudioData s, SampleBlock n, SampleBlock b) {
 
 		this(s);
 		nextKnot = n;
 		below = b;
 	}
-
 
 
 	public AudioData getSample() {
@@ -39,7 +39,6 @@ public class SampleBlock implements SamplePyramid {
 	}
 
 
-
 	public SampleBlock getNextKnot() {
 
 		return nextKnot;
@@ -49,7 +48,6 @@ public class SampleBlock implements SamplePyramid {
 
 		nextKnot = n;
 	}
-
 
 
 	public SampleBlock getBelow() {
@@ -63,13 +61,22 @@ public class SampleBlock implements SamplePyramid {
 	}
 
 
+	public void setIndex() {
 
+
+	}
+
+
+
+	@Override
 	public void addSampling(AudioData s) {
 
 		SampleBlock
 			knot = new SampleBlock(s);
 
-		if (nextKnot == this) nextKnot = knot;
+		if (nextKnot == this) {
+			nextKnot = knot;
+		}
 
 		else {
 			knot.setNextKnot(nextKnot);
@@ -78,16 +85,25 @@ public class SampleBlock implements SamplePyramid {
 
 	}
 
-	public void setIndex(){
+	@Override
+	public AudioData getSampling(int i) {
 
+		int
+			sampleIndex = i - nextKnot.sample.getIndex();
 
+		SampleBlock
+			temp = nextKnot;
 
+		while(sampleIndex > 0) {
+			temp = temp.nextKnot;
+			sampleIndex--;
+		}
 
+		return temp.sample;
 	}
 
-
 	@Override
-	public int size(){
+	public int size() {
 
 		return 0;
 	}

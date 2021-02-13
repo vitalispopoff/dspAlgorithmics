@@ -4,7 +4,7 @@ import javafx.scene.canvas.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 
-import data.structure.Previewing;
+import data.structure.signal.Previewing;
 import data.structure.signal.SamplePyramid;
 import gui.Root;
 

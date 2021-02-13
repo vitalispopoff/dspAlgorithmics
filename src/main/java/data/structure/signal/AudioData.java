@@ -4,6 +4,16 @@ import algorithms.metaProcessors.FileContentConverter;
 
 public interface AudioData {
 
+	//	!--- TODO to be removed	--------------------------------
+
+	boolean
+		_switcher3 = false;	// * run new implementation ?
+
+	temporal t = new temporal();
+	class temporal{ static{ System.out.println("SamplePyramid > new implementation = " + _switcher3); }}
+
+	//	!--- TODO ----------------------------------------------
+
 
 	static AudioData newInstance(int v) {
 
@@ -32,9 +42,21 @@ public interface AudioData {
 	}
 
 
+
+	int getChannel();
+
+	void setChannel(int c);
+
+	int getIndex();
+
+	void setIndex(int i);
+
+
+
 	int getValue();
 
 	void setValue(int v);
+
 
 
 	void setNext(AudioData s);

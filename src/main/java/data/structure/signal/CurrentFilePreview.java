@@ -1,8 +1,6 @@
-package data.structure;
+package data.structure.signal;
 
 import data.FileCache;
-import data.structure.signal.AudioData;
-import data.structure.signal.SamplePyramid;
 
 import java.util.ArrayList;
 

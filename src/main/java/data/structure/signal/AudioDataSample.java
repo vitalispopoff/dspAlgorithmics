@@ -4,6 +4,8 @@ public class AudioDataSample implements AudioData {
 
 
 	int
+		channel,
+		index,
 		value;
 
 	AudioData
@@ -14,6 +16,45 @@ public class AudioDataSample implements AudioData {
 	public AudioDataSample(int v){
 
 		value = v;
+	}
+
+
+
+	public AudioData getTail(){
+
+		return tail;
+	}
+
+	public void setTail(AudioData s){
+
+		tail = s;
+	}
+
+
+
+	@Override
+	public int getChannel(){
+
+		return channel;
+	}
+
+	@Override
+	public void setChannel(int c){
+
+		channel = c;
+	}
+
+
+	@Override
+	public int getIndex(){
+
+		return index;
+	}
+
+	@Override
+	public void setIndex(int i){
+
+		index = i;
 	}
 
 
@@ -48,17 +89,4 @@ public class AudioDataSample implements AudioData {
 
 		return new byte[0];
 	} // ! TODO
-
-
-	public AudioData getTail(){
-
-		return tail;
-	}
-
-	public void setTail(AudioData s){
-
-		tail = s;
-	}
-
-
 }

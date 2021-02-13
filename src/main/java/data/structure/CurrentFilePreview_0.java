@@ -17,11 +17,6 @@ public abstract class CurrentFilePreview_0 implements Previewing {
 	}
 
 
-	public static List<SamplePyramid> getCurrentChannel(){
-
-		return currentSamplePyramid;
-	}
-
 	public static void addLevelToCurrentSamplePyramid(){
 
 		currentSamplePyramid.add(FileCache.getFile().getChannelAnchor().getChannel(0));
@@ -31,8 +26,8 @@ public abstract class CurrentFilePreview_0 implements Previewing {
 	private static void populateSamplePyramid(){
 
 		int
-			chanLastLevel = getCurrentChannel().size() - 1,
-			chanLastLevelSize = getCurrentChannel().get(chanLastLevel).size();
+			chanLastLevel = getCurrentSamplePyramid().size() - 1,
+			chanLastLevelSize = getCurrentSamplePyramid().get(chanLastLevel).size();
 
 		SamplePyramid
 			channelSource,
@@ -40,7 +35,7 @@ public abstract class CurrentFilePreview_0 implements Previewing {
 
 		if (chanLastLevelSize > 512) {
 
-			channelSource = getCurrentChannel().get(chanLastLevel);
+			channelSource = getCurrentSamplePyramid().get(chanLastLevel);
 			newChannel = SamplePyramid.newInstance();
 
 			for (int i = 0; i < (chanLastLevelSize >> 2); i++){
@@ -66,7 +61,7 @@ public abstract class CurrentFilePreview_0 implements Previewing {
 				if (min == d || max == d) newChannel.addSampling(d);
 			}
 
-			getCurrentChannel().add(newChannel);
+			getCurrentSamplePyramid().add(newChannel);
 			populateSamplePyramid();
 		}
 	}

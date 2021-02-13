@@ -1,6 +1,5 @@
 package data.structure.signal;
 
-import data.structure.CurrentFilePreview;
 import data.structure.Previewing;
 
 import java.util.*;
@@ -45,7 +44,7 @@ public class Channels implements Channeling {
 
 //			for (int i = 0; i < 3; i++) _oldSamplePyramid.add(SamplePyramid.newInstance());
 
-			_oldSamplePyramid = Previewing.getCurrentSamplePyramid();
+			_oldSamplePyramid = Previewing.getCurrentSamples();
 
 
 		}

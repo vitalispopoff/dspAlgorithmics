@@ -238,7 +238,7 @@ public class PreviewPanel extends Canvas {
 							   : 0;
 
 		SamplePyramid
-			channel = Previewing.getCurrentSamplePyramid(channelIndex);
+			samples = Previewing.getCurrentSamples(channelIndex);
 
 		double
 			bitsPerSample = getCurrentFileBitsPerSample(),
@@ -286,12 +286,12 @@ public class PreviewPanel extends Canvas {
 					x1End -= hScaleParam;
 				}
 
-				if (indexIsInRange(index1End) && index1End < channel.size())
-					y1End = y0 - channel.getSampling((int) index1End).getValue() / vScale;
+				if (indexIsInRange(index1End) && index1End < samples.size())
+					y1End = y0 - samples.getSampling((int) index1End).getValue() / vScale;
 
-				if (indexIsInRange(index1Start) && index1Start < channel.size()) {
+				if (indexIsInRange(index1Start) && index1Start < samples.size()) {
 
-					y1Start = y0 - channel.getSampling((int) index1Start).getValue() / vScale;
+					y1Start = y0 - samples.getSampling((int) index1Start).getValue() / vScale;
 					context.setStroke(RED);
 					context.strokeLine(x1Start, y1Start, x1End, y1End);
 
@@ -304,7 +304,7 @@ public class PreviewPanel extends Canvas {
 
 				}
 
-			} while (index1End >= 0 && x1End > margin && index1End < channel.size());
+			} while (index1End >= 0 && x1End > margin && index1End < samples.size());
 
 		} // * print left side
 
@@ -331,13 +331,13 @@ public class PreviewPanel extends Canvas {
 					x2End += hScaleParam;
 				}
 
-				if (indexIsInRange(index2Start) && index2Start < channel.size())
-					y2Start = y0 - channel.getSampling((int) index2Start).getValue() / vScale;
+				if (indexIsInRange(index2Start) && index2Start < samples.size())
+					y2Start = y0 - samples.getSampling((int) index2Start).getValue() / vScale;
 
 
-				if (indexIsInRange(index2End) && index2End < channel.size()) {
+				if (indexIsInRange(index2End) && index2End < samples.size()) {
 
-					y2End = y0 - channel.getSampling((int) index2End).getValue() / vScale;
+					y2End = y0 - samples.getSampling((int) index2End).getValue() / vScale;
 					context.setStroke(RED);
 					context.strokeLine(x2Start, y2Start, x2End, y2End);
 
@@ -349,7 +349,7 @@ public class PreviewPanel extends Canvas {
 					}    // drawing sample points at zoom in
 				}
 
-			} while (index2End < fileLength && index2End < channel.size() && x2End < width + margin);
+			} while (index2End < fileLength && index2End < samples.size() && x2End < width + margin);
 
 		} // * print right side
 	}

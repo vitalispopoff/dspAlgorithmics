@@ -27,18 +27,18 @@ public interface Previewing {
 		CurrentFilePreview.getCurrentChannel().clear();
 	}*/	// ! cleanCurrentFileSignal: TODO fix
 
-	static ArrayList<SamplePyramid> getCurrentSamplePyramid(){
+	static ArrayList<SamplePyramid> getCurrentSamples(){
 
 		return _switcher1
-			? CurrentFilePreview_0.getCurrentSamplePyramid()
-			: CurrentFilePreview.getCurrentSamplePyramid();
+			? CurrentFilePreview.getCurrentSamplePyramid()
+			: CurrentFilePreview_0.getCurrentSamplePyramid();
 	}
 
-	static SamplePyramid getCurrentSamplePyramid(int index){
+	static SamplePyramid getCurrentSamples(int index){
 
 		return _switcher1
-			? CurrentFilePreview_0.getCurrentChannel().get(index)
-			: CurrentFilePreview.getCurrentChannel().get(index);
+			? CurrentFilePreview.getCurrentSamplePyramid().get(index)
+			: CurrentFilePreview_0.getCurrentSamplePyramid().get(index);
 	}
 
 	static void loadCurrentChan(){

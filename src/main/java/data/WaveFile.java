@@ -10,7 +10,7 @@ import data.structure.signal.*;
 
 import static algorithms.metaProcessors.FileManager.*;
 import static data.FileCache.addToCache;
-import static data.structure.header.WaveFileContentStructure.*;
+import static data.structure.WaveFileStructure.*;
 
 
 public class WaveFile implements AudioFile {
@@ -38,7 +38,7 @@ public class WaveFile implements AudioFile {
 		header = FileHeader.instanceOf(fileContent);
 
 		int
-			start = WaveFileContentStructure.SIGNAL.getLocation()[0],
+			start = WaveFileStructure.SIGNAL.getLocation()[0],
 			end = start + header.getField(DATA_SIZE);
 
 		byte[]

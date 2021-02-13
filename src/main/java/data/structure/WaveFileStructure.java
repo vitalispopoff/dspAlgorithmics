@@ -1,6 +1,6 @@
-package data.structure.header;
+package data.structure;
 
-public enum WaveFileContentStructure {
+public enum WaveFileStructure implements FileStructure{
 
 	FILE_ID {
 
@@ -44,16 +44,19 @@ public enum WaveFileContentStructure {
 
 //	--------------------------------------------------------------------------------------------------------------------
 
+	@Override
 	public int[] getLocation(){
 
 		return slotLocations[this.ordinal()];
 	}
 
+	@Override
 	public int getStart(){
 
 		return slotLocations[this.ordinal()][0];
 	}
 
+	@Override
 	public int getLength(){
 
 		return slotLocations[this.ordinal()][1];

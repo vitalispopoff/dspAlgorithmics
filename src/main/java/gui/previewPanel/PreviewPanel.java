@@ -16,6 +16,7 @@ import static data.structure.Previewing.*;
 
 public class PreviewPanel extends Canvas {
 
+
 	private final Root
 		root;
 

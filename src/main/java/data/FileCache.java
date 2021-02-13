@@ -7,7 +7,7 @@ import javafx.collections.FXCollections;
 
 import java.util.List;
 
-import static data.structure.header.WaveFileContentStructure.*;
+import static data.structure.WaveFileStructure.*;
 
 public abstract class FileCache {
 

@@ -1,5 +1,7 @@
 package data.structure.header;
 
+import data.structure.WaveFileStructure;
+
 import java.util.Arrays;
 
 public interface FileHeader {
@@ -18,9 +20,9 @@ public interface FileHeader {
 
 
 
-	int getField(WaveFileContentStructure field);
+	int getField(WaveFileStructure field);
 
-	void setField(WaveFileContentStructure field, int value);
+	void setField(WaveFileStructure field, int value);
 
 	byte[] getSource();
 }

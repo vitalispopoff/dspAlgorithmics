@@ -1,6 +1,5 @@
 package data;
 
-import data.structure.FileAddress;
 import data.structure.header.FileHeader;
 import data.structure.signal.*;
 

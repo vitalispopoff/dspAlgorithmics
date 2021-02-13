@@ -1,5 +1,8 @@
 package data.structure.signal;
 
+import data.structure.CurrentFilePreview;
+import data.structure.Previewing;
+
 import java.util.*;
 
 import static algorithms.metaProcessors.FileContentConverter.*;
@@ -8,11 +11,7 @@ public class Channels implements Channeling {
 
 	//	!--- TODO to be removed	--------------------------------
 
-	public static final boolean
-		_switcher = false;
-
-	public ArrayList<SamplePyramid>
-		_channelList = new ArrayList<>();
+	public ArrayList<SamplePyramid> _oldSamplePyramid = new ArrayList<>();
 
 	//	!--- TODO ----------------------------------------------
 
@@ -25,6 +24,8 @@ public class Channels implements Channeling {
 	SamplePyramid
 		samplePyramid;
 
+	Previewing
+		currentPreview;
 
 
 	public Channels(int numberOfChannels) {
@@ -38,15 +39,18 @@ public class Channels implements Channeling {
 
 		temp.nextChannel = this;
 
-	//	!--- TODO to be removed	--------------------------------
+		//	!--- TODO to be removed	--------------------------------
 
-		if (!_switcher) {
-			for (int i = 0; i < 3; i++)
-				_channelList.add(SamplePyramid.newInstance());
+		if (!_switcher0) {
+
+//			for (int i = 0; i < 3; i++) _oldSamplePyramid.add(SamplePyramid.newInstance());
+
+			_oldSamplePyramid = Previewing.getCurrentSamplePyramid();
+
 
 		}
 
-	//	!--- TODO ----------------------------------------------
+		//	!--- TODO ----------------------------------------------
 
 	}
 
@@ -61,19 +65,11 @@ public class Channels implements Channeling {
 	}
 
 
-
 	Channels(byte[] source, int blockAlign, int numberOfChannels) {
 
 		this(numberOfChannels);
 
-		if (_switcher) importToChannels(bytesToIntegers(source, blockAlign / numberOfChannels));
-
-		else importToChannels(bytesToIntegers(source, blockAlign / numberOfChannels), numberOfChannels);
-	}
-
-	private void importToChannels(Integer[] input) {
-
-
+		importToChannels(bytesToIntegers(source, blockAlign / numberOfChannels), numberOfChannels);
 	}
 
 
@@ -81,7 +77,7 @@ public class Channels implements Channeling {
 	@Override
 	public SamplePyramid getChannel(int index) {
 
-		if (_switcher) {
+		if (_switcher0) {
 
 			Channels
 				result = this;
@@ -92,31 +88,30 @@ public class Channels implements Channeling {
 			return result.samplePyramid;
 		}
 
-		return _channelList.get(index);    // ! TODO line to be removed
+		return _oldSamplePyramid.get(index);    // ! TODO line to be removed
 	}
-
 
 
 	//	!--- TODO to be relocated ------------------------------
 
 	private void importToChannels(Integer[] input, int numberOfChannels) {
 
-		if (_channelList != null && this._channelList.size() > 0) {
-			_channelList.clear();
+		if (_oldSamplePyramid != null && this._oldSamplePyramid.size() > 0) {
+			_oldSamplePyramid.clear();
 		}
 
 		for (int i = 0; i < numberOfChannels; i++)
-			_channelList.add(SamplePyramid.newInstance());
+			_oldSamplePyramid.add(SamplePyramid.newInstance());
 
 		int
 			index = 0;
 
 		for (Integer i : input)
-			_channelList.get(index++ % numberOfChannels).addSampling(i);
+			_oldSamplePyramid.get(index++ % numberOfChannels).addSampling(i);
 	}
 
 	@Override
-	public byte[] getSource(int bitsPerSample) {
+	public byte[] releaseSource(int bitsPerSample) {
 
 		return integersToBytes(consolidateChannels(), bitsPerSample);
 	}
@@ -124,8 +119,8 @@ public class Channels implements Channeling {
 	private Integer[] consolidateChannels() {
 
 		int
-			numberOfChannels = _channelList.size(),
-			numberOfSamples = _channelList.get(0).size(),
+			numberOfChannels = _oldSamplePyramid.size(),
+			numberOfSamples = _oldSamplePyramid.get(0).size(),
 			resultLength = numberOfChannels * numberOfSamples;
 
 		Integer[]
@@ -137,7 +132,7 @@ public class Channels implements Channeling {
 				channelIndex = i % numberOfChannels,
 				sampleIndex = (i - channelIndex) / numberOfChannels;
 
-			result[i] = this._channelList.get(channelIndex).getSampling(sampleIndex).getValue();
+			result[i] = this._oldSamplePyramid.get(channelIndex).getSampling(sampleIndex).getValue();
 		}
 
 		return result;
@@ -145,5 +140,3 @@ public class Channels implements Channeling {
 
 	//	!--- TODO ----------------------------------------------
 }
-
-/*private void removeChannel(int index){ channels.remove(index); }*/    // remove channels not used at all

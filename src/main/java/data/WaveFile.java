@@ -52,6 +52,8 @@ public class WaveFile implements AudioFile {
 		setFileAddress(file.getPath());
 
 		addToCache(this);
+
+		Previewing.loadCurrentChan(); // * moved from preview panel
 	}
 
 
@@ -90,7 +92,7 @@ public class WaveFile implements AudioFile {
 
 		byte[]
 			headerSource = header.getSource(),
-			signalSource =  channelAnchor.getSource(header.getField(BITS_PER_SAMPLE)),
+			signalSource = audioAnchor.getAll(header.getField(BLOCK_ALIGN)),
 			result = new byte[lengths[2]];
 
 		System.arraycopy(headerSource, 0, result, 0, lengths[0]);
@@ -105,7 +107,7 @@ public class WaveFile implements AudioFile {
 
 		int
 			headerLength = header.getSource().length,
-			signalLength =  channelAnchor.getSource(header.getField(BITS_PER_SAMPLE)).length,
+			signalLength =  channelAnchor.releaseSource(header.getField(BITS_PER_SAMPLE)).length,
 			currentLength = headerLength + signalLength;
 
 		header.setField(FILE_SIZE, currentLength - 8);

@@ -6,7 +6,7 @@ import data.structure.signal.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CurrentFilePreview implements Previewing {
+public abstract class CurrentFilePreview_0 implements Previewing {
 
 	public static ArrayList<SamplePyramid>
 		currentSamplePyramid = new ArrayList<>();

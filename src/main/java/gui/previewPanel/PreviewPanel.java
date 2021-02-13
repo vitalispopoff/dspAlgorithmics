@@ -12,7 +12,6 @@ import static javafx.scene.paint.Color.*;
 import static javafx.scene.text.TextAlignment.*;
 
 import static data.FileCache.*;
-import static data.structure.Previewing.*;
 
 public class PreviewPanel extends Canvas {
 
@@ -49,7 +48,8 @@ public class PreviewPanel extends Canvas {
 
 			if (getFileCache().size()>0) {
 
-				Previewing.loadCurrentChan();
+				/*Previewing.loadCurrentChan();*/ // * moved to WaveFile
+
 				drawEverything();
 
 				root.previewRefreshTrigger.scrollPanelStateProperty().addListener((observable1) -> {
@@ -61,7 +61,7 @@ public class PreviewPanel extends Canvas {
 			else {
 				root.previewRefreshTrigger.scrollPanelStateProperty().removeListener(((observable1) -> {}));
 				clean();
-				cleanCurrentFileSignal();
+//				cleanCurrentFileSignal();
 			}
 		});
 	}

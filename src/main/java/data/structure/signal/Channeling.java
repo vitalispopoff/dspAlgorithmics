@@ -1,15 +1,17 @@
 package data.structure.signal;
 
-import data.structure.header.WaveHeader;
-
 public interface Channeling {
 
+	//	!--- TODO to be removed	--------------------------------
 
+	boolean
+		_switcher0 = false; // * run new implementation ?
 
-	static Channeling newInstance(AudioData audioData, WaveHeader header){
+	temporal t = new temporal();
+	class temporal{ static{ System.out.println("Channeling > new implementation = " + Channeling._switcher0); }}
 
-		return null;
-	}
+	//	!--- TODO ----------------------------------------------
+
 
 	static Channeling newInstance(byte[] source, int blockAlign, int numberOfChannels){
 
@@ -24,8 +26,10 @@ public interface Channeling {
 	}
 
 
-
 	SamplePyramid getChannel(int index);
 
-	byte[] getSource(int bitsPerSample);
+	byte[] releaseSource(int bitsPerSample);
+
+
+
 }

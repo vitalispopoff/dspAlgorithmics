@@ -43,6 +43,13 @@ public class AudioDataSample implements AudioData {
 	}
 
 
+	@Override
+	public byte[] getAll(int blockAlign){
+
+		return new byte[0];
+	} // ! TODO
+
+
 	public AudioData getTail(){
 
 		return tail;
@@ -52,4 +59,6 @@ public class AudioDataSample implements AudioData {
 
 		tail = s;
 	}
+
+
 }

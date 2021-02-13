@@ -40,4 +40,6 @@ public interface AudioData {
 	void setNext(AudioData s);
 
 	AudioData getNext();
+
+	byte[] getAll(int blockAlign);
 }

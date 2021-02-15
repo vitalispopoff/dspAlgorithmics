@@ -65,12 +65,4 @@ public class AudioDataSample implements AudioData {
 
 		return new byte[0];
 	} // ! TODO
-
-/*	@Override
-	public int size(){
-
-		return (index == 0 && tail != this) // * the bool is redundant - just in case.
-				   ? tail.getIndex() + 1
-				   : -1;
-	}*/	// size() - temporarily disabled
 }

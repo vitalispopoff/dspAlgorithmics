@@ -45,19 +45,10 @@ public class WaveFile implements AudioFile {
 			signalSource = Arrays.copyOfRange(fileContent, start, end);
 
 		audioAnchor = AudioData.setFromSource(signalSource, header.getField(BLOCK_ALIGN));
-
-
 		channelAnchor = Channeling.newInstance(signalSource, header.getField(BLOCK_ALIGN), header.getField(CHANNELS));
 
-//		channelAnchor = Channeling.newInstance(audioAnchor, header.getField(CHANNELS));
-
 		setFileAddress(file.getPath());
-
 		addToCache(this);
-
-//		Previewing.loadCurrentChan_old(); // * moved from preview panel
-
-
 	}
 
 

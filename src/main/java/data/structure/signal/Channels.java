@@ -1,17 +1,9 @@
 package data.structure.signal;
 
-import java.util.*;
-
 import static algorithms.metaProcessors.FileContentConverter.*;
 
 public class Channels  extends CurrentFilePreview implements Channeling {
 
-
-//	public ArrayList<SamplePyramid> currentSamplePyramid = CurrentFilePreview_old.getCurrentSamplePyramid();
-
-
-	public Channels(int numberOfChannels) {
-	}
 
 
 	Channels(byte[] source, int blockAlign, int numberOfChannels) {
@@ -22,6 +14,8 @@ public class Channels  extends CurrentFilePreview implements Channeling {
 
 		populateSamplePyramid();
 	}
+
+	private Channels(int numberOfChannels) {}
 
 
 	@Override

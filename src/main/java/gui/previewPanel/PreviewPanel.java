@@ -212,13 +212,6 @@ public class PreviewPanel extends Canvas {
 	private void setHorizontalScale() {
 
 		horizontalScale = Math.pow(2., root.getHorizontalScrollPanel().getScaleValue());
-
-		System.out.println(
-			"guiPreviewPanel.setHorizontalScale() : getScaleValue() = "
-				+ (int) Math.abs(root.getHorizontalScrollPanel().getScaleValue())
-				+ "; hScale = "
-				+ horizontalScale
-		);
 	}
 
 	private boolean indexIsInRange(double index) {
@@ -238,16 +231,8 @@ public class PreviewPanel extends Canvas {
 							   	? (int) -root.getHorizontalScrollPanel().getScaleValue()
 							   : 0;
 
-
-
 		SamplePyramid
 			samples = FileCache.getFile().getChannelAnchor().getSampleLevel(samplePyramidLevel);
-
-		System.out.println(">>>\tPreviewPanel.drawWaveForm : samplePyramidLevel = "
-					+ samplePyramidLevel
-					+ "\n\tsamples.size = "
-					+ samples.size()
-		);
 
 		double
 			bitsPerSample = getCurrentFileBitsPerSample(),

@@ -55,11 +55,6 @@ public interface AudioData {
 		return anchor;
 	}
 
-	/*default int getChannel(){
-
-		return 0;
-	}*/ // ? TODO write getChannel algorithm based on header (header reference needed)
-
 	int getIndex();
 
 	void setIndex(int i);

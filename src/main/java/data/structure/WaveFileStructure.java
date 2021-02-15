@@ -50,11 +50,11 @@ public enum WaveFileStructure implements FileStructure{
 		return slotLocations[this.ordinal()];
 	}
 
-	@Override
+/*	@Override
 	public int getStart(){
 
 		return slotLocations[this.ordinal()][0];
-	}
+	}*/	// ? disposable
 
 	@Override
 	public int getLength(){

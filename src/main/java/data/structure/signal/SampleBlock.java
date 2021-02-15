@@ -20,29 +20,29 @@ public class SampleBlock implements SamplePyramid {
 		sample = s;
 	}
 
-	public SampleBlock(AudioData s, SampleBlock n, SampleBlock b) {
+	/*public SampleBlock(AudioData s, SampleBlock n, SampleBlock b) {
 
 		this(s);
 		nextKnot = n;
 		below = b;
-	}
+	}*/ // ? disposable?
 
 
-	public AudioData getSample() {
+	/*public AudioData getSample() {
 
 		return sample;
-	}
+	}*/ // ? disposable
 
-	public void setSample(AudioData sample) {
+	/*public void setSample(AudioData sample) {
 
 		this.sample = sample;
-	}
+	}*/ // ? disposable
 
 
-	public SampleBlock getNextKnot() {
+	/*public SampleBlock getNextKnot() {
 
 		return nextKnot;
-	}
+	}*/ // ? disposable
 
 	public void setNextKnot(SampleBlock n) {
 
@@ -50,21 +50,21 @@ public class SampleBlock implements SamplePyramid {
 	}
 
 
-	public SampleBlock getBelow() {
+	/*public SampleBlock getBelow() {
 
 		return below;
-	}
+	}*/	// ? disposable
 
-	public void setBelow(SampleBlock b) {
+	/*public void setBelow(SampleBlock b) {
 
 		below = b;
-	}
+	}*/ // ? disposable
 
 
-	public void setIndex() {
+	/*public void setIndex() {
 
 
-	}
+	}*/ // ? disposable
 
 
 
@@ -102,9 +102,4 @@ public class SampleBlock implements SamplePyramid {
 		return temp.sample;
 	}
 
-	@Override
-	public int size() {
-
-		return 0;
-	}
 }

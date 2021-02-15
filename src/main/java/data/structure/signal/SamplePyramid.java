@@ -31,5 +31,5 @@ public interface SamplePyramid {
 
 	AudioData getSampling(int i);
 
-	int size();
+	default int size(){ return 0;}
 }

@@ -6,7 +6,6 @@ import data.structure.signal.*;
 public interface AudioFile {
 
 
-
 	void setFileAddress(String fileAddress);
 
 	FileAddress getFileAddress();
@@ -14,7 +13,7 @@ public interface AudioFile {
 
 	FileHeader getHeader();
 
-	AudioData getAudioAnchor();
+	/*AudioData getAudioAnchor();*/ // ? disposable
 
 	Channeling getChannelAnchor();
 

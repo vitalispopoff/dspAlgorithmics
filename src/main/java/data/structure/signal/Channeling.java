@@ -33,5 +33,5 @@ public interface Channeling {
 
 	SamplePyramid getChannel(int index);
 
-	byte[] releaseSource(int bitsPerSample);
+	/*byte[] releaseSource(int bitsPerSample);*/ // to be disposable
 }

@@ -5,7 +5,7 @@ public interface FileStructure {
 
 	int[] getLocation();
 
-	int getStart();
+	/*int getStart();*/	// ? disposable
 
 	int getLength();
 }

@@ -118,13 +118,14 @@ public class Channels implements Channeling {
 			_oldSamplePyramid.get(index++ % numberOfChannels).addSampling(i);
 	}
 
-	@Override
+	/*
+//	@Override
 	public byte[] releaseSource(int bitsPerSample) {
 
 		return integersToBytes(consolidateChannels(), bitsPerSample);
-	}
+	}*/ // ! disposable
 
-	private Integer[] consolidateChannels() {
+	/*private Integer[] consolidateChannels() {
 
 		int
 			numberOfChannels = _oldSamplePyramid.size(),
@@ -144,7 +145,7 @@ public class Channels implements Channeling {
 		}
 
 		return result;
-	}
+	}*/ // ! disposable
 
 	//	!--- TODO ----------------------------------------------
 }

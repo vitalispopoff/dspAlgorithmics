@@ -17,7 +17,6 @@ public abstract class CurrentFilePreview_old implements Previewing {
 
 	public static void addLevelToCurrentSamplePyramid(){
 
-		currentSamplePyramid.add(FileCache.getFile().getChannelAnchor().getChannel(0));
 		populateSamplePyramid();
 	}
 

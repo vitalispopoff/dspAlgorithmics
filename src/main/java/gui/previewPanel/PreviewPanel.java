@@ -235,7 +235,7 @@ public class PreviewPanel extends Canvas {
 
 		int
 			channelIndex = root.getHorizontalScrollPanel().getScaleValue() < 0.
-							   ? (int) -root.getHorizontalScrollPanel().getScaleValue()
+							   	? (int) -root.getHorizontalScrollPanel().getScaleValue()
 							   : 0;
 
 		SamplePyramid

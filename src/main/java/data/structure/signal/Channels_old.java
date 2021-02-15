@@ -85,7 +85,7 @@ public class Channels_old implements Channeling {
 	}*/ // ! that's the part to be written too
 
 	@Override
-	public SamplePyramid getChannel(int index) {
+	public SamplePyramid getSampleLevel(int index) {
 
 		if (_switcher0) {
 

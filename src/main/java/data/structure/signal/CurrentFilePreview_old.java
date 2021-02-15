@@ -17,6 +17,8 @@ public abstract class CurrentFilePreview_old implements Previewing {
 
 	public static void addLevelToCurrentSamplePyramid(){
 
+		System.out.println("CurrentFilePreview_old.addLevelToCurrentSamplePyramid() called out");
+
 		populateSamplePyramid();
 	}
 

@@ -234,15 +234,20 @@ public class PreviewPanel extends Canvas {
 		context.setStroke(RED);
 
 		int
-			channelIndex = root.getHorizontalScrollPanel().getScaleValue() < 0.
+			samplePyramidLevel = root.getHorizontalScrollPanel().getScaleValue() < 0.
 							   	? (int) -root.getHorizontalScrollPanel().getScaleValue()
 							   : 0;
 
-		SamplePyramid
-			samples = Previewing._switcher1
-				? Previewing.getCurrentSamples_old(channelIndex)
-				: FileCache.getFile().getChannelAnchor().getChannel(0);
 
+
+		SamplePyramid
+			samples = FileCache.getFile().getChannelAnchor().getSampleLevel(samplePyramidLevel);
+
+		System.out.println(">>>\tPreviewPanel.drawWaveForm : samplePyramidLevel = "
+					+ samplePyramidLevel
+					+ "\n\tsamples.size = "
+					+ samples.size()
+		);
 
 		double
 			bitsPerSample = getCurrentFileBitsPerSample(),
@@ -262,15 +267,15 @@ public class PreviewPanel extends Canvas {
 
 			x0 = width / 2.,
 
-			hScaleParam = ((horizontalScale - ((int) horizontalScale)) * Math.pow(2, channelIndex));
+			hScaleParam = (horizontalScale - ((int) horizontalScale)) * Math.pow(2, samplePyramidLevel);
 
 		{
 			double
-				index1Start = horizontalScroll / Math.pow(2., channelIndex),
+				index1Start = horizontalScroll / Math.pow(2., samplePyramidLevel),
 				x1Start = x0,
 				y1Start,
 
-				index1End = horizontalScroll / Math.pow(2., channelIndex) + 1,
+				index1End = horizontalScroll / Math.pow(2., samplePyramidLevel) + 1,
 				x1End = x0 + 1 * horizontalScale,
 				y1End = y0;
 
@@ -279,7 +284,7 @@ public class PreviewPanel extends Canvas {
 				index1Start--;
 				index1End--;
 
-				if (channelIndex == 0) {
+				if (samplePyramidLevel == 0) {
 
 					x1Start -= horizontalScale;
 					x1End -= horizontalScale;
@@ -314,11 +319,11 @@ public class PreviewPanel extends Canvas {
 
 		{
 			double
-				index2Start = horizontalScroll / Math.pow(2., channelIndex) - 1,
+				index2Start = horizontalScroll / Math.pow(2., samplePyramidLevel) - 1,
 				x2Start = x0 - 1 - horizontalScale,
 				y2Start = y0,
 
-				index2End = horizontalScroll / Math.pow(2., channelIndex),
+				index2End = horizontalScroll / Math.pow(2., samplePyramidLevel),
 				x2End = x0,
 				y2End;
 
@@ -326,7 +331,7 @@ public class PreviewPanel extends Canvas {
 				index2Start++;
 				index2End++;
 
-				if (channelIndex == 0) {
+				if (samplePyramidLevel == 0) {
 					x2Start += horizontalScale;
 					x2End += horizontalScale;
 				}

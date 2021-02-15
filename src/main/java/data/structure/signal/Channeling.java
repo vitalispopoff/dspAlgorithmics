@@ -31,7 +31,7 @@ public interface Channeling {
 	}*/	// info to be taken from header
 
 
-	SamplePyramid getChannel(int index);
+	SamplePyramid getSampleLevel(int index);
 
 	/*byte[] releaseSource(int bitsPerSample);*/ // to be disposable
 }

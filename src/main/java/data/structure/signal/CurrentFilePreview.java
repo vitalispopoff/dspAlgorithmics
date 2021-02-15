@@ -1,7 +1,5 @@
 package data.structure.signal;
 
-import data.FileCache;
-
 import java.util.ArrayList;
 
 public abstract class CurrentFilePreview implements Previewing {
@@ -22,11 +20,12 @@ public abstract class CurrentFilePreview implements Previewing {
 
 	public void addLevelToCurrentSamples(){
 
-		currentSamplePyramid.add(FileCache.getFile().getChannelAnchor().getChannel(0)); // ! THIS!
+		System.out.println("CurrentFilePreview.addLevelToCurrentSamplePyramid() called out");
+
 		populateSamplePyramid();
 	}
 
-	private void populateSamplePyramid(){
+	/*private*/ void populateSamplePyramid(){
 
 		int
 			chanLastLevel = getCurrentSamples().size() - 1,

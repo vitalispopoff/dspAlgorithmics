@@ -55,7 +55,9 @@ public class WaveFile implements AudioFile {
 
 		addToCache(this);
 
-		Previewing.loadCurrentChan_old(); // * moved from preview panel
+//		Previewing.loadCurrentChan_old(); // * moved from preview panel
+
+
 	}
 
 

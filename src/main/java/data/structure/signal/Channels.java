@@ -4,37 +4,46 @@ import java.util.ArrayList;
 
 import static algorithms.metaProcessors.FileContentConverter.*;
 
-public class Channels  /*extends CurrentFilePreview*/ implements Channeling, Previewing {
+public class Channels implements Channeling {
 
 
 	public ArrayList<SamplePyramid>
 		currentSamplePyramid = new ArrayList<>();
 
 
+	Channels(byte[] source, int blockAlign, int numberOfChannels) {
 
-	public ArrayList<SamplePyramid> getCurrentSamples(){
+		this(numberOfChannels);
 
-		return currentSamplePyramid;
-	}
-
-	public SamplePyramid getCurrentSamples(int index){
-
-		return currentSamplePyramid.get(index);
-	}
-
-
-	public void addLevelToCurrentSamples(){
-
-		System.out.println("CurrentFilePreview.addLevelToCurrentSamplePyramid() called out");
+		importToChannels(bytesToIntegers(source, blockAlign / numberOfChannels), numberOfChannels);
 
 		populateSamplePyramid();
 	}
 
-	void populateSamplePyramid(){
+	private Channels(int numberOfChannels) {}
+
+
+	private void importToChannels(Integer[] input, int numberOfChannels) {
+
+		if (currentSamplePyramid != null && this.currentSamplePyramid.size() > 0) {
+			currentSamplePyramid.clear();
+		}
+
+		for (int i = 0; i < numberOfChannels; i++)
+			currentSamplePyramid.add(SamplePyramid.newInstance());
 
 		int
-			chanLastLevel = getCurrentSamples().size() - 1,
-			chanLastLevelSize = getCurrentSamples().get(chanLastLevel).size();
+			index = 0;
+
+		for (Integer i : input)
+			currentSamplePyramid.get(index++ % numberOfChannels).addSampling(i);
+	}
+
+	private void populateSamplePyramid(){
+
+		int
+			chanLastLevel = currentSamplePyramid.size() - 1,
+			chanLastLevelSize = currentSamplePyramid.get(chanLastLevel).size();
 
 		SamplePyramid
 			channelSource,
@@ -42,7 +51,7 @@ public class Channels  /*extends CurrentFilePreview*/ implements Channeling, Pre
 
 		if (chanLastLevelSize > 512) {
 
-			channelSource = getCurrentSamples().get(chanLastLevel);
+			channelSource = currentSamplePyramid.get(chanLastLevel);
 			newChannel = SamplePyramid.newInstance();
 
 			for (int i = 0; i < (chanLastLevelSize >> 2); i++){
@@ -68,26 +77,10 @@ public class Channels  /*extends CurrentFilePreview*/ implements Channeling, Pre
 				if (min == d || max == d) newChannel.addSampling(d);
 			}
 
-			getCurrentSamples().add(newChannel);
+			currentSamplePyramid.add(newChannel);
 			populateSamplePyramid();
 		}
 	}
-
-
-
-
-
-
-	Channels(byte[] source, int blockAlign, int numberOfChannels) {
-
-		this(numberOfChannels);
-
-		importToChannels(bytesToIntegers(source, blockAlign / numberOfChannels), numberOfChannels);
-
-		populateSamplePyramid();
-	}
-
-	private Channels(int numberOfChannels) {}
 
 
 	@Override
@@ -95,24 +88,4 @@ public class Channels  /*extends CurrentFilePreview*/ implements Channeling, Pre
 
 		return currentSamplePyramid.get(index);    //	!--- TODO to be removed
 	}
-
-
-	//	!--- TODO to be relocated ------------------------------
-
-	private void importToChannels(Integer[] input, int numberOfChannels) {
-
-		if (currentSamplePyramid != null && this.currentSamplePyramid.size() > 0) {
-			currentSamplePyramid.clear();
-		}
-
-		for (int i = 0; i < numberOfChannels; i++)
-			currentSamplePyramid.add(SamplePyramid.newInstance());
-
-		int
-			index = 0;
-
-		for (Integer i : input)
-			currentSamplePyramid.get(index++ % numberOfChannels).addSampling(i);
-	}
-
 }

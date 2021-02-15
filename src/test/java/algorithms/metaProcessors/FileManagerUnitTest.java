@@ -8,7 +8,7 @@ import static _inputs.Data_InputData.*;
 public class FileManagerUnitTest {
 
     @Test
-    public void fileManagerTest(){
+    public void loadFileTest_0(){
 
         Assert.assertArrayEquals(
             loadFile("src\\main\\resources\\sample-mono.wav"),

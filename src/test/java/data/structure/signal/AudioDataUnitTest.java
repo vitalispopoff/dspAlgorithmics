@@ -6,6 +6,7 @@ import static data.structure.signal.AudioData.*;
 
 public class AudioDataUnitTest {
 
+	@Ignore
 	@Test
 	public void newInstanceTest_0() {
 
@@ -14,9 +15,9 @@ public class AudioDataUnitTest {
 			result = newInstance(input).getValue();
 
 		Assert.assertEquals(input, result);
-	}
+	}	// ! redundant to the implementation class
 
-
+//	@Ignore
 	@Test
 	public void setFromSourceTest_0() {
 
@@ -24,11 +25,12 @@ public class AudioDataUnitTest {
 			input = {(byte) 0x00};
 
 		int
-			sampleRate = 1;
+			blockAlign = 1;
 
-		Assert.assertTrue(setFromSource(input, sampleRate) instanceof AudioData);
+		Assert.assertTrue(setFromSource(input, blockAlign) instanceof AudioData);
 	}
 
+//	@Ignore
 	@Test
 	public void setFromSourceTest_1() {
 
@@ -36,14 +38,15 @@ public class AudioDataUnitTest {
 			input = {(byte) 0x00};
 
 		int
-			sR = 1;
+			blockAlign = 1;
 
 		AudioData
-			result = setFromSource(input, sR).getNext();
+			result = setFromSource(input, blockAlign).getNext();
 
 		Assert.assertEquals(result.getNext(), result);
 	}
 
+//	@Ignore
 	@Test
 	public void setFromSourceTest_2() {
 
@@ -51,15 +54,16 @@ public class AudioDataUnitTest {
 			input = {(byte) 0x01};
 
 		int
-			sR = 1;
+			blockAlign = 1;
 
 		AudioData
-			result = setFromSource(input, sR);
+			result = setFromSource(input, blockAlign);
 
 		Assert.assertEquals((int) input[0], result.getValue());
 
 	}
 
+//	@Ignore
 	@Test
 	public void setFromSourceTest_3() {
 
@@ -67,37 +71,18 @@ public class AudioDataUnitTest {
 			input = {(byte) 0x10, (byte) 0x00, (byte) 0x00, (byte) 0x80};
 
 		int
-			sR = 2;
+			blockAlign = 2;
 
 		AudioData
-			r = setFromSource(input, sR);
+			r = setFromSource(input, blockAlign);
 
 		int
 			result_1 = r.getValue(),
 			result_2 = r.getNext().getValue(),
-			proper_1 = 16,
-			proper_2 = -32768;
+			expected_1 = 16,
+			expected_2 = -32768;
 
-		Assert.assertEquals(proper_1, result_1);
-		Assert.assertEquals(proper_2, result_2);
-	}
-
-	@Test
-	public void setFromSourceTest_4() {
-
-		byte[]
-			input = {(byte) 0x10, (byte) 0x00, (byte) 0x00, (byte) 0x80};
-		int
-			sR = 2,
-			proper = 2,
-			result = 1;
-
-		AudioData
-			anchor = setFromSource(input, sR),
-			temp = anchor;
-
-		for (; !(temp.getNext().equals(temp)); result++) temp = temp.getNext();
-
-		Assert.assertEquals(proper, result);
+		Assert.assertEquals(expected_1, result_1);
+		Assert.assertEquals(expected_2, result_2);
 	}
 }

@@ -7,18 +7,20 @@ import algorithms.metaProcessors.FileContentConverter;
 * with indices, and tail (set for the anchor)
 *
 *
-* */
+*
+*
+* */ // comment
 public interface AudioData {
 
-	//	!--- TODO to be removed	--------------------------------
+	//	!--- to be removed	------------------------------------
 
 	boolean
 		_switcher3 = false;	// * run new implementation ?
 
-	temporal t = new temporal();
-	class temporal{ static{ System.out.println("AudioData > new ver = " + _switcher3); }}
+	Temporal t = new Temporal();
+	class Temporal { static{ System.out.println("AudioData > new ver = " + _switcher3); }}
 
-	//	!--- TODO ----------------------------------------------
+	//	?-------------------------------------------------------
 
 
 	static AudioData newInstance(int v) {
@@ -53,12 +55,10 @@ public interface AudioData {
 		return anchor;
 	}
 
+	/*default int getChannel(){
 
-
-	int getChannel();
-
-	void setChannel(int c);
-
+		return 0;
+	}*/ // ? TODO write getChannel algorithm based on header (header reference needed)
 
 	int getIndex();
 
@@ -67,7 +67,6 @@ public interface AudioData {
 
 	int getValue();
 
-	void setValue(int v);
 
 
 	void setNext(AudioData s);
@@ -77,10 +76,8 @@ public interface AudioData {
 
 	void setTail(AudioData s);
 
-	AudioData getTail();
+	/*AudioData getTail();*/ // ? disposable
 
 
 	byte[] getAll(int blockAlign);
-
-	int size();
 }

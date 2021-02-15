@@ -82,6 +82,21 @@ public interface FileContentConverter {
 
 
 
+	static Integer[] bytesToIntegers(byte[] source, int sampleLength){
+
+		int
+			stripLength = source.length / sampleLength;
+
+		Integer[]
+			result = new Integer[stripLength];
+
+		for (int i = 0; i < stripLength; i++)
+
+			result[i] =  FileContentConverter.readDataSample(source, i * sampleLength, sampleLength);
+
+		return result;
+	}
+
 	static byte[] integersToBytes(Integer[] signal, int bitsPerSample){
 
 		int
@@ -100,21 +115,6 @@ public interface FileContentConverter {
 
 			System.arraycopy(sample, 0, result, resultIndex, sampleLength);
 		}
-
-		return result;
-	}
-
-	static Integer[] bytesToIntegers(byte[] source, int sampleLength){
-
-		int
-			stripLength = source.length / sampleLength;
-
-		Integer[]
-			result = new Integer[stripLength];
-
-		for (int i = 0; i < stripLength; i++)
-
-			result[i] =  FileContentConverter.readDataSample(source, i * sampleLength, sampleLength);
 
 		return result;
 	}

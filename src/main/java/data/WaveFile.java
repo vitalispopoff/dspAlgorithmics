@@ -109,7 +109,8 @@ public class WaveFile implements AudioFile {
 
 		int
 			headerLength = header.getSource().length,
-			signalLength =  channelAnchor.releaseSource(header.getField(BITS_PER_SAMPLE)).length,
+			/*signalLength =  channelAnchor.releaseSource(header.getField(BITS_PER_SAMPLE)).length,*/ // ! disconnecting from Channeling interface
+			signalLength = header.getField(DATA_SIZE) / header.getField(BLOCK_ALIGN) * header.getField(CHANNELS),
 			currentLength = headerLength + signalLength;
 
 		header.setField(FILE_SIZE, currentLength - 8);

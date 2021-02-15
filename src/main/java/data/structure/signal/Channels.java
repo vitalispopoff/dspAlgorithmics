@@ -55,14 +55,14 @@ public class Channels implements Channeling {
 		importToChannels(bytesToIntegers(source, blockAlign / numberOfChannels), numberOfChannels);
 	}
 
-	Channels(AudioData audioData, int numberOfChannels){
+	/*Channels(AudioData audioData, int numberOfChannels){
 
 		this(numberOfChannels);
 
 		importToChannels(audioData, numberOfChannels);
-	}
+	}*/	// ! we want to write it tho
 
-	private void importToChannels(AudioData audioAnchor, int numberOfChannels){
+	/*private void importToChannels(AudioData audioAnchor, int numberOfChannels){
 
 		if (_oldSamplePyramid != null && this._oldSamplePyramid.size() > 0) {
 			_oldSamplePyramid.clear();
@@ -80,7 +80,7 @@ public class Channels implements Channeling {
 			currentSample = currentSample.getNext();
 		}
 
-	}
+	}*/ // ! that's the part to be written too
 
 	@Override
 	public SamplePyramid getChannel(int index) {

@@ -1,7 +1,9 @@
 package data.structure.signal;
 
 import org.junit.*;
+import org.junit.jupiter.api.Disabled;
 
+@Ignore
 public class ChannelsUnitTest {
 
 

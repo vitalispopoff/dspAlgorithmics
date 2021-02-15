@@ -18,17 +18,17 @@ public interface Channeling {
 		return new Channels(source, blockAlign, numberOfChannels);
 	}
 
-	static Channeling newInstance(AudioData audioAnchor, int numberOfChannels){
+/*	static Channeling newInstance(AudioData audioAnchor, int numberOfChannels){
 
 		return new Channels(audioAnchor, numberOfChannels);
-	}
+	}*/	// ? temporarily disabled - to be written good tho
 
 
 
-	default int size(){
+	/*default int size(){
 
 		return 1;
-	}
+	}*/	// info to be taken from header
 
 
 	SamplePyramid getChannel(int index);

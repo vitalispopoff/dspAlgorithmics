@@ -1,5 +1,6 @@
 package gui.previewPanel;
 
+import data.FileCache;
 import javafx.scene.canvas.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
@@ -238,7 +239,10 @@ public class PreviewPanel extends Canvas {
 							   : 0;
 
 		SamplePyramid
-			samples = Previewing.getCurrentSamples_old(channelIndex);
+			samples = Previewing._switcher1
+				? Previewing.getCurrentSamples_old(channelIndex)
+				: FileCache.getFile().getChannelAnchor().getChannel(0);
+
 
 		double
 			bitsPerSample = getCurrentFileBitsPerSample(),

@@ -7,7 +7,7 @@ import static algorithms.metaProcessors.FileContentConverter.*;
 public class Channels  extends CurrentFilePreview implements Channeling {
 
 
-	public ArrayList<SamplePyramid> _oldSamplePyramid = CurrentFilePreview_old.getCurrentSamplePyramid();
+	public ArrayList<SamplePyramid> samplePyramid_old = CurrentFilePreview_old.getCurrentSamplePyramid();
 
 
 	public Channels(int numberOfChannels) {
@@ -25,7 +25,7 @@ public class Channels  extends CurrentFilePreview implements Channeling {
 	@Override
 	public SamplePyramid getChannel(int index) {
 
-		return _oldSamplePyramid.get(index);    //	!--- TODO to be removed
+		return samplePyramid_old.get(index);    //	!--- TODO to be removed
 	}
 
 
@@ -33,18 +33,18 @@ public class Channels  extends CurrentFilePreview implements Channeling {
 
 	private void importToChannels(Integer[] input, int numberOfChannels) {
 
-		if (_oldSamplePyramid != null && this._oldSamplePyramid.size() > 0) {
-			_oldSamplePyramid.clear();
+		if (samplePyramid_old != null && this.samplePyramid_old.size() > 0) {
+			samplePyramid_old.clear();
 		}
 
 		for (int i = 0; i < numberOfChannels; i++)
-			_oldSamplePyramid.add(SamplePyramid.newInstance());
+			samplePyramid_old.add(SamplePyramid.newInstance());
 
 		int
 			index = 0;
 
 		for (Integer i : input)
-			_oldSamplePyramid.get(index++ % numberOfChannels).addSampling(i);
+			samplePyramid_old.get(index++ % numberOfChannels).addSampling(i);
 	}
 
 }

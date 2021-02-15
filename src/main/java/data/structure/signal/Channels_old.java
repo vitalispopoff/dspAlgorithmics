@@ -10,6 +10,8 @@ public class Channels_old implements Channeling {
 	public ArrayList<SamplePyramid> _oldSamplePyramid = new ArrayList<>();	//	!--- TODO to be removed
 
 
+	static { System.out.println(">>>\tChannels_old class called out"); }
+
 	int
 		channelIndex;
 

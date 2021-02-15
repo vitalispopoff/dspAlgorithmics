@@ -23,11 +23,12 @@ public interface Previewing {
 
 	//	!--- TODO to be removed	--------------------------------
 
-/*	boolean
-		_switcher1 = false;	// * run new implementation ?
+	boolean
+		_switcher1 = true;	// * run new implementation ?
+
 	Temporal t = new Temporal();
 
-	class Temporal { static{ System.out.println("Previewing > new ver = " + Previewing._switcher1); }}*/	// ? _switcher - disposable
+	class Temporal { static{ System.out.println("Previewing > new ver = " + Previewing._switcher1); }}	// ? _switcher - disposable
 
 	static ArrayList<SamplePyramid> getCurrentSamples_old(){
 

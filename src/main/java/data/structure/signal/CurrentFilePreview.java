@@ -6,26 +6,31 @@ import java.util.ArrayList;
 
 public abstract class CurrentFilePreview implements Previewing {
 
-	public static ArrayList<SamplePyramid>
+	public ArrayList<SamplePyramid>
 		currentSamplePyramid = new ArrayList<>();
 
-	public static ArrayList<SamplePyramid> getCurrentSamplePyramid(){
+	public ArrayList<SamplePyramid> getCurrentSamples(){
 
 		return currentSamplePyramid;
 	}
 
+	public SamplePyramid getCurrentSamples(int index){
 
-	public static void addLevelToCurrentSamplePyramid(){
+		return currentSamplePyramid.get(index);
+	}
 
-		currentSamplePyramid.add(FileCache.getFile().getChannelAnchor().getChannel(0));
+
+	public void addLevelToCurrentSamples(){
+
+		currentSamplePyramid.add(FileCache.getFile().getChannelAnchor().getChannel(0)); // ! THIS!
 		populateSamplePyramid();
 	}
 
-	private static void populateSamplePyramid(){
+	private void populateSamplePyramid(){
 
 		int
-			chanLastLevel = getCurrentSamplePyramid().size() - 1,
-			chanLastLevelSize = getCurrentSamplePyramid().get(chanLastLevel).size();
+			chanLastLevel = getCurrentSamples().size() - 1,
+			chanLastLevelSize = getCurrentSamples().get(chanLastLevel).size();
 
 		SamplePyramid
 			channelSource,
@@ -33,7 +38,7 @@ public abstract class CurrentFilePreview implements Previewing {
 
 		if (chanLastLevelSize > 512) {
 
-			channelSource = getCurrentSamplePyramid().get(chanLastLevel);
+			channelSource = getCurrentSamples().get(chanLastLevel);
 			newChannel = SamplePyramid.newInstance();
 
 			for (int i = 0; i < (chanLastLevelSize >> 2); i++){
@@ -59,7 +64,7 @@ public abstract class CurrentFilePreview implements Previewing {
 				if (min == d || max == d) newChannel.addSampling(d);
 			}
 
-			getCurrentSamplePyramid().add(newChannel);
+			getCurrentSamples().add(newChannel);
 			populateSamplePyramid();
 		}
 	}

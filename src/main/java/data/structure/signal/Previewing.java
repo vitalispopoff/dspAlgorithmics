@@ -4,35 +4,45 @@ import java.util.ArrayList;
 
 public interface Previewing {
 
+
+
+	ArrayList<SamplePyramid> getCurrentSamples();
+
+	SamplePyramid getCurrentSamples(int index)/*{
+
+		return getCurrentSamplePyramid().get(index);
+	}*/
+	;
+
+	void loadCurrentChan()/*{
+
+		addLevelToCurrentSamplePyramid();
+	}*/
+	;
+
+
 	//	!--- TODO to be removed	--------------------------------
 
-	boolean
+/*	boolean
 		_switcher1 = false;	// * run new implementation ?
-
 	Temporal t = new Temporal();
-	class Temporal { static{ System.out.println("Previewing > new ver = " + Previewing._switcher1); }}
 
-	//	!--- TODO ----------------------------------------------
+	class Temporal { static{ System.out.println("Previewing > new ver = " + Previewing._switcher1); }}*/	// ? _switcher - disposable
 
+	static ArrayList<SamplePyramid> getCurrentSamples_old(){
 
-
-	static ArrayList<SamplePyramid> getCurrentSamples(){
-
-		return _switcher1
-			? CurrentFilePreview.getCurrentSamplePyramid()
-			: CurrentFilePreview_old.getCurrentSamplePyramid();
+		return CurrentFilePreview_old.getCurrentSamplePyramid();
 	}
 
-	static SamplePyramid getCurrentSamples(int index){
+	static SamplePyramid getCurrentSamples_old(int index){
 
-		return _switcher1
-			? CurrentFilePreview.getCurrentSamplePyramid().get(index)
-			: CurrentFilePreview_old.getCurrentSamplePyramid().get(index);
+		return CurrentFilePreview_old.getCurrentSamplePyramid().get(index);
 	}
 
-	static void loadCurrentChan(){
+	static void loadCurrentChan_old(){
 
-		CurrentFilePreview.addLevelToCurrentSamplePyramid();
 		CurrentFilePreview_old.addLevelToCurrentSamplePyramid();
 	}
+
+	//	!--- TODO ----------------------------------------------
 }

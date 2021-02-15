@@ -238,7 +238,7 @@ public class PreviewPanel extends Canvas {
 							   : 0;
 
 		SamplePyramid
-			samples = Previewing.getCurrentSamples(channelIndex);
+			samples = Previewing.getCurrentSamples_old(channelIndex);
 
 		double
 			bitsPerSample = getCurrentFileBitsPerSample(),

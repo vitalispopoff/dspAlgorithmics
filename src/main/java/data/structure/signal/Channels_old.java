@@ -34,7 +34,7 @@ public class Channels_old implements Channeling {
 			temp.nextChannel = this;
 		}
 
-		if (!_switcher0) _oldSamplePyramid = Previewing.getCurrentSamples();    //	!--- TODO to be removed
+		if (!_switcher0) _oldSamplePyramid = Previewing.getCurrentSamples_old();    //	!--- TODO to be removed
 	}
 
 	private Channels_old(int numberOfChannels, int index) {

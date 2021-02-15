@@ -14,11 +14,11 @@ public interface Previewing {
 	}*/
 	;
 
-	void loadCurrentChan()/*{
+	/*void loadCurrentChan(){
 
 		addLevelToCurrentSamplePyramid();
-	}*/
-	;
+	}
+	;*/	// ? disposable ?
 
 
 	//	!--- TODO to be removed	--------------------------------

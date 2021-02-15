@@ -4,13 +4,10 @@ import java.util.*;
 
 import static algorithms.metaProcessors.FileContentConverter.*;
 
-public class Channels implements Channeling {
+public class Channels  extends CurrentFilePreview implements Channeling {
 
 
 	public ArrayList<SamplePyramid> _oldSamplePyramid = CurrentFilePreview_old.getCurrentSamplePyramid();
-
-//	public CurrentFilePreview currentFilePreview = CurrentFilePreview.getCurrentSamplePyramid();
-
 
 
 	public Channels(int numberOfChannels) {

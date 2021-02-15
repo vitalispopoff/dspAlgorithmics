@@ -4,8 +4,11 @@ import java.util.ArrayList;
 
 public abstract class CurrentFilePreview implements Previewing {
 
+
 	public ArrayList<SamplePyramid>
 		currentSamplePyramid = new ArrayList<>();
+
+
 
 	public ArrayList<SamplePyramid> getCurrentSamples(){
 
@@ -25,7 +28,7 @@ public abstract class CurrentFilePreview implements Previewing {
 		populateSamplePyramid();
 	}
 
-	/*private*/ void populateSamplePyramid(){
+	void populateSamplePyramid(){
 
 		int
 			chanLastLevel = getCurrentSamples().size() - 1,

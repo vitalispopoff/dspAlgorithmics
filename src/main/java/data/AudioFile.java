@@ -13,7 +13,6 @@ public interface AudioFile {
 
 	FileHeader getHeader();
 
-	/*AudioData getAudioAnchor();*/ // ? disposable
 
 	Channeling getChannelAnchor();
 

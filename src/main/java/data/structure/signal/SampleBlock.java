@@ -2,6 +2,8 @@ package data.structure.signal;
 
 public class SampleBlock implements SamplePyramid {
 
+	static{ System.out.println("SampleBlock called out"); }
+
 
 	AudioData
 		sample;
@@ -13,9 +15,9 @@ public class SampleBlock implements SamplePyramid {
 	byte
 		level = 0;
 
-	SampleBlock() {}
+	public SampleBlock() {}
 
-	private SampleBlock(AudioData s) {
+	SampleBlock(AudioData s) {
 
 		sample = s;
 	}
@@ -28,15 +30,15 @@ public class SampleBlock implements SamplePyramid {
 	}*/ // ? disposable?
 
 
-	/*public AudioData getSample() {
+	public AudioData getSample() {
 
 		return sample;
-	}*/ // ? disposable
+	} // ? disposable
 
-	/*public void setSample(AudioData sample) {
+	public void setSample(AudioData sample) {
 
 		this.sample = sample;
-	}*/ // ? disposable
+	} // ? disposable
 
 
 	/*public SampleBlock getNextKnot() {

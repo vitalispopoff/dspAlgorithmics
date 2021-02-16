@@ -2,6 +2,10 @@ package data.structure.signal;
 
 public class AudioDataSample implements AudioData {
 
+	static{
+		System.out.println("AudioDataSample called out");
+	}
+
 
 	int
 		channel,

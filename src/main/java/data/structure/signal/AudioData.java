@@ -12,21 +12,14 @@ import algorithms.metaProcessors.FileContentConverter;
 * */ // comment
 public interface AudioData {
 
-	//	!--- to be removed	------------------------------------
 
-	boolean
-		_switcher3 = false;	// * run new implementation ?
-
-	Temporal t = new Temporal();
-	class Temporal { static{ System.out.println("AudioData > new ver = " + _switcher3); }}
-
-	//	?-------------------------------------------------------
 
 
 	static AudioData newInstance(int v) {
 
 		return new AudioDataSample(v);
 	}
+
 
 	static AudioData setFromSource(byte[] source, int blockAlign) {
 
@@ -54,6 +47,7 @@ public interface AudioData {
 
 		return anchor;
 	}
+
 
 	int getIndex();
 

@@ -2,26 +2,42 @@ package data.structure.signal;
 
 public interface SamplePyramid {
 
-	//	!--- TODO to be removed	--------------------------------
+	//	!--- to be removed	------------------------------------
 
 	boolean
-		_switcher2 = false;	// * run new implementation ?
+		_switcher = false;
 
-	temporal t = new temporal();
-	class temporal{ static{ System.out.println("SamplePyramid > new ver = " + _switcher2); }}
+	//	@format:off
+	_tmp t = new _tmp();
 
-	//	!--- TODO ----------------------------------------------
+	class _tmp {
+
+		static {
+			System.out.println("SamplePyramid > new ver = " + _switcher);
+		}
+	}
+//	@format:on
+
+	//	?-------------------------------------------------------
 
 
-	static SamplePyramid newInstance(){
+	static SamplePyramid newInstance() {
 
-		return _switcher2
-			? new SampleBlock()
-			: new SampleBlock_old();
+		return _switcher
+				   ? new SampleBlock()
+				   : new SampleBlock_old();
 	}
 
+	static SamplePyramid newInstance(AudioData sample) {
 
-	default void addSampling(Integer v){
+		return new SampleBlock(sample);
+	}
+
+	void setSample(AudioData sample);
+
+	AudioData getSample();
+
+	default void addSampling(Integer v) {
 
 		addSampling(AudioData.newInstance(v));
 	}
@@ -31,5 +47,5 @@ public interface SamplePyramid {
 
 	AudioData getSampling(int i);
 
-	default int size(){ return 0;}
+	default int size() { return 0;}
 }

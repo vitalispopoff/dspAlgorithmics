@@ -7,8 +7,11 @@ import static algorithms.metaProcessors.FileContentConverter.*;
 public class Channels implements Channeling {
 
 
+
+
 	public ArrayList<SamplePyramid>
 		currentSamplePyramid = new ArrayList<>();
+
 
 
 	Channels(byte[] source, int blockAlign, int numberOfChannels) {
